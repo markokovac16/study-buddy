@@ -1,8 +1,9 @@
 <script setup>
+import Header from './components/Header.vue'
 </script>
 
 <template>
-  <h1 class="text-4xl text-blue-700">Study Buddy</h1>
+  <Header />
 </template>
 
 <style scoped></style>
