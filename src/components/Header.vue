@@ -3,12 +3,12 @@ import Logo from './Logo.vue'
 </script>
 
 <template>
-  <div class="flex h-16 justify-between px-12 py-3 shadow-xl">
+  <header class="flex h-16 items-center justify-between bg-sb-surface px-12 shadow-sm">
     <Logo />
 
-    <div class="flex items-center gap-3">
-      <img src="../assets/notify_icon.svg" alt="" />
-      <img src="../assets/profile_icon.svg" alt="" />
+    <div class="flex items-center gap-4">
+      <img src="../assets/notify_icon.svg" alt="" class="h-6 w-6" />
+      <img src="../assets/profile_icon.svg" alt="" class="h-6 w-6" />
     </div>
-  </div>
+  </header>
 </template>

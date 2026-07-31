@@ -5,15 +5,15 @@ const links = ['O nama', 'Kontakt', 'Privatnost', 'Uvjeti']
 </script>
 
 <template>
-  <div class="flex h-16 w-full items-center justify-between px-12 py-3 shadow-xl">
+  <footer class="flex h-16 w-full items-center justify-between bg-sb-surface px-12 text-sm text-slate-500">
     <div class="w-1/3">
-      <Logo :icon="false" />
+      <Logo :icon="false" size="text-xl" />
     </div>
 
     <div class="flex w-1/3 items-center justify-center gap-6">
-      <p v-for="link in links" :key="link">{{ link }}</p>
+      <a v-for="link in links" :key="link" href="#">{{ link }}</a>
     </div>
 
-    <p class="flex w-1/3 items-center justify-end">© 2024 StudyBuddy Kognitivno utočište</p>
-  </div>
+    <p class="w-1/3 text-right">© 2026 StudyBuddy Kognitivno utočište</p>
+  </footer>
 </template>
