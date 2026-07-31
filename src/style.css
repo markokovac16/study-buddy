@@ -2,15 +2,21 @@
 
 @theme {
   --color-sb-blue: #312e81;
-  --color-sb-indigo: #3f45b5;
-  --color-sb-teal: #0f766e;
-  --color-sb-mint: #14b8a6;
-  --color-sb-bg: #f4f6f9;
+  --color-sb-indigo: #24389c;
+  --color-sb-teal: #006a6a;
+  --color-sb-bg: #f3f4f5;
   --color-sb-surface: #f8fafc;
-  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
-  --radius-card: 1rem;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 0.75rem;
 }
 
 body {
   @apply bg-sb-bg font-sans text-slate-800;
+}
+
+h1,
+h2,
+h3 {
+  @apply font-heading;
 }
