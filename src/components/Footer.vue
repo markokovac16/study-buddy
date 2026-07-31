@@ -1,18 +1,19 @@
+<script setup>
+import Logo from './Logo.vue'
+
+const links = ['O nama', 'Kontakt', 'Privatnost', 'Uvjeti']
+</script>
+
 <template>
-  <div class="flex w-full h-16 px-12 py-3 justify-between items-center fixed bottom-0 shadow-xl">
-    <div class="items-center w-1/3">
-      <p class="text-bold text-3xl text-sb-blue">StudyBuddy</p>
+  <div class="flex h-16 w-full items-center justify-between px-12 py-3 shadow-xl">
+    <div class="w-1/3">
+      <Logo :icon="false" />
     </div>
 
-    <div class="flex gap-6 items-center justify-center w-1/3">
-      <p>O nama</p>
-      <p>Kontakt</p>
-      <p>Privatnost</p>
-      <p>Uvjeti</p>
+    <div class="flex w-1/3 items-center justify-center gap-6">
+      <p v-for="link in links" :key="link">{{ link }}</p>
     </div>
 
-    <p class="flex justify-end items-center w-1/3">© 2024 StudyBuddy Kognitivno utočište</p>
+    <p class="flex w-1/3 items-center justify-end">© 2024 StudyBuddy Kognitivno utočište</p>
   </div>
 </template>
-
-<script setup></script>

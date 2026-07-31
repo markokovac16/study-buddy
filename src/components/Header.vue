@@ -1,15 +1,14 @@
-<template>
-  <div class="flex h-16 px-12 py-3 justify-between shadow-xl">
-    <div class="flex gap-3 items-cent">
-      <img src="../assets/header_icon.svg" alt="" class="h-10 w-10" />
-      <p class="text-bold text-3xl text-sb-blue">StudyBuddy</p>
-    </div>
+<script setup>
+import Logo from './Logo.vue'
+</script>
 
-    <div class="flex gap-3 items-center">
+<template>
+  <div class="flex h-16 justify-between px-12 py-3 shadow-xl">
+    <Logo />
+
+    <div class="flex items-center gap-3">
       <img src="../assets/notify_icon.svg" alt="" />
       <img src="../assets/profile_icon.svg" alt="" />
     </div>
   </div>
 </template>
-
-<script setup></script>
