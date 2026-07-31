@@ -2,4 +2,15 @@
 
 @theme {
   --color-sb-blue: #312e81;
+  --color-sb-indigo: #3f45b5;
+  --color-sb-teal: #0f766e;
+  --color-sb-mint: #14b8a6;
+  --color-sb-bg: #f4f6f9;
+  --color-sb-surface: #f8fafc;
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 1rem;
+}
+
+body {
+  @apply bg-sb-bg font-sans text-slate-800;
 }
