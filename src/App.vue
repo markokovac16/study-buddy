@@ -1,14 +1,3 @@
-<script setup>
-import Header from './components/Header.vue'
-import Footer from './components/Footer.vue'
-</script>
-
 <template>
-  <div class="flex min-h-screen flex-col">
-    <Header />
-    <main class="flex-1 px-12 py-3">
-      <RouterView />
-    </main>
-    <Footer />
-  </div>
+  <RouterView />
 </template>
