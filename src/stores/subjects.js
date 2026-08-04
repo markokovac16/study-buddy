@@ -6,7 +6,7 @@ import { STATUSI } from '../data/mock'
 let brojac = 100
 const noviId = (prefiks) => `${prefiks}${++brojac}`
 
-export const usePredmetiStore = defineStore('predmeti', () => {
+export const useSubjectsStore = defineStore('subjects', () => {
   const predmeti = ref([...mock.predmeti])
   const zadaci = ref([...mock.zadaci])
   const biljeske = ref([...mock.biljeske])
@@ -17,7 +17,8 @@ export const usePredmetiStore = defineStore('predmeti', () => {
   const priloziPredmeta = (predmetId) => prilozi.value.filter((p) => p.predmetId === predmetId)
   const predmetPoId = (predmetId) => predmeti.value.find((p) => p.predmetId === predmetId)
 
-  const naCekanju = (predmetId) => zadaciPredmeta(predmetId).filter((z) => z.status !== STATUSI.ZAVRSENO).length
+  const naCekanju = (predmetId) =>
+    zadaciPredmeta(predmetId).filter((z) => z.status !== STATUSI.ZAVRSENO).length
 
   function napredak(predmetId) {
     const svi = zadaciPredmeta(predmetId)
@@ -57,11 +58,16 @@ export const usePredmetiStore = defineStore('predmeti', () => {
 
   function prebaciStatus(zadatakId) {
     const zadatak = zadaci.value.find((z) => z.zadatakId === zadatakId)
-    if (zadatak) zadatak.status = zadatak.status === STATUSI.ZAVRSENO ? STATUSI.NA_CEKANJU : STATUSI.ZAVRSENO
+    if (zadatak)
+      zadatak.status = zadatak.status === STATUSI.ZAVRSENO ? STATUSI.NA_CEKANJU : STATUSI.ZAVRSENO
   }
 
   function dodajBiljesku(biljeska) {
-    biljeske.value.push({ biljeskaId: noviId('b'), datum: new Date().toISOString().slice(0, 10), ...biljeska })
+    biljeske.value.push({
+      biljeskaId: noviId('b'),
+      datum: new Date().toISOString().slice(0, 10),
+      ...biljeska,
+    })
   }
 
   function urediBiljesku(biljeskaId, promjene) {
@@ -74,7 +80,12 @@ export const usePredmetiStore = defineStore('predmeti', () => {
   }
 
   function dodajPrilog(prilog) {
-    prilozi.value.push({ prilogId: noviId('pr'), datum: new Date().toISOString().slice(0, 10), url: '#', ...prilog })
+    prilozi.value.push({
+      prilogId: noviId('pr'),
+      datum: new Date().toISOString().slice(0, 10),
+      url: '#',
+      ...prilog,
+    })
   }
 
   function obrisiPrilog(prilogId) {

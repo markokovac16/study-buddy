@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { defineStore } from 'pinia'
 import { usePomodoroStore } from './pomodoro'
-import { usePredmetiStore } from './predmeti'
+import { useSubjectsStore } from './subjects'
 import { STATUSI } from '../data/mock'
 
 const DANI = ['Pon', 'Uto', 'Sri', 'Čet', 'Pet', 'Sub', 'Ned']
@@ -18,12 +18,14 @@ function uSate(minuta) {
   return Math.round((minuta / 60) * 10) / 10
 }
 
-export const useStatistikaStore = defineStore('statistika', () => {
+export const useStatisticsStore = defineStore('statistics', () => {
   const pomodoro = usePomodoroStore()
-  const predmetiStore = usePredmetiStore()
+  const predmetiStore = useSubjectsStore()
 
   const filtrirane = (predmetId) =>
-    predmetId && predmetId !== 'svi' ? pomodoro.sesije.filter((s) => s.predmetId === predmetId) : pomodoro.sesije
+    predmetId && predmetId !== 'svi'
+      ? pomodoro.sesije.filter((s) => s.predmetId === predmetId)
+      : pomodoro.sesije
 
   const zbroj = (sesije) => sesije.reduce((ukupno, s) => ukupno + s.trajanje, 0)
 
@@ -68,7 +70,9 @@ export const useStatistikaStore = defineStore('statistika', () => {
       const datum = new Date(pocetak)
       datum.setDate(datum.getDate() + indeks)
       const minuta = zbroj(
-        filtrirane(predmetId).filter((s) => new Date(s.pocetak).toDateString() === datum.toDateString()),
+        filtrirane(predmetId).filter(
+          (s) => new Date(s.pocetak).toDateString() === datum.toDateString(),
+        ),
       )
       return { dan, minuta, sati: uSate(minuta) }
     })
@@ -88,7 +92,11 @@ export const useStatistikaStore = defineStore('statistika', () => {
   })
 
   const danasMinuta = computed(() =>
-    zbroj(pomodoro.sesije.filter((s) => new Date(s.pocetak).toDateString() === new Date().toDateString())),
+    zbroj(
+      pomodoro.sesije.filter(
+        (s) => new Date(s.pocetak).toDateString() === new Date().toDateString(),
+      ),
+    ),
   )
 
   const najproduktivnijiDan = computed(() => {
@@ -96,7 +104,9 @@ export const useStatistikaStore = defineStore('statistika', () => {
     return dani.reduce((najbolji, dan) => (dan.minuta > najbolji.minuta ? dan : najbolji), dani[0])
   })
 
-  const dovrseniZadaci = computed(() => predmetiStore.zadaci.filter((z) => z.status === STATUSI.ZAVRSENO).length)
+  const dovrseniZadaci = computed(
+    () => predmetiStore.zadaci.filter((z) => z.status === STATUSI.ZAVRSENO).length,
+  )
   const ukupnoZadataka = computed(() => predmetiStore.zadaci.length)
 
   return {
