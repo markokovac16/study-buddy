@@ -1,9 +1,19 @@
 import { PRIORITETI, STATUSI } from '../data/mock'
 
 export const bojePredmeta = {
-  amber: { pozadina: 'bg-amber-100', tekst: 'text-amber-600', traka: 'bg-amber-500', hex: '#f59e0b' },
+  amber: {
+    pozadina: 'bg-amber-100',
+    tekst: 'text-amber-600',
+    traka: 'bg-amber-500',
+    hex: '#f59e0b',
+  },
   teal: { pozadina: 'bg-teal-100', tekst: 'text-teal-600', traka: 'bg-teal-500', hex: '#14b8a6' },
-  indigo: { pozadina: 'bg-indigo-100', tekst: 'text-sb-blue', traka: 'bg-sb-indigo', hex: '#3f45b5' },
+  indigo: {
+    pozadina: 'bg-indigo-100',
+    tekst: 'text-sb-blue',
+    traka: 'bg-sb-indigo',
+    hex: '#24389c',
+  },
   blue: { pozadina: 'bg-sky-100', tekst: 'text-sky-700', traka: 'bg-sky-500', hex: '#0284c7' },
   rose: { pozadina: 'bg-rose-100', tekst: 'text-rose-600', traka: 'bg-rose-500', hex: '#f43f5e' },
 }
@@ -35,7 +45,11 @@ export const statusNaziv = {
 }
 
 export function formatDatum(iso) {
-  return new Date(iso).toLocaleDateString('hr-HR', { day: 'numeric', month: 'long', year: 'numeric' })
+  return new Date(iso).toLocaleDateString('hr-HR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
 }
 
 export function danaDo(iso) {
