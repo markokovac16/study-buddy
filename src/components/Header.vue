@@ -14,13 +14,10 @@ const auth = useAuthStore()
       <Logo />
     </RouterLink>
 
-    <div class="flex items-center gap-4">
+    <div v-if="auth.prijavljen" class="flex items-center gap-4">
       <Icon name="zvono" size="h-6 w-6 text-slate-500" />
-      <RouterLink v-if="auth.prijavljen" to="/app/profil">
+      <RouterLink to="/app/profil">
         <Avatar :ime="auth.korisnik.ime" size="h-9 w-9 text-xs" />
-      </RouterLink>
-      <RouterLink v-else to="/prijava">
-        <Icon name="korisnik" size="h-6 w-6 text-slate-500" />
       </RouterLink>
     </div>
   </header>

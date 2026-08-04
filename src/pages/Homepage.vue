@@ -32,10 +32,8 @@ const raspodjela = computed(() => statistika.poPredmetu.slice(0, 3))
           Kolegiji, zadaci i bilješke na jednom mjestu, uz timer koji vas drži u fokusu.
         </p>
         <div class="mt-8 flex gap-4">
-          <RouterLink to="/registracija"><BaseButton>Započnite besplatno</BaseButton></RouterLink>
-          <RouterLink to="/prijava"
-            ><BaseButton variant="secondary">Prijava</BaseButton></RouterLink
-          >
+          <BaseButton to="/registracija">Započnite besplatno</BaseButton>
+          <BaseButton to="/prijava" variant="secondary">Prijava</BaseButton>
         </div>
       </div>
 

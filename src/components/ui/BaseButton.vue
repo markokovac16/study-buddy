@@ -2,6 +2,7 @@
 defineProps({
   variant: { type: String, default: 'primary' },
   block: { type: Boolean, default: false },
+  to: { type: String, default: '' },
 })
 
 const variants = {
@@ -14,10 +15,12 @@ const variants = {
 </script>
 
 <template>
-  <button
-    class="cursor-pointer rounded-xl px-5 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
+  <component
+    :is="to ? 'RouterLink' : 'button'"
+    :to="to || undefined"
+    class="inline-block cursor-pointer rounded-xl px-5 py-2.5 text-center text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
     :class="[variants[variant], block && 'w-full']"
   >
     <slot />
-  </button>
+  </component>
 </template>
