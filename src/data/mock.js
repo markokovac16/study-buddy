@@ -356,22 +356,22 @@ export const sadrzajNaslovnice = [
   {
     sadrzajId: 'sn1',
     tip: 'Istaknuto',
-    naslov: 'Toplinska karta kognitivnog opterećenja',
-    opis: 'Vizualizacija vršnih sati učenja među 50 tis. korisnika.',
+    naslov: 'Kada studenti najviše uče',
+    opis: 'Pregled sati u kojima je na platformi najviše aktivnih studenata.',
     vidljiv: true,
   },
   {
     sadrzajId: 'sn2',
     tip: 'Kategorija',
-    naslov: 'Neuro-arhitektura',
-    opis: 'Najtrendovskiji predmet s 4,2 tis. aktivnih sudionika.',
+    naslov: 'Kognitivna psihologija',
+    opis: 'Najpraćeniji kolegij ovog mjeseca, 4200 aktivnih studenata.',
     vidljiv: true,
   },
   {
     sadrzajId: 'sn3',
     tip: 'Ljestvica',
-    naslov: 'Globalna ljestvica nizova učenja',
-    opis: 'Dodaj istaknuti element.',
+    naslov: 'Ljestvica najdužih nizova učenja',
+    opis: 'Tko je najviše dana zaredom odradio barem jednu sesiju učenja.',
     vidljiv: false,
   },
 ]
