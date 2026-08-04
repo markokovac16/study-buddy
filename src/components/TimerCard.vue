@@ -18,8 +18,10 @@ const pomodoro = usePomodoroStore()
       </p>
 
       <div class="flex items-center gap-3">
-        <BaseButton v-if="!pomodoro.radi" @click="pomodoro.pokreni()">Pokreni</BaseButton>
-        <BaseButton v-else variant="secondary" @click="pomodoro.zaustavi()">Pauza</BaseButton>
+        <BaseButton :disabled="pomodoro.radi" @click="pomodoro.pokreni()">Pokreni</BaseButton>
+        <BaseButton variant="secondary" :disabled="!pomodoro.radi" @click="pomodoro.zaustavi()">
+          Pauza
+        </BaseButton>
         <button
           class="cursor-pointer rounded-xl bg-slate-100 p-2.5 text-slate-600 transition hover:bg-slate-200"
           @click="pomodoro.resetiraj()"

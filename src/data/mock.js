@@ -2,6 +2,14 @@ export const PRIORITETI = { NIZAK: 'NIZAK', SREDNJI: 'SREDNJI', VISOK: 'VISOK' }
 
 export const STATUSI = { NA_CEKANJU: 'NA_CEKANJU', U_TIJEKU: 'U_TIJEKU', ZAVRSENO: 'ZAVRSENO' }
 
+function danOd(pomak) {
+  const datum = new Date()
+  datum.setDate(datum.getDate() + pomak)
+  const mjesec = String(datum.getMonth() + 1).padStart(2, '0')
+  const dan = String(datum.getDate()).padStart(2, '0')
+  return `${datum.getFullYear()}-${mjesec}-${dan}`
+}
+
 export const korisnik = {
   korisnikId: 'u1',
   email: 'marko.kovac@unipu.hr',
@@ -50,7 +58,7 @@ export const zadaci = [
     predmetId: 'p2',
     naslov: 'Implementiraj rotaciju crveno-crnog stabla',
     opis: 'Lijeva i desna rotacija s testovima.',
-    rokIzvrsenja: '2026-08-01',
+    rokIzvrsenja: danOd(1),
     prioritet: PRIORITETI.VISOK,
     status: STATUSI.NA_CEKANJU,
   },
@@ -59,7 +67,7 @@ export const zadaci = [
     predmetId: 'p2',
     naslov: 'Ponovi analizu složenosti heap sorta',
     opis: 'Najgori i prosječni slučaj.',
-    rokIzvrsenja: '2026-08-04',
+    rokIzvrsenja: danOd(4),
     prioritet: PRIORITETI.SREDNJI,
     status: STATUSI.U_TIJEKU,
   },
@@ -68,7 +76,7 @@ export const zadaci = [
     predmetId: 'p4',
     naslov: 'Predaj lab. izvještaj: Dinamika fluida',
     opis: 'Kemijski laboratorij • Grupa B',
-    rokIzvrsenja: '2026-08-01',
+    rokIzvrsenja: danOd(0),
     prioritet: PRIORITETI.VISOK,
     status: STATUSI.NA_CEKANJU,
   },
@@ -77,7 +85,7 @@ export const zadaci = [
     predmetId: 'p3',
     naslov: 'Riješi zbirku: redovi i konvergencija',
     opis: 'Poglavlja 4 do 7.',
-    rokIzvrsenja: '2026-08-03',
+    rokIzvrsenja: danOd(-2),
     prioritet: PRIORITETI.SREDNJI,
     status: STATUSI.U_TIJEKU,
   },
@@ -86,7 +94,7 @@ export const zadaci = [
     predmetId: 'p1',
     naslov: 'Nacrt seminarskog rada iz epistemologije',
     opis: 'Moderna Europa • Završni projekt',
-    rokIzvrsenja: '2026-08-07',
+    rokIzvrsenja: danOd(9),
     prioritet: PRIORITETI.NIZAK,
     status: STATUSI.NA_CEKANJU,
   },
@@ -95,7 +103,7 @@ export const zadaci = [
     predmetId: 'p1',
     naslov: 'Pročitaj Gettierov članak',
     opis: '',
-    rokIzvrsenja: '2026-07-28',
+    rokIzvrsenja: danOd(-7),
     prioritet: PRIORITETI.SREDNJI,
     status: STATUSI.ZAVRSENO,
   },
@@ -104,7 +112,7 @@ export const zadaci = [
     predmetId: 'p3',
     naslov: 'Kolokvij iz derivacija',
     opis: '',
-    rokIzvrsenja: '2026-07-24',
+    rokIzvrsenja: danOd(-11),
     prioritet: PRIORITETI.VISOK,
     status: STATUSI.ZAVRSENO,
   },
@@ -113,7 +121,7 @@ export const zadaci = [
     predmetId: 'p4',
     naslov: 'Vježbe: Schrödingerova jednadžba',
     opis: '',
-    rokIzvrsenja: '2026-08-10',
+    rokIzvrsenja: danOd(6),
     prioritet: PRIORITETI.NIZAK,
     status: STATUSI.NA_CEKANJU,
   },
@@ -127,7 +135,7 @@ export const biljeske = [
     naslov: 'Kolizije hash tablice',
     sadrzaj:
       'Ulančavanje nasuprot otvorenog adresiranja. Otvoreno adresiranje uključuje linearno sondiranje, kvadratno sondiranje i dvostruko hashiranje.',
-    datum: '2026-07-24',
+    datum: danOd(-11),
   },
   {
     biljeskaId: 'b2',
@@ -136,7 +144,7 @@ export const biljeske = [
     naslov: 'Prečaci za Big O',
     sadrzaj:
       'Pamćenje stogova rekurzije, ugniježđenih petlji (n^2) i podijeli pa vladaj (log n). Master teorem pokriva većinu primjera sa zadaće.',
-    datum: '2026-07-27',
+    datum: danOd(-8),
   },
   {
     biljeskaId: 'b3',
@@ -145,7 +153,7 @@ export const biljeske = [
     naslov: 'Gettierovi protuprimjeri',
     sadrzaj:
       'Opravdano istinito vjerovanje nije dovoljno za znanje. Potreban je uvjet koji isključuje sreću.',
-    datum: '2026-07-21',
+    datum: danOd(-14),
   },
 ]
 
@@ -156,7 +164,7 @@ export const prilozi = [
     naziv: 'Syllabus_SP_2026.pdf',
     tip: 'pdf',
     velicinaKb: 1200,
-    datum: '2026-07-17',
+    datum: danOd(-18),
     url: '#',
   },
   {
@@ -165,7 +173,7 @@ export const prilozi = [
     naziv: 'B-Tree_Vizualizacija.png',
     tip: 'slika',
     velicinaKb: 4800,
-    datum: '2026-07-26',
+    datum: danOd(-9),
     url: '#',
   },
   {
@@ -174,7 +182,7 @@ export const prilozi = [
     naziv: 'Teorija_grafova.docx',
     tip: 'dokument',
     velicinaKb: 850,
-    datum: '2026-07-30',
+    datum: danOd(-5),
     url: '#',
   },
   {
@@ -183,7 +191,7 @@ export const prilozi = [
     naziv: 'Gettier_1963.pdf',
     tip: 'pdf',
     velicinaKb: 320,
-    datum: '2026-07-20',
+    datum: danOd(-15),
     url: '#',
   },
 ]
@@ -191,48 +199,52 @@ export const prilozi = [
 export const KVOTA_KB = 5 * 1024 * 1024
 
 const sesijeVrijeme = [
-  ['2026-07-06T09:00', 'p4', 50],
-  ['2026-07-07T11:00', 'p2', 25],
-  ['2026-07-08T14:00', 'p3', 50],
-  ['2026-07-09T09:30', 'p4', 75],
-  ['2026-07-10T16:00', 'p1', 25],
-  ['2026-07-11T10:00', 'p2', 50],
-  ['2026-07-13T09:00', 'p4', 75],
-  ['2026-07-14T13:00', 'p2', 50],
-  ['2026-07-15T10:00', 'p3', 25],
-  ['2026-07-16T09:00', 'p4', 50],
-  ['2026-07-17T15:00', 'p1', 50],
-  ['2026-07-18T11:00', 'p2', 75],
-  ['2026-07-19T17:00', 'p3', 25],
-  ['2026-07-20T09:00', 'p4', 100],
-  ['2026-07-21T10:30', 'p1', 50],
-  ['2026-07-22T14:00', 'p2', 50],
-  ['2026-07-23T09:00', 'p4', 75],
-  ['2026-07-24T11:00', 'p3', 50],
-  ['2026-07-25T16:00', 'p2', 25],
-  ['2026-07-26T10:00', 'p1', 50],
-  ['2026-07-27T09:00', 'p4', 100],
-  ['2026-07-28T10:00', 'p2', 75],
-  ['2026-07-29T09:30', 'p3', 50],
-  ['2026-07-29T14:00', 'p4', 50],
-  ['2026-07-30T09:00', 'p2', 75],
-  ['2026-07-30T15:00', 'p1', 25],
-  ['2026-07-31T09:00', 'p4', 100],
-  ['2026-07-31T13:00', 'p2', 50],
+  [-25, '09:00', 'p4', 50],
+  [-24, '11:00', 'p2', 25],
+  [-23, '14:00', 'p3', 50],
+  [-22, '09:30', 'p4', 75],
+  [-21, '16:00', 'p1', 25],
+  [-20, '10:00', 'p2', 50],
+  [-18, '09:00', 'p4', 75],
+  [-17, '13:00', 'p2', 50],
+  [-16, '10:00', 'p3', 25],
+  [-15, '09:00', 'p4', 50],
+  [-14, '15:00', 'p1', 50],
+  [-13, '11:00', 'p2', 75],
+  [-12, '17:00', 'p3', 25],
+  [-11, '09:00', 'p4', 100],
+  [-10, '10:30', 'p1', 50],
+  [-9, '14:00', 'p2', 50],
+  [-8, '09:00', 'p4', 75],
+  [-7, '11:00', 'p3', 50],
+  [-6, '16:00', 'p2', 25],
+  [-5, '10:00', 'p1', 50],
+  [-4, '09:00', 'p4', 100],
+  [-3, '10:00', 'p2', 75],
+  [-2, '09:30', 'p3', 50],
+  [-2, '14:00', 'p4', 50],
+  [-1, '09:00', 'p2', 75],
+  [-1, '15:00', 'p1', 25],
+  [0, '09:00', 'p4', 100],
+  [0, '13:00', 'p2', 50],
 ]
 
-export const pomodoroSesije = sesijeVrijeme.map(([pocetak, predmetId, trajanje], i) => ({
-  sesijaId: `s${i + 1}`,
-  predmetId,
-  pocetak,
-  zavrsetak: new Date(new Date(pocetak).getTime() + trajanje * 60000).toISOString(),
-  trajanje,
-}))
+export const pomodoroSesije = sesijeVrijeme.map(([pomak, sat, predmetId, trajanje], i) => {
+  const pocetak = `${danOd(pomak)}T${sat}`
+  return {
+    sesijaId: `s${i + 1}`,
+    predmetId,
+    pocetak,
+    zavrsetak: new Date(new Date(pocetak).getTime() + trajanje * 60000).toISOString(),
+    trajanje,
+  }
+})
 
 export const aktivnosti = [
   {
     id: 'a1',
     ikona: 'knjiga',
+    boja: 'blue',
     naslov: 'Kvantna fizika',
     opis: 'Ponovljeno 12 kartica',
     vrijeme: 'prije 45 min',
@@ -240,6 +252,7 @@ export const aktivnosti = [
   {
     id: 'a2',
     ikona: 'dokument',
+    boja: 'teal',
     naslov: 'Strukture podataka',
     opis: 'Anotiran PDF "B-Tree vizualizacija"',
     vrijeme: 'prije 2 h',
@@ -247,6 +260,7 @@ export const aktivnosti = [
   {
     id: 'a3',
     ikona: 'pomoc',
+    boja: 'amber',
     naslov: 'Filozofija',
     opis: 'Vježbeni kviz: Sustavi pamćenja',
     vrijeme: 'jučer',
@@ -406,7 +420,7 @@ export const metrikePlatforme = {
       id: 'na3',
       ikona: 'upload',
       naslov: 'Objava istaknutog sadržaja',
-      opis: '"Neuro-arhitektura" objavljena na naslovnicu.',
+      opis: '"Kognitivna psihologija" objavljena na naslovnicu.',
       vrijeme: 'prije 2 h',
     },
   ],

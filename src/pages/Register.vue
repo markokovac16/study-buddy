@@ -29,12 +29,12 @@ function posalji() {
   poslano.value = true
   if (greskaEmaila.value || greskaLozinke.value) return
   auth.registracija(email.value)
-  router.push(auth.jeAdmin ? '/admin/pregled' : '/app/ploca')
+  router.push(auth.jeAdmin ? '/admin/pregled' : '/ploca')
 }
 
 function google() {
   auth.prijavaGoogle()
-  router.push('/app/ploca')
+  router.push('/ploca')
 }
 </script>
 

@@ -32,12 +32,6 @@ export const prioritetBoja = {
   [PRIORITETI.NIZAK]: 'teal',
 }
 
-export const prioritetTraka = {
-  [PRIORITETI.VISOK]: 'bg-red-500',
-  [PRIORITETI.SREDNJI]: 'bg-sb-indigo',
-  [PRIORITETI.NIZAK]: 'bg-teal-500',
-}
-
 export const statusNaziv = {
   [STATUSI.NA_CEKANJU]: 'Na čekanju',
   [STATUSI.U_TIJEKU]: 'U tijeku',

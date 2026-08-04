@@ -29,7 +29,7 @@ function posalji() {
   poslano.value = true
   if (greskaEmaila.value || greskaLozinke.value) return
   auth.prijava(email.value)
-  router.push(auth.jeAdmin ? '/admin/pregled' : '/app/ploca')
+  router.push(auth.jeAdmin ? '/admin/pregled' : '/ploca')
 }
 </script>
 

@@ -11,15 +11,15 @@ const pomodoro = usePomodoroStore()
 const router = useRouter()
 
 const stavke = [
-  { to: '/app/ploca', ikona: 'ploca', naziv: 'Nadzorna ploča' },
-  { to: '/app/predmeti', ikona: 'knjiga', naziv: 'Predmeti' },
-  { to: '/app/statistika', ikona: 'graf', naziv: 'Statistika' },
-  { to: '/app/profil', ikona: 'korisnik', naziv: 'Profil' },
+  { to: '/ploca', ikona: 'ploca', naziv: 'Nadzorna ploča' },
+  { to: '/predmeti', ikona: 'knjiga', naziv: 'Predmeti' },
+  { to: '/statistika', ikona: 'graf', naziv: 'Statistika' },
+  { to: '/profil', ikona: 'korisnik', naziv: 'Profil' },
 ]
 
 function pokreniPomodoro() {
   pomodoro.pokreni()
-  router.push('/app/ploca')
+  router.push('/ploca')
 }
 
 function odjava() {
@@ -41,7 +41,19 @@ function odjava() {
         </div>
       </div>
 
-      <BaseButton block class="mb-8" @click="pokreniPomodoro">Pokreni Pomodoro</BaseButton>
+      <BaseButton v-if="!pomodoro.radi" block class="mb-8" @click="pokreniPomodoro">
+        Pokreni Pomodoro
+      </BaseButton>
+      <RouterLink
+        v-else
+        to="/ploca"
+        class="rounded-card mb-8 block bg-sb-indigo px-4 py-3 text-center text-white"
+      >
+        <span class="text-2xl font-bold tabular-nums">{{ pomodoro.prikaz }}</span>
+        <span class="mt-0.5 block text-xs opacity-80">
+          {{ pomodoro.faza === 'rad' ? 'Fokus u tijeku' : 'Pauza' }}
+        </span>
+      </RouterLink>
 
       <nav class="flex flex-col gap-1">
         <RouterLink
