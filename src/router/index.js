@@ -8,6 +8,7 @@ import Register from '../pages/Register.vue'
 import Dashboard from '../pages/Dashboard.vue'
 import Subjects from '../pages/Subjects.vue'
 import Statistics from '../pages/Statistics.vue'
+import Profile from '../pages/Profile.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,7 @@ const router = createRouter({
         { path: 'ploca', name: 'ploca', component: Dashboard },
         { path: 'predmeti', name: 'predmeti', component: Subjects },
         { path: 'statistika', name: 'statistika', component: Statistics },
+        { path: 'profil', name: 'profil', component: Profile },
       ],
     },
   ],
