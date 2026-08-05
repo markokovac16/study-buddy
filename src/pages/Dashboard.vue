@@ -32,7 +32,7 @@ const postotakCilja = computed(() => Math.round((statistika.danasMinuta / ciljMi
 const porukaCilja = computed(() => {
   if (postotakCilja.value >= 100) return 'Cilj ispunjen!'
   if (postotakCilja.value >= 60) return 'Skoro pa gotovo!'
-  return 'Još malo pa stiže zamah.'
+  return 'Tek ste počeli.'
 })
 
 const tezinaPrioriteta = { VISOK: 0, SREDNJI: 1, NIZAK: 2 }
@@ -51,9 +51,7 @@ const nadolazeci = computed(() => {
 <template>
   <div>
     <h1 class="text-4xl font-bold text-slate-900">{{ pozdrav }}, {{ ime }}!</h1>
-    <p class="mt-2 text-slate-500">
-      Spremni za sesiju dubokog rada? Vaše kognitivno utočište je spremno.
-    </p>
+    <p class="mt-2 text-slate-500">Spremni za deep work sesiju?</p>
 
     <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
       <TimerCard />

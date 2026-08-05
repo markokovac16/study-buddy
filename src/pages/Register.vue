@@ -41,10 +41,8 @@ function google() {
 <template>
   <div class="flex justify-center px-6 py-20">
     <form class="w-full max-w-md" @submit.prevent="posalji">
-      <h1 class="text-center text-4xl font-bold text-slate-900">Zakoračite u svoje utočište</h1>
-      <p class="mt-3 mb-8 text-center text-slate-500">
-        Pridružite se s 10.000+ studenata koji danas vraćaju svoj fokus.
-      </p>
+      <h1 class="text-center text-4xl font-bold text-slate-900">Otvorite račun</h1>
+      <p class="mt-3 mb-8 text-center text-slate-500">Pridružite se s više od 10.000 studenata.</p>
 
       <BaseButton type="button" variant="outline" block @click="google"
         >Registracija putem Googlea</BaseButton

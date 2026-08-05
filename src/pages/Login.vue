@@ -36,9 +36,7 @@ function posalji() {
 <template>
   <div class="flex justify-center px-6 py-20">
     <form class="w-full max-w-md" @submit.prevent="posalji">
-      <h1 class="mb-8 text-center text-4xl font-bold text-slate-900">
-        Zakoračite u svoje utočište
-      </h1>
+      <h1 class="mb-8 text-center text-4xl font-bold text-slate-900">Dobro došli natrag</h1>
 
       <div class="space-y-4">
         <BaseInput

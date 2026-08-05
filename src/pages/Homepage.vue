@@ -26,7 +26,7 @@ const raspodjela = computed(() => statistika.poPredmetu.slice(0, 3))
     <div class="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-2">
       <div>
         <h1 class="text-6xl leading-tight font-bold text-slate-900">
-          Vaše kognitivno utočište<br />za bolje ocjene.
+          Više fokusa,<br />bolje ocjene.
         </h1>
         <p class="mt-6 text-lg text-slate-500">
           Kolegiji, zadaci i bilješke na jednom mjestu, uz timer koji vas drži u fokusu.

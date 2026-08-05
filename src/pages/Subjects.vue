@@ -134,7 +134,7 @@ function ucitajDatoteku(dogadaj) {
     <div class="flex items-start justify-between gap-6">
       <PageHeading
         title="Upravljanje predmetima"
-        subtitle="Organizirajte svoj akademski put modularnim zonama fokusa za svaku disciplinu."
+        subtitle="Svi kolegiji, zadaci, bilješke i materijali na jednom mjestu."
       />
       <BaseButton class="flex items-center gap-2" @click="otvoriNoviPredmet">
         <Icon name="plus" size="h-4 w-4 inline" />
@@ -213,7 +213,7 @@ function ucitajDatoteku(dogadaj) {
             <div class="mb-4 flex items-center justify-between">
               <h3 class="flex items-center gap-2 text-xl font-bold text-slate-900">
                 <Icon name="dokument" />
-                Kognitivne bilješke
+                Bilješke
               </h3>
               <div class="flex items-center gap-3">
                 <button

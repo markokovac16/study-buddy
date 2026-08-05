@@ -37,7 +37,7 @@ function odjava() {
           <p class="font-semibold text-slate-800">
             {{ auth.korisnik.ime.split(' ')[0] }}
           </p>
-          <p class="text-xs text-slate-500">Način dubokog rada</p>
+          <p class="text-xs text-slate-500">Deep work mode</p>
         </div>
       </div>
 
