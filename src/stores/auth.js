@@ -25,7 +25,11 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function prijava(email) {
-    korisnik.value = { ...mockKorisnik, email, uloga: email.includes('admin') ? 'admin' : 'student' }
+    korisnik.value = {
+      ...mockKorisnik,
+      email,
+      uloga: email.includes('admin') ? 'admin' : 'student',
+    }
     spremi()
   }
 
@@ -52,5 +56,16 @@ export const useAuthStore = defineStore('auth', () => {
     odjava()
   }
 
-  return { korisnik, prijavljen, jeAdmin, inicijali, prijava, registracija, prijavaGoogle, odjava, azuriraj, deaktiviraj }
+  return {
+    korisnik,
+    prijavljen,
+    jeAdmin,
+    inicijali,
+    prijava,
+    registracija,
+    prijavaGoogle,
+    odjava,
+    azuriraj,
+    deaktiviraj,
+  }
 })

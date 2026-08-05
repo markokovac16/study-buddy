@@ -10,7 +10,10 @@ const model = defineModel()
 
 <template>
   <label class="block">
-    <span v-if="label" class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase">
+    <span
+      v-if="label"
+      class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase"
+    >
       {{ label }}
     </span>
     <textarea
