@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import Icon from './ui/Icon.vue'
 import Avatar from './ui/Avatar.vue'
@@ -10,12 +11,13 @@ const auth = useAuthStore()
 const pomodoro = usePomodoroStore()
 const router = useRouter()
 
-const stavke = [
+const stavke = computed(() => [
   { to: '/ploca', ikona: 'ploca', naziv: 'Nadzorna ploča' },
   { to: '/predmeti', ikona: 'knjiga', naziv: 'Predmeti' },
   { to: '/statistika', ikona: 'graf', naziv: 'Statistika' },
   { to: '/profil', ikona: 'korisnik', naziv: 'Profil' },
-]
+  ...(auth.jeAdmin ? [{ to: '/admin/pregled', ikona: 'stit', naziv: 'Administracija' }] : []),
+])
 
 function pokreniPomodoro() {
   pomodoro.pokreni()

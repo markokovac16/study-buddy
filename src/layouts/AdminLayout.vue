@@ -12,6 +12,7 @@ const router = useRouter()
 const stavke = [
   { to: '/admin/pregled', naziv: 'Pregled' },
   { to: '/admin/korisnici', naziv: 'Upravljanje korisnicima' },
+  { to: '/ploca', naziv: 'Moj studij' },
 ]
 
 function odjava() {
