@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { addDoc, collection, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
@@ -13,17 +13,28 @@ export const useSubjectsStore = defineStore('subjects', () => {
   const auth = useAuthStore()
 
   const predmeti = ref([])
-  const zadaci = ref([])
-  const ucitavanje = ref(true)
+  const zadaciPoPredmetu = ref({})
+  const ucitavanjePredmeta = ref(true)
   const biljeske = ref([...mock.biljeske])
   const prilozi = ref([...mock.prilozi])
 
-  const zbirka = (naziv) => collection(db, 'korisnici', auth.korisnik.korisnikId, naziv)
+  const zbirkaPredmeta = () => collection(db, 'korisnici', auth.korisnik.korisnikId, 'predmeti')
+  const zapisPredmeta = (predmetId) => doc(zbirkaPredmeta(), predmetId)
+  const zbirkaZadataka = (predmetId) => collection(zapisPredmeta(predmetId), 'zadaci')
 
-  const zadaciPredmeta = (predmetId) => zadaci.value.filter((z) => z.predmetId === predmetId)
+  const zadaci = computed(() => Object.values(zadaciPoPredmetu.value).flat())
+
+  const ucitavanje = computed(
+    () =>
+      ucitavanjePredmeta.value ||
+      predmeti.value.some((predmet) => !(predmet.predmetId in zadaciPoPredmetu.value)),
+  )
+
+  const zadaciPredmeta = (predmetId) => zadaciPoPredmetu.value[predmetId] ?? []
   const biljeskePredmeta = (predmetId) => biljeske.value.filter((b) => b.predmetId === predmetId)
   const priloziPredmeta = (predmetId) => prilozi.value.filter((p) => p.predmetId === predmetId)
   const predmetPoId = (predmetId) => predmeti.value.find((p) => p.predmetId === predmetId)
+  const zadatakPoId = (zadatakId) => zadaci.value.find((z) => z.zadatakId === zadatakId)
 
   const naCekanju = (predmetId) =>
     zadaciPredmeta(predmetId).filter((z) => z.status !== STATUSI.ZAVRSENO).length
@@ -35,40 +46,56 @@ export const useSubjectsStore = defineStore('subjects', () => {
     return Math.round((zavrseni / svi.length) * 100)
   }
 
-  const IZVORI = 2
-  let odjave = []
-  let primljeno = 0
+  let odjavaPredmeta = null
+  const odjaveZadataka = new Map()
 
-  function oznaciUcitano() {
-    primljeno += 1
-    if (primljeno >= IZVORI) ucitavanje.value = false
+  function pratiZadatke(predmetId) {
+    const odjava = onSnapshot(zbirkaZadataka(predmetId), (snimka) => {
+      zadaciPoPredmetu.value = {
+        ...zadaciPoPredmetu.value,
+        [predmetId]: snimka.docs.map((dokument) => ({
+          zadatakId: dokument.id,
+          predmetId,
+          ...dokument.data(),
+        })),
+      }
+    })
+    odjaveZadataka.set(predmetId, odjava)
+  }
+
+  function prestaniPratiti(predmetId) {
+    odjaveZadataka.get(predmetId)()
+    odjaveZadataka.delete(predmetId)
+    const preostali = { ...zadaciPoPredmetu.value }
+    delete preostali[predmetId]
+    zadaciPoPredmetu.value = preostali
+  }
+
+  function uskladiZadatke(idevi) {
+    idevi.filter((predmetId) => !odjaveZadataka.has(predmetId)).forEach(pratiZadatke)
+    ;[...odjaveZadataka.keys()]
+      .filter((predmetId) => !idevi.includes(predmetId))
+      .forEach(prestaniPratiti)
   }
 
   function pretplati() {
-    ucitavanje.value = true
-    primljeno = 0
-    odjave = [
-      onSnapshot(zbirka('predmeti'), (snimka) => {
-        predmeti.value = snimka.docs
-          .map((dokument) => ({ predmetId: dokument.id, ...dokument.data() }))
-          .sort((prvi, drugi) => prvi.naziv.localeCompare(drugi.naziv))
-        oznaciUcitano()
-      }),
-      onSnapshot(zbirka('zadaci'), (snimka) => {
-        zadaci.value = snimka.docs.map((dokument) => ({
-          zadatakId: dokument.id,
-          ...dokument.data(),
-        }))
-        oznaciUcitano()
-      }),
-    ]
+    ucitavanjePredmeta.value = true
+    odjavaPredmeta = onSnapshot(zbirkaPredmeta(), (snimka) => {
+      predmeti.value = snimka.docs
+        .map((dokument) => ({ predmetId: dokument.id, ...dokument.data() }))
+        .sort((prvi, drugi) => prvi.naziv.localeCompare(drugi.naziv))
+      uskladiZadatke(predmeti.value.map((predmet) => predmet.predmetId))
+      ucitavanjePredmeta.value = false
+    })
   }
 
   function odjaviSve() {
-    odjave.forEach((odjava) => odjava())
-    odjave = []
+    if (odjavaPredmeta) odjavaPredmeta()
+    odjavaPredmeta = null
+    odjaveZadataka.forEach((odjava) => odjava())
+    odjaveZadataka.clear()
     predmeti.value = []
-    zadaci.value = []
+    zadaciPoPredmetu.value = {}
   }
 
   watch(
@@ -81,38 +108,42 @@ export const useSubjectsStore = defineStore('subjects', () => {
   )
 
   function dodajPredmet(predmet) {
-    return addDoc(zbirka('predmeti'), { ikona: 'knjiga', ...predmet })
+    return addDoc(zbirkaPredmeta(), { ikona: 'knjiga', ...predmet })
   }
 
   function urediPredmet(predmetId, promjene) {
-    return updateDoc(doc(zbirka('predmeti'), predmetId), promjene)
+    return updateDoc(zapisPredmeta(predmetId), promjene)
   }
 
   async function obrisiPredmet(predmetId) {
     await Promise.all(
       zadaciPredmeta(predmetId).map((zadatak) =>
-        deleteDoc(doc(zbirka('zadaci'), zadatak.zadatakId)),
+        deleteDoc(doc(zbirkaZadataka(predmetId), zadatak.zadatakId)),
       ),
     )
-    await deleteDoc(doc(zbirka('predmeti'), predmetId))
+    await deleteDoc(zapisPredmeta(predmetId))
     biljeske.value = biljeske.value.filter((b) => b.predmetId !== predmetId)
     prilozi.value = prilozi.value.filter((p) => p.predmetId !== predmetId)
   }
 
-  function dodajZadatak(zadatak) {
-    return addDoc(zbirka('zadaci'), { status: STATUSI.NA_CEKANJU, opis: '', ...zadatak })
+  function dodajZadatak({ predmetId, ...zadatak }) {
+    return addDoc(zbirkaZadataka(predmetId), { status: STATUSI.NA_CEKANJU, opis: '', ...zadatak })
   }
 
   function urediZadatak(zadatakId, promjene) {
-    return updateDoc(doc(zbirka('zadaci'), zadatakId), promjene)
+    const zadatak = zadatakPoId(zadatakId)
+    if (!zadatak) return
+    return updateDoc(doc(zbirkaZadataka(zadatak.predmetId), zadatakId), promjene)
   }
 
   function obrisiZadatak(zadatakId) {
-    return deleteDoc(doc(zbirka('zadaci'), zadatakId))
+    const zadatak = zadatakPoId(zadatakId)
+    if (!zadatak) return
+    return deleteDoc(doc(zbirkaZadataka(zadatak.predmetId), zadatakId))
   }
 
   function prebaciStatus(zadatakId) {
-    const zadatak = zadaci.value.find((z) => z.zadatakId === zadatakId)
+    const zadatak = zadatakPoId(zadatakId)
     if (!zadatak) return
     const status = zadatak.status === STATUSI.ZAVRSENO ? STATUSI.NA_CEKANJU : STATUSI.ZAVRSENO
     return urediZadatak(zadatakId, { status })

@@ -1,5 +1,6 @@
 <script setup>
 import { usePomodoroStore } from '../stores/pomodoro'
+import BaseCard from './ui/BaseCard.vue'
 import BaseButton from './ui/BaseButton.vue'
 import Icon from './ui/Icon.vue'
 
@@ -7,9 +8,8 @@ const pomodoro = usePomodoroStore()
 </script>
 
 <template>
-  <div class="rounded-card overflow-hidden bg-white shadow-sm">
-    <div class="h-1.5 bg-gradient-to-r from-sb-blue to-sb-teal" />
-    <div class="flex flex-col items-center px-6 py-7">
+  <BaseCard>
+    <div class="flex flex-col items-center">
       <p class="text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">
         {{ pomodoro.faza === 'rad' ? 'Timer fokusa' : 'Pauza' }}
       </p>
@@ -35,5 +35,5 @@ const pomodoro = usePomodoroStore()
         {{ pomodoro.opisSesije }}
       </p>
     </div>
-  </div>
+  </BaseCard>
 </template>
