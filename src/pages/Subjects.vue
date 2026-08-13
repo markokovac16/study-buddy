@@ -14,6 +14,7 @@ import FileRow from '../components/FileRow.vue'
 import SubjectModal from '../components/modals/SubjectModal.vue'
 import TaskModal from '../components/modals/TaskModal.vue'
 import NoteModal from '../components/modals/NoteModal.vue'
+import TimerCard from '../components/TimerCard.vue'
 import { useSubjectsStore } from '../stores/subjects'
 import { KVOTA_KB, PRIORITETI, STATUSI } from '../data/mock'
 import { bojaPredmeta, formatVelicina, prioritetNaziv } from '../utils/format'
@@ -259,35 +260,40 @@ function ucitajDatoteku(dogadaj) {
           </div>
         </div>
 
-        <div class="rounded-card bg-slate-100 p-6">
-          <div class="mb-4 flex items-center justify-between">
-            <h3 class="flex items-center gap-2 text-xl font-bold text-slate-900">
-              <Icon name="mapa" />
-              Resursi
-            </h3>
-            <label
-              class="cursor-pointer rounded-xl bg-white p-2.5 text-slate-600 shadow-sm transition hover:bg-slate-50"
-            >
-              <Icon name="upload" />
-              <input type="file" class="hidden" @change="ucitajDatoteku" />
-            </label>
-          </div>
+        <div class="space-y-6">
+          <TimerCard :predmet-id="odabraniId" />
 
-          <div v-if="priloziOdabranog.length" class="space-y-3">
-            <FileRow
-              v-for="prilog in priloziOdabranog"
-              :key="prilog.prilogId"
-              :prilog="prilog"
-              @obrisi="store.obrisiPrilog(prilog.prilogId)"
-            />
-          </div>
-          <p v-else class="text-sm text-slate-500">Nema priloga. Dodajte datoteku ili sliku.</p>
+          <div class="rounded-card bg-slate-100 p-6">
+            <div class="mb-4 flex items-center justify-between">
+              <h3 class="flex items-center gap-2 text-xl font-bold text-slate-900">
+                <Icon name="mapa" />
+                Resursi
+              </h3>
+              <label
+                class="cursor-pointer rounded-xl bg-white p-2.5 text-slate-600 shadow-sm transition hover:bg-slate-50"
+              >
+                <Icon name="upload" />
+                <input type="file" class="hidden" @change="ucitajDatoteku" />
+              </label>
+            </div>
 
-          <div class="mt-6 border-t border-slate-200 pt-4">
-            <p class="mb-2 text-center text-xs text-slate-500">
-              Iskoristili ste {{ iskoristenoPostotak }}% od {{ formatVelicina(KVOTA_KB) }} prostora
-            </p>
-            <ProgressBar :value="iskoristenoPostotak" />
+            <div v-if="priloziOdabranog.length" class="space-y-3">
+              <FileRow
+                v-for="prilog in priloziOdabranog"
+                :key="prilog.prilogId"
+                :prilog="prilog"
+                @obrisi="store.obrisiPrilog(prilog.prilogId)"
+              />
+            </div>
+            <p v-else class="text-sm text-slate-500">Nema priloga. Dodajte datoteku ili sliku.</p>
+
+            <div class="mt-6 border-t border-slate-200 pt-4">
+              <p class="mb-2 text-center text-xs text-slate-500">
+                Iskoristili ste {{ iskoristenoPostotak }}% od
+                {{ formatVelicina(KVOTA_KB) }} prostora
+              </p>
+              <ProgressBar :value="iskoristenoPostotak" />
+            </div>
           </div>
         </div>
       </div>
