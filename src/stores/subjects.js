@@ -9,32 +9,43 @@ import { STATUSI } from '../data/mock'
 let brojac = 100
 const noviId = (prefiks) => `${prefiks}${++brojac}`
 
+const danas = () => new Date().toISOString().slice(0, 10)
+
 export const useSubjectsStore = defineStore('subjects', () => {
   const auth = useAuthStore()
 
   const predmeti = ref([])
   const zadaciPoPredmetu = ref({})
+  const biljeskePoPredmetu = ref({})
   const ucitavanjePredmeta = ref(true)
-  const biljeske = ref([...mock.biljeske])
   const prilozi = ref([...mock.prilozi])
+
+  const PODZBIRKE = [
+    { naziv: 'zadaci', kljuc: 'zadatakId', spremnik: zadaciPoPredmetu },
+    { naziv: 'biljeske', kljuc: 'biljeskaId', spremnik: biljeskePoPredmetu },
+  ]
 
   const zbirkaPredmeta = () => collection(db, 'korisnici', auth.korisnik.korisnikId, 'predmeti')
   const zapisPredmeta = (predmetId) => doc(zbirkaPredmeta(), predmetId)
-  const zbirkaZadataka = (predmetId) => collection(zapisPredmeta(predmetId), 'zadaci')
+  const podzbirka = (predmetId, naziv) => collection(zapisPredmeta(predmetId), naziv)
 
   const zadaci = computed(() => Object.values(zadaciPoPredmetu.value).flat())
+  const biljeske = computed(() => Object.values(biljeskePoPredmetu.value).flat())
 
   const ucitavanje = computed(
     () =>
       ucitavanjePredmeta.value ||
-      predmeti.value.some((predmet) => !(predmet.predmetId in zadaciPoPredmetu.value)),
+      predmeti.value.some((predmet) =>
+        PODZBIRKE.some(({ spremnik }) => !(predmet.predmetId in spremnik.value)),
+      ),
   )
 
   const zadaciPredmeta = (predmetId) => zadaciPoPredmetu.value[predmetId] ?? []
-  const biljeskePredmeta = (predmetId) => biljeske.value.filter((b) => b.predmetId === predmetId)
+  const biljeskePredmeta = (predmetId) => biljeskePoPredmetu.value[predmetId] ?? []
   const priloziPredmeta = (predmetId) => prilozi.value.filter((p) => p.predmetId === predmetId)
   const predmetPoId = (predmetId) => predmeti.value.find((p) => p.predmetId === predmetId)
   const zadatakPoId = (zadatakId) => zadaci.value.find((z) => z.zadatakId === zadatakId)
+  const biljeskaPoId = (biljeskaId) => biljeske.value.find((b) => b.biljeskaId === biljeskaId)
 
   const naCekanju = (predmetId) =>
     zadaciPredmeta(predmetId).filter((z) => z.status !== STATUSI.ZAVRSENO).length
@@ -47,33 +58,37 @@ export const useSubjectsStore = defineStore('subjects', () => {
   }
 
   let odjavaPredmeta = null
-  const odjaveZadataka = new Map()
+  const odjavePodzbirki = new Map()
 
-  function pratiZadatke(predmetId) {
-    const odjava = onSnapshot(zbirkaZadataka(predmetId), (snimka) => {
-      zadaciPoPredmetu.value = {
-        ...zadaciPoPredmetu.value,
-        [predmetId]: snimka.docs.map((dokument) => ({
-          zadatakId: dokument.id,
-          predmetId,
-          ...dokument.data(),
-        })),
-      }
-    })
-    odjaveZadataka.set(predmetId, odjava)
+  function pratiPodzbirke(predmetId) {
+    const odjave = PODZBIRKE.map(({ naziv, kljuc, spremnik }) =>
+      onSnapshot(podzbirka(predmetId, naziv), (snimka) => {
+        spremnik.value = {
+          ...spremnik.value,
+          [predmetId]: snimka.docs.map((dokument) => ({
+            [kljuc]: dokument.id,
+            predmetId,
+            ...dokument.data(),
+          })),
+        }
+      }),
+    )
+    odjavePodzbirki.set(predmetId, odjave)
   }
 
   function prestaniPratiti(predmetId) {
-    odjaveZadataka.get(predmetId)()
-    odjaveZadataka.delete(predmetId)
-    const preostali = { ...zadaciPoPredmetu.value }
-    delete preostali[predmetId]
-    zadaciPoPredmetu.value = preostali
+    odjavePodzbirki.get(predmetId).forEach((odjava) => odjava())
+    odjavePodzbirki.delete(predmetId)
+    PODZBIRKE.forEach(({ spremnik }) => {
+      const preostali = { ...spremnik.value }
+      delete preostali[predmetId]
+      spremnik.value = preostali
+    })
   }
 
-  function uskladiZadatke(idevi) {
-    idevi.filter((predmetId) => !odjaveZadataka.has(predmetId)).forEach(pratiZadatke)
-    ;[...odjaveZadataka.keys()]
+  function uskladiPodzbirke(idevi) {
+    idevi.filter((predmetId) => !odjavePodzbirki.has(predmetId)).forEach(pratiPodzbirke)
+    ;[...odjavePodzbirki.keys()]
       .filter((predmetId) => !idevi.includes(predmetId))
       .forEach(prestaniPratiti)
   }
@@ -84,7 +99,7 @@ export const useSubjectsStore = defineStore('subjects', () => {
       predmeti.value = snimka.docs
         .map((dokument) => ({ predmetId: dokument.id, ...dokument.data() }))
         .sort((prvi, drugi) => prvi.naziv.localeCompare(drugi.naziv))
-      uskladiZadatke(predmeti.value.map((predmet) => predmet.predmetId))
+      uskladiPodzbirke(predmeti.value.map((predmet) => predmet.predmetId))
       ucitavanjePredmeta.value = false
     })
   }
@@ -92,10 +107,10 @@ export const useSubjectsStore = defineStore('subjects', () => {
   function odjaviSve() {
     if (odjavaPredmeta) odjavaPredmeta()
     odjavaPredmeta = null
-    odjaveZadataka.forEach((odjava) => odjava())
-    odjaveZadataka.clear()
+    odjavePodzbirki.forEach((odjave) => odjave.forEach((odjava) => odjava()))
+    odjavePodzbirki.clear()
     predmeti.value = []
-    zadaciPoPredmetu.value = {}
+    PODZBIRKE.forEach(({ spremnik }) => (spremnik.value = {}))
   }
 
   watch(
@@ -117,29 +132,34 @@ export const useSubjectsStore = defineStore('subjects', () => {
 
   async function obrisiPredmet(predmetId) {
     await Promise.all(
-      zadaciPredmeta(predmetId).map((zadatak) =>
-        deleteDoc(doc(zbirkaZadataka(predmetId), zadatak.zadatakId)),
+      PODZBIRKE.flatMap(({ naziv, kljuc, spremnik }) =>
+        (spremnik.value[predmetId] ?? []).map((stavka) =>
+          deleteDoc(doc(podzbirka(predmetId, naziv), stavka[kljuc])),
+        ),
       ),
     )
     await deleteDoc(zapisPredmeta(predmetId))
-    biljeske.value = biljeske.value.filter((b) => b.predmetId !== predmetId)
     prilozi.value = prilozi.value.filter((p) => p.predmetId !== predmetId)
   }
 
   function dodajZadatak({ predmetId, ...zadatak }) {
-    return addDoc(zbirkaZadataka(predmetId), { status: STATUSI.NA_CEKANJU, opis: '', ...zadatak })
+    return addDoc(podzbirka(predmetId, 'zadaci'), {
+      status: STATUSI.NA_CEKANJU,
+      opis: '',
+      ...zadatak,
+    })
   }
 
   function urediZadatak(zadatakId, promjene) {
     const zadatak = zadatakPoId(zadatakId)
     if (!zadatak) return
-    return updateDoc(doc(zbirkaZadataka(zadatak.predmetId), zadatakId), promjene)
+    return updateDoc(doc(podzbirka(zadatak.predmetId, 'zadaci'), zadatakId), promjene)
   }
 
   function obrisiZadatak(zadatakId) {
     const zadatak = zadatakPoId(zadatakId)
     if (!zadatak) return
-    return deleteDoc(doc(zbirkaZadataka(zadatak.predmetId), zadatakId))
+    return deleteDoc(doc(podzbirka(zadatak.predmetId, 'zadaci'), zadatakId))
   }
 
   function prebaciStatus(zadatakId) {
@@ -149,30 +169,24 @@ export const useSubjectsStore = defineStore('subjects', () => {
     return urediZadatak(zadatakId, { status })
   }
 
-  function dodajBiljesku(biljeska) {
-    biljeske.value.push({
-      biljeskaId: noviId('b'),
-      datum: new Date().toISOString().slice(0, 10),
-      ...biljeska,
-    })
+  function dodajBiljesku({ predmetId, ...biljeska }) {
+    return addDoc(podzbirka(predmetId, 'biljeske'), { datum: danas(), ...biljeska })
   }
 
   function urediBiljesku(biljeskaId, promjene) {
-    const biljeska = biljeske.value.find((b) => b.biljeskaId === biljeskaId)
-    if (biljeska) Object.assign(biljeska, promjene)
+    const biljeska = biljeskaPoId(biljeskaId)
+    if (!biljeska) return
+    return updateDoc(doc(podzbirka(biljeska.predmetId, 'biljeske'), biljeskaId), promjene)
   }
 
   function obrisiBiljesku(biljeskaId) {
-    biljeske.value = biljeske.value.filter((b) => b.biljeskaId !== biljeskaId)
+    const biljeska = biljeskaPoId(biljeskaId)
+    if (!biljeska) return
+    return deleteDoc(doc(podzbirka(biljeska.predmetId, 'biljeske'), biljeskaId))
   }
 
   function dodajPrilog(prilog) {
-    prilozi.value.push({
-      prilogId: noviId('pr'),
-      datum: new Date().toISOString().slice(0, 10),
-      url: '#',
-      ...prilog,
-    })
+    prilozi.value.push({ prilogId: noviId('pr'), datum: danas(), url: '#', ...prilog })
   }
 
   function obrisiPrilog(prilogId) {
