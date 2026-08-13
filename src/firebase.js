@@ -1,8 +1,8 @@
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/firestore'
+import { initializeApp } from 'firebase/app'
+import { getAuth, GoogleAuthProvider } from 'firebase/auth'
+import { getFirestore } from 'firebase/firestore'
 
-firebase.initializeApp({
+const aplikacija = initializeApp({
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -11,8 +11,6 @@ firebase.initializeApp({
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 })
 
-export const auth = firebase.auth()
-export const db = firebase.firestore()
-export const googleProvider = new firebase.auth.GoogleAuthProvider()
-
-export default firebase
+export const auth = getAuth(aplikacija)
+export const db = getFirestore(aplikacija)
+export const googleProvider = new GoogleAuthProvider()

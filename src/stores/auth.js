@@ -1,5 +1,13 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from 'firebase/auth'
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { auth, db, googleProvider } from '../firebase'
 
 const PREDLOZAK = {
@@ -42,7 +50,7 @@ export const useAuthStore = defineStore('auth', () => {
       : '',
   )
 
-  const zapis = (korisnikId) => db.collection('korisnici').doc(korisnikId)
+  const zapis = (korisnikId) => doc(db, 'korisnici', korisnikId)
 
   function noviProfil(racun) {
     return {
@@ -57,10 +65,10 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function ucitaj(racun) {
     const dokument = zapis(racun.uid)
-    let snimka = await dokument.get()
-    if (!snimka.exists) {
-      await dokument.set(noviProfil(racun))
-      snimka = await dokument.get()
+    let snimka = await getDoc(dokument)
+    if (!snimka.exists()) {
+      await setDoc(dokument, noviProfil(racun))
+      snimka = await getDoc(dokument)
     }
     korisnik.value = { korisnikId: racun.uid, ...snimka.data() }
     if (!korisnik.value.aktivan) {
@@ -70,29 +78,29 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function prijava(email, lozinka) {
-    const { user } = await auth.signInWithEmailAndPassword(email, lozinka)
+    const { user } = await signInWithEmailAndPassword(auth, email, lozinka)
     await ucitaj(user)
   }
 
   async function registracija(email, lozinka) {
-    const { user } = await auth.createUserWithEmailAndPassword(email, lozinka)
+    const { user } = await createUserWithEmailAndPassword(auth, email, lozinka)
     await ucitaj(user)
   }
 
   async function prijavaGoogle() {
-    const { user } = await auth.signInWithPopup(googleProvider)
+    const { user } = await signInWithPopup(auth, googleProvider)
     await ucitaj(user)
   }
 
   async function odjava() {
     korisnik.value = null
-    await auth.signOut()
+    await signOut(auth)
   }
 
   async function azuriraj(promjene) {
     const korisnikId = korisnik.value.korisnikId
     korisnik.value = { ...korisnik.value, ...promjene }
-    await zapis(korisnikId).update(promjene)
+    await updateDoc(zapis(korisnikId), promjene)
   }
 
   async function deaktiviraj() {
@@ -100,7 +108,7 @@ export const useAuthStore = defineStore('auth', () => {
     await odjava()
   }
 
-  auth.onAuthStateChanged(async (racun) => {
+  onAuthStateChanged(auth, async (racun) => {
     if (racun && korisnik.value?.korisnikId !== racun.uid) {
       await ucitaj(racun).catch(() => {})
     } else if (!racun) {

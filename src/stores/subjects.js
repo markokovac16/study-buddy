@@ -1,5 +1,6 @@
 import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
+import { addDoc, collection, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { useAuthStore } from './auth'
 import * as mock from '../data/mock'
@@ -17,8 +18,7 @@ export const useSubjectsStore = defineStore('subjects', () => {
   const biljeske = ref([...mock.biljeske])
   const prilozi = ref([...mock.prilozi])
 
-  const zbirka = (naziv) =>
-    db.collection('korisnici').doc(auth.korisnik.korisnikId).collection(naziv)
+  const zbirka = (naziv) => collection(db, 'korisnici', auth.korisnik.korisnikId, naziv)
 
   const zadaciPredmeta = (predmetId) => zadaci.value.filter((z) => z.predmetId === predmetId)
   const biljeskePredmeta = (predmetId) => biljeske.value.filter((b) => b.predmetId === predmetId)
@@ -48,13 +48,13 @@ export const useSubjectsStore = defineStore('subjects', () => {
     ucitavanje.value = true
     primljeno = 0
     odjave = [
-      zbirka('predmeti').onSnapshot((snimka) => {
+      onSnapshot(zbirka('predmeti'), (snimka) => {
         predmeti.value = snimka.docs
           .map((dokument) => ({ predmetId: dokument.id, ...dokument.data() }))
-          .sort((a, b) => a.naziv.localeCompare(b.naziv))
+          .sort((prvi, drugi) => prvi.naziv.localeCompare(drugi.naziv))
         oznaciUcitano()
       }),
-      zbirka('zadaci').onSnapshot((snimka) => {
+      onSnapshot(zbirka('zadaci'), (snimka) => {
         zadaci.value = snimka.docs.map((dokument) => ({
           zadatakId: dokument.id,
           ...dokument.data(),
@@ -81,32 +81,34 @@ export const useSubjectsStore = defineStore('subjects', () => {
   )
 
   function dodajPredmet(predmet) {
-    return zbirka('predmeti').add({ ikona: 'knjiga', ...predmet })
+    return addDoc(zbirka('predmeti'), { ikona: 'knjiga', ...predmet })
   }
 
   function urediPredmet(predmetId, promjene) {
-    return zbirka('predmeti').doc(predmetId).update(promjene)
+    return updateDoc(doc(zbirka('predmeti'), predmetId), promjene)
   }
 
   async function obrisiPredmet(predmetId) {
     await Promise.all(
-      zadaciPredmeta(predmetId).map((zadatak) => zbirka('zadaci').doc(zadatak.zadatakId).delete()),
+      zadaciPredmeta(predmetId).map((zadatak) =>
+        deleteDoc(doc(zbirka('zadaci'), zadatak.zadatakId)),
+      ),
     )
-    await zbirka('predmeti').doc(predmetId).delete()
+    await deleteDoc(doc(zbirka('predmeti'), predmetId))
     biljeske.value = biljeske.value.filter((b) => b.predmetId !== predmetId)
     prilozi.value = prilozi.value.filter((p) => p.predmetId !== predmetId)
   }
 
   function dodajZadatak(zadatak) {
-    return zbirka('zadaci').add({ status: STATUSI.NA_CEKANJU, opis: '', ...zadatak })
+    return addDoc(zbirka('zadaci'), { status: STATUSI.NA_CEKANJU, opis: '', ...zadatak })
   }
 
   function urediZadatak(zadatakId, promjene) {
-    return zbirka('zadaci').doc(zadatakId).update(promjene)
+    return updateDoc(doc(zbirka('zadaci'), zadatakId), promjene)
   }
 
   function obrisiZadatak(zadatakId) {
-    return zbirka('zadaci').doc(zadatakId).delete()
+    return deleteDoc(doc(zbirka('zadaci'), zadatakId))
   }
 
   function prebaciStatus(zadatakId) {
