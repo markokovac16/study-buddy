@@ -33,6 +33,15 @@ const boje = {
       </p>
     </div>
 
+    <a
+      :href="prilog.url"
+      download
+      class="text-slate-400 transition hover:text-sb-indigo"
+      title="Preuzmi"
+    >
+      <Icon name="preuzimanje" size="h-4 w-4" />
+    </a>
+
     <button
       class="cursor-pointer text-slate-400 transition hover:text-red-600"
       @click="$emit('obrisi')"

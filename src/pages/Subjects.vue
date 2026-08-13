@@ -125,17 +125,7 @@ function spremiBiljesku(podaci) {
 function ucitajDatoteku(dogadaj) {
   const datoteka = dogadaj.target.files[0]
   if (!datoteka) return
-  const tip = datoteka.type.startsWith('image/')
-    ? 'slika'
-    : datoteka.type === 'application/pdf'
-      ? 'pdf'
-      : 'dokument'
-  store.dodajPrilog({
-    predmetId: odabraniId.value,
-    naziv: datoteka.name,
-    tip,
-    velicinaKb: Math.round(datoteka.size / 1024),
-  })
+  store.dodajPrilog({ predmetId: odabraniId.value, datoteka })
   dogadaj.target.value = ''
 }
 </script>
@@ -277,7 +267,8 @@ function ucitajDatoteku(dogadaj) {
               </label>
             </div>
 
-            <div v-if="priloziOdabranog.length" class="space-y-3">
+            <Loader v-if="store.slanjePriloga" tekst="Slanje datoteke" />
+            <div v-else-if="priloziOdabranog.length" class="space-y-3">
               <FileRow
                 v-for="prilog in priloziOdabranog"
                 :key="prilog.prilogId"

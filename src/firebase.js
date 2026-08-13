@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, GoogleAuthProvider } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
+import { getStorage } from 'firebase/storage'
 
 const aplikacija = initializeApp({
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,4 +14,5 @@ const aplikacija = initializeApp({
 
 export const auth = getAuth(aplikacija)
 export const db = getFirestore(aplikacija)
+export const spremiste = getStorage(aplikacija)
 export const googleProvider = new GoogleAuthProvider()

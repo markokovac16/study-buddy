@@ -1,15 +1,17 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { addDoc, collection, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore'
-import { db } from '../firebase'
+import { deleteObject, getDownloadURL, ref as mjestoDatoteke, uploadBytes } from 'firebase/storage'
+import { db, spremiste } from '../firebase'
 import { useAuthStore } from './auth'
-import * as mock from '../data/mock'
 import { STATUSI } from '../data/mock'
 
-let brojac = 100
-const noviId = (prefiks) => `${prefiks}${++brojac}`
-
 const danas = () => new Date().toISOString().slice(0, 10)
+
+function tipDatoteke(datoteka) {
+  if (datoteka.type.startsWith('image/')) return 'slika'
+  return datoteka.type === 'application/pdf' ? 'pdf' : 'dokument'
+}
 
 export const useSubjectsStore = defineStore('subjects', () => {
   const auth = useAuthStore()
@@ -17,12 +19,14 @@ export const useSubjectsStore = defineStore('subjects', () => {
   const predmeti = ref([])
   const zadaciPoPredmetu = ref({})
   const biljeskePoPredmetu = ref({})
+  const priloziPoPredmetu = ref({})
   const ucitavanjePredmeta = ref(true)
-  const prilozi = ref([...mock.prilozi])
+  const slanjePriloga = ref(false)
 
   const PODZBIRKE = [
     { naziv: 'zadaci', kljuc: 'zadatakId', spremnik: zadaciPoPredmetu },
     { naziv: 'biljeske', kljuc: 'biljeskaId', spremnik: biljeskePoPredmetu },
+    { naziv: 'prilozi', kljuc: 'prilogId', spremnik: priloziPoPredmetu },
   ]
 
   const zbirkaPredmeta = () => collection(db, 'korisnici', auth.korisnik.korisnikId, 'predmeti')
@@ -31,6 +35,7 @@ export const useSubjectsStore = defineStore('subjects', () => {
 
   const zadaci = computed(() => Object.values(zadaciPoPredmetu.value).flat())
   const biljeske = computed(() => Object.values(biljeskePoPredmetu.value).flat())
+  const prilozi = computed(() => Object.values(priloziPoPredmetu.value).flat())
 
   const ucitavanje = computed(
     () =>
@@ -42,10 +47,11 @@ export const useSubjectsStore = defineStore('subjects', () => {
 
   const zadaciPredmeta = (predmetId) => zadaciPoPredmetu.value[predmetId] ?? []
   const biljeskePredmeta = (predmetId) => biljeskePoPredmetu.value[predmetId] ?? []
-  const priloziPredmeta = (predmetId) => prilozi.value.filter((p) => p.predmetId === predmetId)
+  const priloziPredmeta = (predmetId) => priloziPoPredmetu.value[predmetId] ?? []
   const predmetPoId = (predmetId) => predmeti.value.find((p) => p.predmetId === predmetId)
   const zadatakPoId = (zadatakId) => zadaci.value.find((z) => z.zadatakId === zadatakId)
   const biljeskaPoId = (biljeskaId) => biljeske.value.find((b) => b.biljeskaId === biljeskaId)
+  const prilogPoId = (prilogId) => prilozi.value.find((p) => p.prilogId === prilogId)
 
   const naCekanju = (predmetId) =>
     zadaciPredmeta(predmetId).filter((z) => z.status !== STATUSI.ZAVRSENO).length
@@ -131,6 +137,7 @@ export const useSubjectsStore = defineStore('subjects', () => {
   }
 
   async function obrisiPredmet(predmetId) {
+    await Promise.all(priloziPredmeta(predmetId).map((prilog) => obrisiDatoteku(prilog.putanja)))
     await Promise.all(
       PODZBIRKE.flatMap(({ naziv, kljuc, spremnik }) =>
         (spremnik.value[predmetId] ?? []).map((stavka) =>
@@ -139,7 +146,6 @@ export const useSubjectsStore = defineStore('subjects', () => {
       ),
     )
     await deleteDoc(zapisPredmeta(predmetId))
-    prilozi.value = prilozi.value.filter((p) => p.predmetId !== predmetId)
   }
 
   function dodajZadatak({ predmetId, ...zadatak }) {
@@ -185,18 +191,42 @@ export const useSubjectsStore = defineStore('subjects', () => {
     return deleteDoc(doc(podzbirka(biljeska.predmetId, 'biljeske'), biljeskaId))
   }
 
-  function dodajPrilog(prilog) {
-    prilozi.value.push({ prilogId: noviId('pr'), datum: danas(), url: '#', ...prilog })
+  const obrisiDatoteku = (putanja) =>
+    putanja ? deleteObject(mjestoDatoteke(spremiste, putanja)) : Promise.resolve()
+
+  async function dodajPrilog({ predmetId, datoteka }) {
+    slanjePriloga.value = true
+    try {
+      const putanja = `korisnici/${auth.korisnik.korisnikId}/predmeti/${predmetId}/${Date.now()}-${datoteka.name}`
+      const mjesto = mjestoDatoteke(spremiste, putanja)
+      await uploadBytes(mjesto, datoteka, {
+        contentDisposition: `attachment; filename="${datoteka.name}"`,
+      })
+      await addDoc(podzbirka(predmetId, 'prilozi'), {
+        naziv: datoteka.name,
+        tip: tipDatoteke(datoteka),
+        velicinaKb: Math.round(datoteka.size / 1024),
+        url: await getDownloadURL(mjesto),
+        putanja,
+        datum: danas(),
+      })
+    } finally {
+      slanjePriloga.value = false
+    }
   }
 
-  function obrisiPrilog(prilogId) {
-    prilozi.value = prilozi.value.filter((p) => p.prilogId !== prilogId)
+  async function obrisiPrilog(prilogId) {
+    const prilog = prilogPoId(prilogId)
+    if (!prilog) return
+    await obrisiDatoteku(prilog.putanja)
+    await deleteDoc(doc(podzbirka(prilog.predmetId, 'prilozi'), prilogId))
   }
 
   return {
     predmeti,
     zadaci,
     ucitavanje,
+    slanjePriloga,
     biljeske,
     prilozi,
     predmetPoId,
