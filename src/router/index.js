@@ -11,6 +11,7 @@ import Subjects from '../pages/Subjects.vue'
 import Statistics from '../pages/Statistics.vue'
 import Profile from '../pages/Profile.vue'
 import AdminOverview from '../pages/admin/Overview.vue'
+import AdminUsers from '../pages/admin/Users.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,8 +43,10 @@ const router = createRouter({
       children: [
         { path: '', redirect: '/admin/pregled' },
         { path: 'pregled', name: 'admin-pregled', component: AdminOverview },
+        { path: 'korisnici', name: 'admin-korisnici', component: AdminUsers },
       ],
     },
+    { path: '/:putanja(.*)*', redirect: '/' },
   ],
   scrollBehavior: () => ({ top: 0 }),
 })
