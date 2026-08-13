@@ -1,11 +1,12 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import BaseButton from '../components/ui/BaseButton.vue'
 import BaseSelect from '../components/ui/BaseSelect.vue'
 import BaseCard from '../components/ui/BaseCard.vue'
 import ProgressBar from '../components/ui/ProgressBar.vue'
 import Icon from '../components/ui/Icon.vue'
 import PageHeading from '../components/ui/PageHeading.vue'
+import Loader from '../components/ui/Loader.vue'
 import SubjectCard from '../components/SubjectCard.vue'
 import TaskRow from '../components/TaskRow.vue'
 import NoteCard from '../components/NoteCard.vue'
@@ -19,7 +20,17 @@ import { bojaPredmeta, formatVelicina, prioritetNaziv } from '../utils/format'
 
 const store = useSubjectsStore()
 
-const odabraniId = ref(store.predmeti[0]?.predmetId ?? null)
+const odabraniId = ref(null)
+
+watch(
+  () => store.predmeti,
+  (predmeti) => {
+    if (!predmeti.some((predmet) => predmet.predmetId === odabraniId.value))
+      odabraniId.value = predmeti[0]?.predmetId ?? null
+  },
+  { immediate: true },
+)
+
 const filterPrioriteta = ref('svi')
 const prikaziSveBiljeske = ref(false)
 
@@ -78,7 +89,6 @@ function spremiPredmet(podaci) {
 function obrisiPredmet() {
   if (!confirm(`Obrisati predmet "${odabrani.value.naziv}" sa svim zadacima i bilješkama?`)) return
   store.obrisiPredmet(odabraniId.value)
-  odabraniId.value = store.predmeti[0]?.predmetId ?? null
 }
 
 function otvoriNoviZadatak() {
@@ -142,7 +152,13 @@ function ucitajDatoteku(dogadaj) {
       </BaseButton>
     </div>
 
-    <div v-if="store.predmeti.length" class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+    <BaseCard v-if="store.ucitavanje">
+      <Loader tekst="Učitavanje predmeta" />
+    </BaseCard>
+    <div
+      v-else-if="store.predmeti.length"
+      class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+    >
       <SubjectCard
         v-for="predmet in store.predmeti"
         :key="predmet.predmetId"

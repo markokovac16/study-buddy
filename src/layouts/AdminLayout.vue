@@ -41,9 +41,12 @@ async function odjava() {
 
       <div class="flex items-center gap-4">
         <Icon name="zvono" size="h-6 w-6 text-slate-500" />
-        <button class="cursor-pointer" @click="odjava">
-          <Avatar :ime="auth.korisnik.ime" size="h-9 w-9 text-xs" />
+        <button class="cursor-pointer text-sm text-slate-500 hover:text-sb-blue" @click="odjava">
+          Odjava
         </button>
+        <RouterLink to="/profil">
+          <Avatar :ime="auth.korisnik.ime" size="h-9 w-9 text-xs" />
+        </RouterLink>
       </div>
     </header>
 

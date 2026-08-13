@@ -5,6 +5,7 @@ import Icon from '../components/ui/Icon.vue'
 import RingProgress from '../components/ui/RingProgress.vue'
 import TimerCard from '../components/TimerCard.vue'
 import TaskCard from '../components/TaskCard.vue'
+import Loader from '../components/ui/Loader.vue'
 import { useAuthStore } from '../stores/auth'
 import { useSubjectsStore } from '../stores/subjects'
 import { useStatisticsStore } from '../stores/statistics'
@@ -118,7 +119,8 @@ const nadolazeci = computed(() => {
         </div>
       </div>
 
-      <div v-if="nadolazeci.length" class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <Loader v-if="predmetiStore.ucitavanje" tekst="Učitavanje zadataka" />
+      <div v-else-if="nadolazeci.length" class="grid grid-cols-1 gap-4 md:grid-cols-3">
         <TaskCard
           v-for="zadatak in nadolazeci"
           :key="zadatak.zadatakId"
