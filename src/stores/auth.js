@@ -1,12 +1,35 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { korisnik as mockKorisnik } from '../data/mock'
+import { auth, db, googleProvider } from '../firebase'
 
-const KLJUC = 'sb-korisnik'
+const PREDLOZAK = {
+  aktivan: true,
+  uloga: 'student',
+  profilnaSlika: '',
+  sveuciliste: '',
+  godina: 1,
+  opis: 'Student',
+  dnevniCiljSati: 6,
+  preferencije: { jezik: 'hr', tema: 'svijetla' },
+  obavijesti: { podsjetnici: true, pauze: true, ciljevi: false },
+}
+
+const imeIzEmaila = (email) =>
+  email
+    .split('@')[0]
+    .split(/[._-]/)
+    .filter(Boolean)
+    .map((rijec) => rijec[0].toUpperCase() + rijec.slice(1))
+    .join(' ')
+
+function greska(kod) {
+  return Object.assign(new Error(kod), { code: kod })
+}
 
 export const useAuthStore = defineStore('auth', () => {
-  const spremljen = localStorage.getItem(KLJUC)
-  const korisnik = ref(spremljen ? JSON.parse(spremljen) : null)
+  const korisnik = ref(null)
+  let razrijesi
+  const inicijalizacija = new Promise((resolve) => (razrijesi = resolve))
 
   const prijavljen = computed(() => korisnik.value !== null)
   const jeAdmin = computed(() => korisnik.value?.uloga === 'admin')
@@ -19,45 +42,76 @@ export const useAuthStore = defineStore('auth', () => {
       : '',
   )
 
-  function spremi() {
-    if (korisnik.value) localStorage.setItem(KLJUC, JSON.stringify(korisnik.value))
-    else localStorage.removeItem(KLJUC)
-  }
+  const zapis = (korisnikId) => db.collection('korisnici').doc(korisnikId)
 
-  function prijava(email) {
-    korisnik.value = {
-      ...mockKorisnik,
-      email,
-      uloga: email.includes('admin') ? 'admin' : 'student',
+  function noviProfil(racun) {
+    return {
+      ...PREDLOZAK,
+      email: racun.email,
+      ime: racun.displayName || imeIzEmaila(racun.email),
+      profilnaSlika: racun.photoURL || '',
+      uloga: racun.email.includes('admin') ? 'admin' : 'student',
+      datumRegistracije: new Date().toISOString().slice(0, 10),
     }
-    spremi()
   }
 
-  function registracija(email) {
-    prijava(email)
+  async function ucitaj(racun) {
+    const dokument = zapis(racun.uid)
+    let snimka = await dokument.get()
+    if (!snimka.exists) {
+      await dokument.set(noviProfil(racun))
+      snimka = await dokument.get()
+    }
+    korisnik.value = { korisnikId: racun.uid, ...snimka.data() }
+    if (!korisnik.value.aktivan) {
+      await odjava()
+      throw greska('auth/user-disabled')
+    }
   }
 
-  function prijavaGoogle() {
-    prijava(mockKorisnik.email)
+  async function prijava(email, lozinka) {
+    const { user } = await auth.signInWithEmailAndPassword(email, lozinka)
+    await ucitaj(user)
   }
 
-  function odjava() {
+  async function registracija(email, lozinka) {
+    const { user } = await auth.createUserWithEmailAndPassword(email, lozinka)
+    await ucitaj(user)
+  }
+
+  async function prijavaGoogle() {
+    const { user } = await auth.signInWithPopup(googleProvider)
+    await ucitaj(user)
+  }
+
+  async function odjava() {
     korisnik.value = null
-    spremi()
+    await auth.signOut()
   }
 
-  function azuriraj(promjene) {
+  async function azuriraj(promjene) {
+    const korisnikId = korisnik.value.korisnikId
     korisnik.value = { ...korisnik.value, ...promjene }
-    spremi()
+    await zapis(korisnikId).update(promjene)
   }
 
-  function deaktiviraj() {
-    azuriraj({ aktivan: false })
-    odjava()
+  async function deaktiviraj() {
+    await azuriraj({ aktivan: false })
+    await odjava()
   }
+
+  auth.onAuthStateChanged(async (racun) => {
+    if (racun && korisnik.value?.korisnikId !== racun.uid) {
+      await ucitaj(racun).catch(() => {})
+    } else if (!racun) {
+      korisnik.value = null
+    }
+    razrijesi()
+  })
 
   return {
     korisnik,
+    inicijalizacija,
     prijavljen,
     jeAdmin,
     inicijali,

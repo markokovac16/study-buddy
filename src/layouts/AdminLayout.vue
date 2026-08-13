@@ -15,8 +15,8 @@ const stavke = [
   { to: '/ploca', naziv: 'Moj studij' },
 ]
 
-function odjava() {
-  auth.odjava()
+async function odjava() {
+  await auth.odjava()
   router.push('/')
 }
 </script>

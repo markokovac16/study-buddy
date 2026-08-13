@@ -64,14 +64,14 @@ function spremi() {
   setTimeout(() => (spremljeno.value = false), 2500)
 }
 
-function odjava() {
-  auth.odjava()
+async function odjava() {
+  await auth.odjava()
   router.push('/')
 }
 
-function deaktiviraj() {
+async function deaktiviraj() {
   if (!confirm('Deaktivirati račun? Nakon deaktivacije nema povratka.')) return
-  auth.deaktiviraj()
+  await auth.deaktiviraj()
   router.push('/')
 }
 </script>

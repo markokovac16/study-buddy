@@ -24,8 +24,8 @@ function pokreniPomodoro() {
   router.push('/ploca')
 }
 
-function odjava() {
-  auth.odjava()
+async function odjava() {
+  await auth.odjava()
   router.push('/')
 }
 </script>

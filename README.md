@@ -21,12 +21,14 @@ Student tijekom semestra prati više kolegija odjednom, a rokovi, bilješke i ma
 - Pinia - storeovi za autentikaciju, predmete, Pomodoro, statistiku i administraciju
 - Tailwind CSS 4 - dizajn tokeni u `@theme` bloku u `src/style.css`
 - Chart.js - grafovi statistike učenja
+- Firebase (SDK 8) - autentikacija i Firestore
 - Vite
 
 ## Pokretanje
 
 ```sh
 npm install
+cp .env.example .env
 npm run dev
 ```
 
@@ -36,9 +38,20 @@ Produkcijski build:
 npm run build
 ```
 
+## Firebase
+
+Aplikacija traži vlastiti Firebase projekt. U [konzoli](https://console.firebase.google.com):
+
+1. Napravi projekt i dodaj web aplikaciju.
+2. U **Authentication** uključi načine prijave **Email/Password** i **Google**.
+3. U **Firestore Database** napravi bazu u test načinu.
+4. Konfiguraciju web aplikacije prepiši u `.env` prema `.env.example`.
+
+`.env` je u `.gitignore` i ne ide u repozitorij.
+
 ## Prijava tijekom razvoja
 
-Podaci su još uvijek mock (Firebase nije spojen). Prijava prolazi s bilo kojom ispravnom e-mail adresom i lozinkom od barem 6 znakova. Adresa koja sadrži `admin` otvara administratorsko sučelje.
+Registracija otvara pravi Firebase račun i uz njega dokument u kolekciji `korisnici`. Adresa koja sadrži `admin` dobiva ulogu administratora, sve ostale ulogu studenta. Predmeti, zadaci i statistika još uvijek rade na mock podacima.
 
 ## Struktura
 
