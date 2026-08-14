@@ -21,6 +21,7 @@ const bojaRezultata = computed(() => {
     <button
       class="cursor-pointer rounded-lg p-1 transition"
       :class="moj === 1 ? 'text-sb-teal' : 'text-slate-300 hover:text-sb-teal'"
+      :title="moj === 1 ? 'Ukloni glas' : 'Glas za'"
       @click="novosti.glasaj(objava.sadrzajId, 1)"
     >
       <Icon name="lijevo" size="h-5 w-5 rotate-90" />
@@ -29,6 +30,7 @@ const bojaRezultata = computed(() => {
     <button
       class="cursor-pointer rounded-lg p-1 transition"
       :class="moj === -1 ? 'text-red-600' : 'text-slate-300 hover:text-red-600'"
+      :title="moj === -1 ? 'Ukloni glas' : 'Glas protiv'"
       @click="novosti.glasaj(objava.sadrzajId, -1)"
     >
       <Icon name="desno" size="h-5 w-5 rotate-90" />

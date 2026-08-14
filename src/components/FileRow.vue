@@ -24,7 +24,7 @@ const boje = {
     </span>
 
     <div class="min-w-0 flex-1">
-      <p class="truncate text-sm font-semibold text-slate-800">
+      <p class="truncate text-sm font-semibold text-slate-800" :title="prilog.naziv">
         {{ prilog.naziv }}
       </p>
       <p class="text-xs text-slate-400">
@@ -44,6 +44,7 @@ const boje = {
 
     <button
       class="cursor-pointer text-slate-400 transition hover:text-red-600"
+      title="Obriši prilog"
       @click="$emit('obrisi')"
     >
       <Icon name="kanta" size="h-4 w-4" />

@@ -274,9 +274,11 @@ async function obrisi(korisnik) {
                   class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:cursor-default disabled:opacity-30"
                   :disabled="korisnik.korisnikId === mojId"
                   :title="
-                    korisnik.uloga === 'admin'
-                      ? 'Postavi kao studenta'
-                      : 'Postavi kao administratora'
+                    korisnik.korisnikId === mojId
+                      ? 'Ne možete mijenjati vlastiti račun'
+                      : korisnik.uloga === 'admin'
+                        ? 'Postavi kao studenta'
+                        : 'Postavi kao administratora'
                   "
                   @click="prebaciUlogu(korisnik)"
                 >
@@ -285,7 +287,13 @@ async function obrisi(korisnik) {
                 <button
                   class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:cursor-default disabled:opacity-30"
                   :disabled="korisnik.korisnikId === mojId"
-                  :title="korisnik.aktivan ? 'Deaktiviraj' : 'Aktiviraj'"
+                  :title="
+                    korisnik.korisnikId === mojId
+                      ? 'Ne možete mijenjati vlastiti račun'
+                      : korisnik.aktivan
+                        ? 'Deaktiviraj račun'
+                        : 'Aktiviraj račun'
+                  "
                   @click="prebaciAktivnost(korisnik)"
                 >
                   <Icon :name="korisnik.aktivan ? 'zabrana' : 'kvacica'" size="h-4 w-4" />
@@ -293,7 +301,11 @@ async function obrisi(korisnik) {
                 <button
                   class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-red-600 disabled:cursor-default disabled:opacity-30"
                   :disabled="korisnik.korisnikId === mojId"
-                  title="Obriši"
+                  :title="
+                    korisnik.korisnikId === mojId
+                      ? 'Ne možete obrisati vlastiti račun'
+                      : 'Obriši korisnika'
+                  "
                   @click="obrisi(korisnik)"
                 >
                   <Icon name="kanta" size="h-4 w-4" />
@@ -321,6 +333,7 @@ async function obrisi(korisnik) {
           <button
             class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:opacity-30"
             :disabled="stranica === 1"
+            title="Prethodna stranica"
             @click="stranica--"
           >
             <Icon name="lijevo" size="h-4 w-4" />
@@ -341,6 +354,7 @@ async function obrisi(korisnik) {
           <button
             class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:opacity-30"
             :disabled="stranica === brojStranica"
+            title="Sljedeća stranica"
             @click="stranica++"
           >
             <Icon name="desno" size="h-4 w-4" />

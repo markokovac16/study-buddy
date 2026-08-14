@@ -18,6 +18,7 @@ defineEmits(['prebaci', 'uredi', 'obrisi'])
           ? 'border-sb-indigo bg-sb-indigo text-white'
           : 'border-slate-300'
       "
+      :title="zadatak.status === STATUSI.ZAVRSENO ? 'Vrati na čekanje' : 'Označi kao završeno'"
       @click="$emit('prebaci')"
     >
       <Icon v-if="zadatak.status === STATUSI.ZAVRSENO" name="kvacica" size="h-3.5 w-3.5" />
@@ -44,12 +45,14 @@ defineEmits(['prebaci', 'uredi', 'obrisi'])
 
     <button
       class="cursor-pointer text-slate-400 transition hover:text-sb-indigo"
+      title="Uredi zadatak"
       @click="$emit('uredi')"
     >
       <Icon name="olovka" />
     </button>
     <button
       class="cursor-pointer text-slate-400 transition hover:text-red-600"
+      title="Obriši zadatak"
       @click="$emit('obrisi')"
     >
       <Icon name="kanta" />

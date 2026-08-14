@@ -69,6 +69,7 @@ watch(
         </BaseButton>
         <button
           class="cursor-pointer rounded-xl bg-slate-100 p-2.5 text-slate-600 transition hover:bg-slate-200"
+          title="Vrati timer na početak"
           @click="pomodoro.resetiraj()"
         >
           <Icon name="reset" />

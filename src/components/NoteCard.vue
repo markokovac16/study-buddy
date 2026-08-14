@@ -16,12 +16,14 @@ defineEmits(['uredi', 'obrisi'])
       <div class="flex gap-2">
         <button
           class="cursor-pointer text-slate-400 transition hover:text-sb-indigo"
+          title="Uredi bilješku"
           @click="$emit('uredi')"
         >
           <Icon name="olovka" size="h-4 w-4" />
         </button>
         <button
           class="cursor-pointer text-slate-400 transition hover:text-red-600"
+          title="Obriši bilješku"
           @click="$emit('obrisi')"
         >
           <Icon name="kanta" size="h-4 w-4" />
