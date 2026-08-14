@@ -1,10 +1,9 @@
 <script setup>
-import BaseModal from '../ui/BaseModal.vue'
+import FormModal from '../ui/FormModal.vue'
 import BaseInput from '../ui/BaseInput.vue'
 import BaseSelect from '../ui/BaseSelect.vue'
 import BaseTextarea from '../ui/BaseTextarea.vue'
 import BaseToggle from '../ui/BaseToggle.vue'
-import BaseButton from '../ui/BaseButton.vue'
 import { useModalForm } from '../../composables/modalForm'
 
 const props = defineProps({ stavka: Object })
@@ -26,26 +25,15 @@ const { obrazac, posalji } = useModalForm(open, prazna, {
 </script>
 
 <template>
-  <BaseModal v-model="open" :title="stavka ? 'Uredi objavu' : 'Nova objava'">
-    <form class="space-y-4" @submit.prevent="posalji">
-      <BaseSelect v-model="obrazac.tip" :options="tipOpcije" label="Tip" class="w-full" />
-      <BaseInput v-model="obrazac.naslov" label="Naslov" />
-      <BaseTextarea v-model="obrazac.sadrzaj" label="Sadržaj" :rows="6" />
-      <BaseInput
-        v-model="obrazac.poveznica"
-        label="Poveznica (neobavezno)"
-        placeholder="https://"
-      />
+  <FormModal v-model="open" :title="stavka ? 'Uredi objavu' : 'Nova objava'" @posalji="posalji">
+    <BaseSelect v-model="obrazac.tip" :options="tipOpcije" label="Tip" class="w-full" />
+    <BaseInput v-model="obrazac.naslov" label="Naslov" />
+    <BaseTextarea v-model="obrazac.sadrzaj" label="Sadržaj" :rows="6" />
+    <BaseInput v-model="obrazac.poveznica" label="Poveznica (neobavezno)" placeholder="https://" />
 
-      <div class="flex items-center justify-between rounded-xl bg-slate-100 px-4 py-3">
-        <span class="text-sm text-slate-600">Vidljivo korisnicima</span>
-        <BaseToggle v-model="obrazac.vidljiv" />
-      </div>
-
-      <div class="flex justify-end gap-3 pt-2">
-        <BaseButton type="button" variant="secondary" @click="open = false">Odustani</BaseButton>
-        <BaseButton>Spremi</BaseButton>
-      </div>
-    </form>
-  </BaseModal>
+    <div class="flex items-center justify-between rounded-xl bg-slate-100 px-4 py-3">
+      <span class="text-sm text-slate-600">Vidljivo korisnicima</span>
+      <BaseToggle v-model="obrazac.vidljiv" />
+    </div>
+  </FormModal>
 </template>

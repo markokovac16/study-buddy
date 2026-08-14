@@ -1,8 +1,7 @@
 <script setup>
-import BaseModal from '../ui/BaseModal.vue'
+import FormModal from '../ui/FormModal.vue'
 import BaseInput from '../ui/BaseInput.vue'
 import BaseSelect from '../ui/BaseSelect.vue'
-import BaseButton from '../ui/BaseButton.vue'
 import { useModalForm } from '../../composables/modalForm'
 import { bojePredmeta } from '../../utils/format'
 
@@ -30,20 +29,13 @@ const ikoneOpcije = [
 </script>
 
 <template>
-  <BaseModal v-model="open" :title="predmet ? 'Uredi predmet' : 'Novi predmet'">
-    <form class="space-y-4" @submit.prevent="posalji">
-      <BaseInput v-model="obrazac.naziv" label="Naziv" placeholder="npr. Strukture podataka" />
-      <BaseInput v-model="obrazac.opis" label="Opis" placeholder="npr. Računalne znanosti 202" />
+  <FormModal v-model="open" :title="predmet ? 'Uredi predmet' : 'Novi predmet'" @posalji="posalji">
+    <BaseInput v-model="obrazac.naziv" label="Naziv" placeholder="npr. Strukture podataka" />
+    <BaseInput v-model="obrazac.opis" label="Opis" placeholder="npr. Računalne znanosti 202" />
 
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <BaseSelect v-model="obrazac.boja" :options="bojeOpcije" label="Boja" class="w-full" />
-        <BaseSelect v-model="obrazac.ikona" :options="ikoneOpcije" label="Ikona" class="w-full" />
-      </div>
-
-      <div class="flex justify-end gap-3 pt-2">
-        <BaseButton type="button" variant="secondary" @click="open = false">Odustani</BaseButton>
-        <BaseButton>Spremi</BaseButton>
-      </div>
-    </form>
-  </BaseModal>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <BaseSelect v-model="obrazac.boja" :options="bojeOpcije" label="Boja" class="w-full" />
+      <BaseSelect v-model="obrazac.ikona" :options="ikoneOpcije" label="Ikona" class="w-full" />
+    </div>
+  </FormModal>
 </template>

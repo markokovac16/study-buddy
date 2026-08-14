@@ -1,24 +1,19 @@
 <script setup>
-import { useRouter } from 'vue-router'
 import Logo from '../components/Logo.vue'
 import Footer from '../components/Footer.vue'
 import Icon from '../components/ui/Icon.vue'
 import Avatar from '../components/ui/Avatar.vue'
+import { useLogout } from '../composables/logout'
 import { useAuthStore } from '../stores/auth'
 
 const auth = useAuthStore()
-const router = useRouter()
+const odjava = useLogout()
 
 const stavke = [
   { to: '/admin/pregled', naziv: 'Pregled' },
   { to: '/admin/korisnici', naziv: 'Upravljanje korisnicima' },
   { to: '/ploca', naziv: 'Moj studij' },
 ]
-
-async function odjava() {
-  await auth.odjava()
-  router.push('/')
-}
 </script>
 
 <template>

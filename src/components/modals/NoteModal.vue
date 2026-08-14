@@ -1,10 +1,9 @@
 <script setup>
 import { computed, ref } from 'vue'
-import BaseModal from '../ui/BaseModal.vue'
+import FormModal from '../ui/FormModal.vue'
 import BaseInput from '../ui/BaseInput.vue'
 import BaseSelect from '../ui/BaseSelect.vue'
 import BaseTextarea from '../ui/BaseTextarea.vue'
-import BaseButton from '../ui/BaseButton.vue'
 import { useModalForm } from '../../composables/modalForm'
 
 const props = defineProps({ biljeska: Object, kategorije: { type: Array, default: () => [] } })
@@ -38,35 +37,32 @@ const { obrazac, posalji } = useModalForm(open, prazna, {
 </script>
 
 <template>
-  <BaseModal v-model="open" :title="biljeska ? 'Uredi bilješku' : 'Nova bilješka'">
-    <form class="space-y-4" @submit.prevent="posalji">
-      <BaseInput v-model="obrazac.naslov" label="Naslov" placeholder="npr. Kolizije hash tablice" />
+  <FormModal
+    v-model="open"
+    :title="biljeska ? 'Uredi bilješku' : 'Nova bilješka'"
+    @posalji="posalji"
+  >
+    <BaseInput v-model="obrazac.naslov" label="Naslov" placeholder="npr. Kolizije hash tablice" />
 
-      <BaseSelect
-        v-model="obrazac.kategorija"
-        :options="kategorijaOpcije"
-        label="Kategorija"
-        class="w-full"
-      />
+    <BaseSelect
+      v-model="obrazac.kategorija"
+      :options="kategorijaOpcije"
+      label="Kategorija"
+      class="w-full"
+    />
 
-      <BaseInput
-        v-if="obrazac.kategorija === NOVA"
-        v-model="novaKategorija"
-        label="Naziv nove kategorije"
-        placeholder="npr. Koncepti"
-      />
+    <BaseInput
+      v-if="obrazac.kategorija === NOVA"
+      v-model="novaKategorija"
+      label="Naziv nove kategorije"
+      placeholder="npr. Koncepti"
+    />
 
-      <BaseTextarea
-        v-model="obrazac.sadrzaj"
-        label="Sadržaj"
-        :rows="6"
-        placeholder="Zapiši ključne misli..."
-      />
-
-      <div class="flex justify-end gap-3 pt-2">
-        <BaseButton type="button" variant="secondary" @click="open = false">Odustani</BaseButton>
-        <BaseButton>Spremi</BaseButton>
-      </div>
-    </form>
-  </BaseModal>
+    <BaseTextarea
+      v-model="obrazac.sadrzaj"
+      label="Sadržaj"
+      :rows="6"
+      placeholder="Zapiši ključne misli..."
+    />
+  </FormModal>
 </template>

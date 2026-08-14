@@ -100,10 +100,28 @@ export const useSubjectsStore = defineStore('subjects', () => {
   const priloziPredmeta = (predmetId) => priloziPoPredmetu.value[predmetId] ?? []
   const predmetPoId = (predmetId) =>
     predmeti.value.find((predmet) => predmet.predmetId === predmetId)
-  const zadatakPoId = (zadatakId) => zadaci.value.find((zadatak) => zadatak.zadatakId === zadatakId)
-  const biljeskaPoId = (biljeskaId) =>
-    biljeske.value.find((biljeska) => biljeska.biljeskaId === biljeskaId)
-  const prilogPoId = (prilogId) => prilozi.value.find((prilog) => prilog.prilogId === prilogId)
+
+  function stavkaPoId(naziv, id) {
+    const { kljuc, spremnik } = PODZBIRKE.find((skup) => skup.naziv === naziv)
+    return Object.values(spremnik.value)
+      .flat()
+      .find((stavka) => stavka[kljuc] === id)
+  }
+
+  function zapisStavke(naziv, id) {
+    const stavka = stavkaPoId(naziv, id)
+    return stavka ? doc(podzbirka(stavka.predmetId, naziv), id) : null
+  }
+
+  const urediStavku = (naziv) => (id, promjene) => {
+    const zapis = zapisStavke(naziv, id)
+    return zapis && updateDoc(zapis, promjene)
+  }
+
+  const obrisiStavku = (naziv) => (id) => {
+    const zapis = zapisStavke(naziv, id)
+    return zapis && deleteDoc(zapis)
+  }
 
   const kategorijePredmeta = (predmetId) =>
     [...new Set(biljeskePredmeta(predmetId).map((biljeska) => biljeska.kategorija))]
@@ -148,20 +166,11 @@ export const useSubjectsStore = defineStore('subjects', () => {
     })
   }
 
-  function urediZadatak(zadatakId, promjene) {
-    const zadatak = zadatakPoId(zadatakId)
-    if (!zadatak) return
-    return updateDoc(doc(podzbirka(zadatak.predmetId, 'zadaci'), zadatakId), promjene)
-  }
-
-  function obrisiZadatak(zadatakId) {
-    const zadatak = zadatakPoId(zadatakId)
-    if (!zadatak) return
-    return deleteDoc(doc(podzbirka(zadatak.predmetId, 'zadaci'), zadatakId))
-  }
+  const urediZadatak = urediStavku('zadaci')
+  const obrisiZadatak = obrisiStavku('zadaci')
 
   function prebaciStatus(zadatakId) {
-    const zadatak = zadatakPoId(zadatakId)
+    const zadatak = stavkaPoId('zadaci', zadatakId)
     if (!zadatak) return
     const status = zadatak.status === STATUSI.ZAVRSENO ? STATUSI.NA_CEKANJU : STATUSI.ZAVRSENO
     return urediZadatak(zadatakId, { status })
@@ -171,17 +180,8 @@ export const useSubjectsStore = defineStore('subjects', () => {
     return addDoc(podzbirka(predmetId, 'biljeske'), { datum: isoDatum(), ...biljeska })
   }
 
-  function urediBiljesku(biljeskaId, promjene) {
-    const biljeska = biljeskaPoId(biljeskaId)
-    if (!biljeska) return
-    return updateDoc(doc(podzbirka(biljeska.predmetId, 'biljeske'), biljeskaId), promjene)
-  }
-
-  function obrisiBiljesku(biljeskaId) {
-    const biljeska = biljeskaPoId(biljeskaId)
-    if (!biljeska) return
-    return deleteDoc(doc(podzbirka(biljeska.predmetId, 'biljeske'), biljeskaId))
-  }
+  const urediBiljesku = urediStavku('biljeske')
+  const obrisiBiljesku = obrisiStavku('biljeske')
 
   const obrisiDatoteku = (putanja) =>
     putanja ? deleteObject(mjestoDatoteke(spremiste, putanja)) : Promise.resolve()
@@ -208,7 +208,7 @@ export const useSubjectsStore = defineStore('subjects', () => {
   }
 
   async function obrisiPrilog(prilogId) {
-    const prilog = prilogPoId(prilogId)
+    const prilog = stavkaPoId('prilozi', prilogId)
     if (!prilog) return
     await obrisiDatoteku(prilog.putanja)
     await deleteDoc(doc(podzbirka(prilog.predmetId, 'prilozi'), prilogId))

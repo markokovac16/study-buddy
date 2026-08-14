@@ -12,12 +12,14 @@ import SaveBar from '../components/SaveBar.vue'
 import ConfirmModal from '../components/modals/ConfirmModal.vue'
 import PasswordModal from '../components/modals/PasswordModal.vue'
 import { useConfirm } from '../composables/useConfirm'
+import { useLogout } from '../composables/logout'
 import { useProfileForm } from '../composables/profileForm'
 import { useAuthStore } from '../stores/auth'
 import { porukaGreske } from '../utils/errors'
 
 const auth = useAuthStore()
 const router = useRouter()
+const odjava = useLogout()
 const { upit, pitaj, odgovori } = useConfirm()
 
 const pocetno = () => ({
@@ -65,11 +67,6 @@ async function spremiLozinku({ trenutna, nova }) {
       : porukaGreske(iznimka)
   }
   saljeLozinku.value = false
-}
-
-async function odjava() {
-  await auth.odjava()
-  router.push('/')
 }
 
 async function deaktiviraj() {

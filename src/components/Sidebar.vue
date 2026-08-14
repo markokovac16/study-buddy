@@ -1,10 +1,11 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import Icon from './ui/Icon.vue'
 import Avatar from './ui/Avatar.vue'
 import BaseButton from './ui/BaseButton.vue'
 import PomodoroModal from './modals/PomodoroModal.vue'
+import { useLogout } from '../composables/logout'
 import { useAuthStore } from '../stores/auth'
 import { usePomodoroStore } from '../stores/pomodoro'
 
@@ -13,7 +14,7 @@ const props = defineProps({ samoDrawer: Boolean })
 const auth = useAuthStore()
 const pomodoro = usePomodoroStore()
 const route = useRoute()
-const router = useRouter()
+const odjava = useLogout()
 
 const otvoren = defineModel({ type: Boolean, default: false })
 const pomodoroModal = ref(false)
@@ -46,11 +47,6 @@ const razredSirine = computed(() =>
     ? 'lg:hidden'
     : 'lg:static lg:translate-x-0 lg:overflow-visible lg:transition-none',
 )
-
-async function odjava() {
-  await auth.odjava()
-  router.push('/')
-}
 </script>
 
 <template>
