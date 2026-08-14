@@ -1,0 +1,46 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function prijavljen() {
+      return request.auth != null;
+    }
+
+    function jeVlasnik(korisnikId) {
+      return prijavljen() && request.auth.uid == korisnikId;
+    }
+
+    function jeAdmin() {
+      return prijavljen()
+        && get(/databases/$(database)/documents/korisnici/$(request.auth.uid)).data.uloga == 'admin';
+    }
+
+    function izmjene() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    match /korisnici/{korisnikId} {
+      allow read: if jeAdmin() || jeVlasnik(korisnikId);
+      allow create: if jeVlasnik(korisnikId);
+      allow delete: if jeAdmin();
+      allow update: if jeAdmin()
+        || (jeVlasnik(korisnikId)
+          && !izmjene().hasAny(['uloga'])
+          && (!izmjene().hasAny(['aktivan']) || request.resource.data.aktivan == false));
+
+      match /{putanja=**} {
+        allow read, write: if jeAdmin() || jeVlasnik(korisnikId);
+      }
+    }
+
+    match /sadrzajNaslovnice/{sadrzajId} {
+      allow read: if true;
+      allow create, delete: if jeAdmin();
+      allow update: if jeAdmin()
+        || (prijavljen()
+          && izmjene().hasOnly(['glasovi'])
+          && request.resource.data.glasovi.diff(resource.data.glasovi).affectedKeys()
+            == [request.auth.uid].toSet());
+    }
+  }
+}
