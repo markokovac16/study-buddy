@@ -6,19 +6,32 @@ import Icon from '../components/ui/Icon.vue'
 import ProgressBar from '../components/ui/ProgressBar.vue'
 import TimerCard from '../components/TimerCard.vue'
 import DonutChart from '../components/charts/DonutChart.vue'
-import { useSubjectsStore } from '../stores/subjects'
-import { useStatisticsStore } from '../stores/statistics'
-import { useAdminStore } from '../stores/admin'
+import { useNewsStore } from '../stores/news'
+import { predmeti, zadaci, STATUSI } from '../data/mock'
 import { bojaPredmeta, prioritetBoja, prioritetNaziv, relativniRok } from '../utils/format'
 
-const predmetiStore = useSubjectsStore()
-const statistika = useStatisticsStore()
-const admin = useAdminStore()
+const novosti = useNewsStore()
 
-const prikazaniPredmeti = computed(() => predmetiStore.predmeti.slice(0, 3))
-const prikazaniZadaci = computed(() => predmetiStore.zadaci.slice(0, 2))
-const istaknuto = computed(() => admin.sadrzaj.filter((stavka) => stavka.vidljiv))
-const raspodjela = computed(() => statistika.poPredmetu.slice(0, 3))
+const MINUTA_IZLOGA = [320, 240, 180]
+
+const prikazaniPredmeti = predmeti.slice(0, 3)
+const prikazaniZadaci = zadaci.slice(0, 2)
+
+const napredak = (predmetId) => {
+  const svi = zadaci.filter((zadatak) => zadatak.predmetId === predmetId)
+  const zavrseni = svi.filter((zadatak) => zadatak.status === STATUSI.ZAVRSENO).length
+  return svi.length ? Math.round((zavrseni / svi.length) * 100) : 0
+}
+
+const ukupnoMinuta = MINUTA_IZLOGA.reduce((zbroj, minuta) => zbroj + minuta, 0)
+
+const raspodjela = prikazaniPredmeti.map((predmet, indeks) => ({
+  ...predmet,
+  minuta: MINUTA_IZLOGA[indeks],
+  postotak: Math.round((MINUTA_IZLOGA[indeks] / ukupnoMinuta) * 100),
+}))
+
+const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
 </script>
 
 <template>
@@ -78,7 +91,7 @@ const raspodjela = computed(() => statistika.poPredmetu.slice(0, 3))
                 {{ predmet.opis }}
               </p>
               <ProgressBar
-                :value="predmetiStore.napredak(predmet.predmetId)"
+                :value="napredak(predmet.predmetId)"
                 :color="bojaPredmeta(predmet.boja).traka"
               />
             </div>
@@ -176,17 +189,19 @@ const raspodjela = computed(() => statistika.poPredmetu.slice(0, 3))
       </div>
 
       <div v-if="istaknuto.length" class="mt-16">
-        <h2 class="text-2xl font-bold text-sb-indigo">Izdvojeno iz zajednice</h2>
+        <h2 class="text-2xl font-bold text-sb-indigo">Novosti iz zajednice</h2>
+        <p class="mt-2 text-slate-500">Prijavite se da biste čitali objave i glasali o njima.</p>
         <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-          <div
+          <RouterLink
             v-for="stavka in istaknuto"
             :key="stavka.sadrzajId"
-            class="rounded-card bg-white p-6 shadow-sm"
+            :to="`/novosti/${stavka.sadrzajId}`"
+            class="rounded-card block bg-white p-6 shadow-sm transition hover:shadow-md"
           >
             <BaseBadge color="indigo">{{ stavka.tip }}</BaseBadge>
             <p class="mt-3 font-semibold text-slate-900">{{ stavka.naslov }}</p>
-            <p class="mt-1 text-sm text-slate-500">{{ stavka.opis }}</p>
-          </div>
+            <p class="mt-1 line-clamp-2 text-sm text-slate-500">{{ stavka.sadrzaj }}</p>
+          </RouterLink>
         </div>
       </div>
     </div>

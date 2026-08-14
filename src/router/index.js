@@ -9,6 +9,8 @@ import Register from '../pages/Register.vue'
 import Dashboard from '../pages/Dashboard.vue'
 import Subjects from '../pages/Subjects.vue'
 import Statistics from '../pages/Statistics.vue'
+import News from '../pages/News.vue'
+import NewsPost from '../pages/NewsPost.vue'
 import Profile from '../pages/Profile.vue'
 import AdminOverview from '../pages/admin/Overview.vue'
 import AdminUsers from '../pages/admin/Users.vue'
@@ -33,6 +35,8 @@ const router = createRouter({
         { path: 'ploca', name: 'ploca', component: Dashboard },
         { path: 'predmeti', name: 'predmeti', component: Subjects },
         { path: 'statistika', name: 'statistika', component: Statistics },
+        { path: 'novosti', name: 'novosti', component: News },
+        { path: 'novosti/:sadrzajId', name: 'novost', component: NewsPost },
         { path: 'profil', name: 'profil', component: Profile },
       ],
     },

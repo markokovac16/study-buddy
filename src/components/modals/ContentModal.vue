@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import BaseModal from '../ui/BaseModal.vue'
 import BaseInput from '../ui/BaseInput.vue'
+import BaseSelect from '../ui/BaseSelect.vue'
 import BaseTextarea from '../ui/BaseTextarea.vue'
 import BaseToggle from '../ui/BaseToggle.vue'
 import BaseButton from '../ui/BaseButton.vue'
@@ -11,11 +12,21 @@ const props = defineProps({ stavka: Object })
 const open = defineModel({ type: Boolean })
 const emit = defineEmits(['spremi'])
 
-const prazna = { tip: 'Istaknuto', naslov: '', opis: '', vidljiv: true }
+const tipOpcije = ['Obavijest', 'Savjet', 'Događanje', 'Ažuriranje'].map((tip) => ({
+  value: tip,
+  label: tip,
+}))
+
+const prazna = { tip: 'Obavijest', naslov: '', sadrzaj: '', poveznica: '', vidljiv: true }
 const obrazac = ref({ ...prazna })
 
 watch(open, (vrijednost) => {
-  if (vrijednost) obrazac.value = props.stavka ? { ...props.stavka } : { ...prazna }
+  if (!vrijednost) return
+  obrazac.value = props.stavka
+    ? Object.fromEntries(
+        Object.keys(prazna).map((polje) => [polje, props.stavka[polje] ?? prazna[polje]]),
+      )
+    : { ...prazna }
 })
 
 function posalji() {
@@ -26,14 +37,24 @@ function posalji() {
 </script>
 
 <template>
-  <BaseModal v-model="open" :title="stavka ? 'Uredi istaknuti element' : 'Novi istaknuti element'">
+  <BaseModal v-model="open" :title="stavka ? 'Uredi objavu' : 'Nova objava'">
     <form class="space-y-4" @submit.prevent="posalji">
-      <BaseInput v-model="obrazac.tip" label="Tip" placeholder="npr. Istaknuto" />
+      <label class="block">
+        <span class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase"
+          >Tip</span
+        >
+        <BaseSelect v-model="obrazac.tip" :options="tipOpcije" class="w-full" />
+      </label>
       <BaseInput v-model="obrazac.naslov" label="Naslov" />
-      <BaseTextarea v-model="obrazac.opis" label="Opis" :rows="3" />
+      <BaseTextarea v-model="obrazac.sadrzaj" label="Sadržaj" :rows="6" />
+      <BaseInput
+        v-model="obrazac.poveznica"
+        label="Poveznica (neobavezno)"
+        placeholder="https://"
+      />
 
       <div class="flex items-center justify-between rounded-xl bg-slate-100 px-4 py-3">
-        <span class="text-sm text-slate-600">Vidljivo na naslovnici</span>
+        <span class="text-sm text-slate-600">Vidljivo korisnicima</span>
         <BaseToggle v-model="obrazac.vidljiv" />
       </div>
 

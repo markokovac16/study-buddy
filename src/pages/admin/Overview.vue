@@ -6,10 +6,13 @@ import BaseBadge from '../../components/ui/BaseBadge.vue'
 import Icon from '../../components/ui/Icon.vue'
 import PageHeading from '../../components/ui/PageHeading.vue'
 import BarChart from '../../components/charts/BarChart.vue'
+import Loader from '../../components/ui/Loader.vue'
 import ContentModal from '../../components/modals/ContentModal.vue'
 import { useAdminStore } from '../../stores/admin'
+import { useNewsStore } from '../../stores/news'
 
 const admin = useAdminStore()
+const novosti = useNewsStore()
 
 const modal = ref(false)
 const zaUredivanje = ref(null)
@@ -28,13 +31,13 @@ function otvoriUredi(stavka) {
 }
 
 function spremi(podaci) {
-  if (zaUredivanje.value) admin.urediSadrzaj(zaUredivanje.value.sadrzajId, podaci)
-  else admin.dodajSadrzaj(podaci)
+  if (zaUredivanje.value) novosti.uredi(zaUredivanje.value.sadrzajId, podaci)
+  else novosti.dodaj(podaci)
 }
 
 function obrisi(stavka) {
-  if (!confirm(`Ukloniti "${stavka.naslov}" s naslovnice?`)) return
-  admin.obrisiSadrzaj(stavka.sadrzajId)
+  if (!confirm(`Obrisati objavu "${stavka.naslov}"?`)) return
+  novosti.obrisi(stavka.sadrzajId)
 }
 </script>
 
@@ -42,7 +45,7 @@ function obrisi(stavka) {
   <div>
     <PageHeading
       title="Pregled platforme"
-      subtitle="Ključni brojevi platforme i sadržaj naslovnice."
+      subtitle="Ključni brojevi platforme i objave u Novostima."
     />
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
@@ -87,22 +90,23 @@ function obrisi(stavka) {
     <div class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div class="lg:col-span-2">
         <div class="mb-5 flex items-center justify-between">
-          <h2 class="text-2xl font-bold text-sb-indigo">Sadržaj naslovnice</h2>
-          <p class="text-sm text-slate-500">
-            {{ admin.sadrzaj.filter((s) => s.vidljiv).length }} vidljivo
-          </p>
+          <h2 class="text-2xl font-bold text-sb-indigo">Novosti</h2>
+          <p class="text-sm text-slate-500">{{ novosti.vidljive.length }} vidljivo</p>
         </div>
 
-        <div class="space-y-3">
+        <Loader v-if="novosti.ucitavanje" />
+
+        <div v-else class="space-y-3">
           <div
-            v-for="(stavka, indeks) in admin.sadrzaj"
+            v-for="stavka in novosti.objave"
             :key="stavka.sadrzajId"
             class="flex items-center gap-4 rounded-xl bg-slate-100 p-4"
           >
             <span
-              class="flex h-14 w-20 shrink-0 items-center justify-center rounded-lg bg-sb-blue text-white"
+              class="flex h-14 w-20 shrink-0 flex-col items-center justify-center rounded-lg bg-sb-blue text-white"
             >
-              <Icon name="iskra" />
+              <span class="text-lg font-bold tabular-nums">{{ novosti.rezultat(stavka) }}</span>
+              <span class="text-[10px] opacity-80">glasova</span>
             </span>
 
             <div class="min-w-0 flex-1">
@@ -110,23 +114,15 @@ function obrisi(stavka) {
                 {{ stavka.tip }}: {{ stavka.naslov }}
                 <BaseBadge v-if="!stavka.vidljiv">Skriveno</BaseBadge>
               </p>
-              <p class="truncate text-sm text-slate-500">{{ stavka.opis }}</p>
+              <p class="truncate text-sm text-slate-500">{{ stavka.sadrzaj }}</p>
             </div>
 
             <div class="flex items-center gap-1">
               <button
-                class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:opacity-30"
-                :disabled="indeks === 0"
-                @click="admin.pomakni(stavka.sadrzajId, -1)"
+                class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo"
+                @click="novosti.prebaciVidljivost(stavka)"
               >
-                <Icon name="lijevo" size="h-4 w-4 rotate-90" />
-              </button>
-              <button
-                class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:opacity-30"
-                :disabled="indeks === admin.sadrzaj.length - 1"
-                @click="admin.pomakni(stavka.sadrzajId, 1)"
-              >
-                <Icon name="desno" size="h-4 w-4 rotate-90" />
+                <Icon :name="stavka.vidljiv ? 'zabrana' : 'kvacica'" size="h-4 w-4" />
               </button>
               <button
                 class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo"
@@ -148,7 +144,7 @@ function obrisi(stavka) {
             @click="otvoriNovi"
           >
             <Icon name="plus" size="h-4 w-4" />
-            Dodaj istaknuti element
+            Nova objava
           </button>
         </div>
       </div>

@@ -19,6 +19,7 @@ const stavke = computed(() => [
   { to: '/ploca', ikona: 'ploca', naziv: 'Nadzorna ploča' },
   { to: '/predmeti', ikona: 'knjiga', naziv: 'Predmeti' },
   { to: '/statistika', ikona: 'graf', naziv: 'Statistika' },
+  { to: '/novosti', ikona: 'iskra', naziv: 'Novosti' },
   { to: '/profil', ikona: 'korisnik', naziv: 'Profil' },
   ...(auth.jeAdmin ? [{ to: '/admin/pregled', ikona: 'stit', naziv: 'Administracija' }] : []),
 ])

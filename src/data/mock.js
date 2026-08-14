@@ -324,30 +324,6 @@ export const korisniciPlatforme = [
   },
 ]
 
-export const sadrzajNaslovnice = [
-  {
-    sadrzajId: 'sn1',
-    tip: 'Istaknuto',
-    naslov: 'Kada studenti najviše uče',
-    opis: 'Pregled sati u kojima je na platformi najviše aktivnih studenata.',
-    vidljiv: true,
-  },
-  {
-    sadrzajId: 'sn2',
-    tip: 'Kategorija',
-    naslov: 'Kognitivna psihologija',
-    opis: 'Najpraćeniji kolegij ovog mjeseca, 4200 aktivnih studenata.',
-    vidljiv: true,
-  },
-  {
-    sadrzajId: 'sn3',
-    tip: 'Ljestvica',
-    naslov: 'Ljestvica najdužih nizova učenja',
-    opis: 'Tko je najviše dana zaredom odradio barem jednu sesiju učenja.',
-    vidljiv: false,
-  },
-]
-
 export const metrikePlatforme = {
   aktivniDanas: 18492,
   rastAktivnih: 12,
