@@ -12,6 +12,8 @@ import Statistics from '../pages/Statistics.vue'
 import News from '../pages/News.vue'
 import NewsPost from '../pages/NewsPost.vue'
 import Profile from '../pages/Profile.vue'
+import Settings from '../pages/Settings.vue'
+import Help from '../pages/Help.vue'
 import AdminOverview from '../pages/admin/Overview.vue'
 import AdminUsers from '../pages/admin/Users.vue'
 
@@ -38,6 +40,8 @@ const router = createRouter({
         { path: 'novosti', name: 'novosti', component: News },
         { path: 'novosti/:sadrzajId', name: 'novost', component: NewsPost },
         { path: 'profil', name: 'profil', component: Profile },
+        { path: 'postavke', name: 'postavke', component: Settings },
+        { path: 'pomoc', name: 'pomoc', component: Help },
       ],
     },
     {

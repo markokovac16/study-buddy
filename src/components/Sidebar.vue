@@ -78,14 +78,22 @@ async function odjava() {
     <div>
       <BaseButton variant="secondary" block class="mb-4" @click="odjava">Odjava</BaseButton>
       <div class="flex flex-col gap-1 border-t border-slate-200 pt-4">
-        <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-slate-500">
+        <RouterLink
+          to="/postavke"
+          class="flex items-center gap-3 rounded-xl px-4 py-2 text-sm text-slate-500 transition hover:bg-white hover:text-sb-indigo"
+          active-class="bg-indigo-100 text-sb-blue"
+        >
           <Icon name="postavke" />
           Postavke
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-slate-500">
+        </RouterLink>
+        <RouterLink
+          to="/pomoc"
+          class="flex items-center gap-3 rounded-xl px-4 py-2 text-sm text-slate-500 transition hover:bg-white hover:text-sb-indigo"
+          active-class="bg-indigo-100 text-sb-blue"
+        >
           <Icon name="pomoc" />
           Pomoć
-        </a>
+        </RouterLink>
       </div>
     </div>
 
