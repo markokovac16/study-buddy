@@ -22,7 +22,7 @@ import { useEditing } from '../composables/editing'
 import TimerCard from '../components/TimerCard.vue'
 import { useSubjectsStore } from '../stores/subjects'
 import { KVOTA_KB, PRIORITETI, STATUSI } from '../data/constants'
-import { bojaPredmeta, formatVelicina, prioritetNaziv } from '../utils/format'
+import { bojaPredmeta, decimalni, formatVelicina, prioritetNaziv } from '../utils/format'
 
 const store = useSubjectsStore()
 const { upit, pitaj, odgovori } = useConfirm()
@@ -275,7 +275,7 @@ function ucitajDatoteku(dogadaj) {
 
             <div class="mt-6 border-t border-slate-200 pt-4">
               <p class="mb-2 text-center text-xs text-slate-500">
-                Iskoristili ste {{ iskoristenoPostotak }}% od
+                Iskoristili ste {{ decimalni(iskoristenoPostotak) }}% od
                 {{ formatVelicina(KVOTA_KB) }} prostora
               </p>
               <ProgressBar :value="iskoristenoPostotak" />

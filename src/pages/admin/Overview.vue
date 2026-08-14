@@ -13,7 +13,7 @@ import ContentModal from '../../components/modals/ContentModal.vue'
 import ConfirmModal from '../../components/modals/ConfirmModal.vue'
 import { useConfirm } from '../../composables/useConfirm'
 import { useEditing } from '../../composables/editing'
-import { prijeVremena } from '../../utils/format'
+import { prijeVremena, sBrojem } from '../../utils/format'
 import { silazno } from '../../utils/sort'
 import { useAdminStore } from '../../stores/admin'
 import { useNewsStore } from '../../stores/news'
@@ -93,7 +93,9 @@ async function obrisi(stavka) {
       <div class="lg:col-span-2">
         <div class="mb-5 flex items-center justify-between">
           <h2 class="text-2xl font-bold text-sb-indigo">Novosti</h2>
-          <p class="text-sm text-slate-500">{{ novosti.vidljive.length }} vidljivo</p>
+          <p class="text-sm text-slate-500">
+            {{ sBrojem(novosti.vidljive.length, 'vidljiva objava', 'vidljive objave', 'vidljivih objava') }}
+          </p>
         </div>
 
         <Loader v-if="novosti.ucitavanje" />

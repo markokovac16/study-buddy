@@ -13,7 +13,7 @@ import DonutChart from '../components/charts/DonutChart.vue'
 import { useStatisticsStore } from '../stores/statistics'
 import { useSubjectsStore } from '../stores/subjects'
 import { usePomodoroStore } from '../stores/pomodoro'
-import { bojaPredmeta, satiIMinute } from '../utils/format'
+import { bojaPredmeta, decimalni, sBrojem, satiIMinute } from '../utils/format'
 
 const statistika = useStatisticsStore()
 const predmetiStore = useSubjectsStore()
@@ -42,6 +42,10 @@ const postotakZadataka = computed(() =>
     ? Math.round((statistika.dovrseniZadaci / statistika.ukupnoZadataka) * 100)
     : 0,
 )
+
+const daniUFlowu = computed(
+  () => statistika.poDanuTjedna().filter((dan) => dan.minuta > 0).length,
+)
 </script>
 
 <template>
@@ -54,7 +58,10 @@ const postotakZadataka = computed(() =>
     <Loader v-if="ucitavanje" tekst="Učitavanje statistike" />
     <template v-else>
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <StatCard label="Ukupno vrijeme učenja" :value="`${statistika.ukupnoSati} sati`">
+        <StatCard
+          label="Ukupno vrijeme učenja"
+          :value="sBrojem(statistika.ukupnoSati, 'sat', 'sata', 'sati')"
+        >
           <p
             v-if="statistika.promjenaTjedna"
             class="mt-2 flex items-center gap-1.5 text-sm"
@@ -125,7 +132,9 @@ const postotakZadataka = computed(() =>
             <div
               class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
             >
-              <span class="text-3xl font-bold text-slate-900">{{ statistika.ukupnoSati }}</span>
+              <span class="text-3xl font-bold text-slate-900">
+                {{ decimalni(statistika.ukupnoSati) }}
+              </span>
               <span class="text-[10px] tracking-widest text-slate-400 uppercase">sati</span>
             </div>
           </div>
@@ -166,16 +175,17 @@ const postotakZadataka = computed(() =>
           </p>
           <p class="mt-6 flex items-center gap-2 font-semibold">
             <Icon name="munja" />
-            {{ statistika.poDanuTjedna().filter((dan) => dan.minuta > 0).length }} dana u flowu ovaj
-            tjedan
+            {{ sBrojem(daniUFlowu, 'dan', 'dana', 'dana') }} u flowu ovaj tjedan
           </p>
         </div>
 
         <BaseCard>
           <p class="text-xl font-bold text-slate-900">Riješeni zadaci</p>
           <p class="mt-3 text-slate-500">
-            Riješili ste {{ statistika.dovrseniZadaci }} od {{ statistika.ukupnoZadataka }} zadataka
-            ({{ postotakZadataka }}%). Nastavite ovim tempom.
+            Riješili ste {{ statistika.dovrseniZadaci }} od
+            {{ sBrojem(statistika.ukupnoZadataka, 'zadatka', 'zadatka', 'zadataka') }} ({{
+              postotakZadataka
+            }}%). Nastavite ovim tempom.
           </p>
           <RouterLink
             to="/predmeti"

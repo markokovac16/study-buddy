@@ -40,6 +40,19 @@ export const statusNaziv = {
 
 export const isoDatum = (datum = new Date()) => datum.toISOString().slice(0, 10)
 
+export const decimalni = (broj, mjesta) =>
+  (mjesta === undefined ? String(broj) : Number(broj).toFixed(mjesta)).replace('.', ',')
+
+export function sBrojem(broj, jednina, dvojina, mnozina) {
+  if (!Number.isInteger(broj)) return `${decimalni(broj)} ${dvojina}`
+  const zadnja = broj % 10
+  const zadnjeDvije = broj % 100
+  if (zadnja === 1 && zadnjeDvije !== 11) return `${broj} ${jednina}`
+  if (zadnja >= 2 && zadnja <= 4 && (zadnjeDvije < 12 || zadnjeDvije > 14))
+    return `${broj} ${dvojina}`
+  return `${broj} ${mnozina}`
+}
+
 export function formatDatum(iso) {
   return new Date(iso).toLocaleDateString('hr-HR', {
     day: 'numeric',
@@ -58,7 +71,7 @@ export function danaDo(iso) {
 
 export function relativniRok(iso) {
   const dana = danaDo(iso)
-  if (dana < 0) return `Rok prošao prije ${Math.abs(dana)} d`
+  if (dana < 0) return `Rok prošao prije ${sBrojem(Math.abs(dana), 'dan', 'dana', 'dana')}`
   if (dana === 0) return 'Rok danas'
   if (dana === 1) return 'Rok sutra'
   if (dana < 7) return `Rok za ${dana} dana`
@@ -80,7 +93,7 @@ export function prijeVremena(iso) {
 
 export function formatVelicina(kb) {
   if (kb < 1024) return `${Math.round(kb)} KB`
-  if (kb < 1024 * 1024) return `${(kb / 1024).toFixed(1).replace('.', ',')} MB`
+  if (kb < 1024 * 1024) return `${decimalni(kb / 1024, 1)} MB`
   return `${Math.round(kb / 1024 / 1024)} GB`
 }
 

@@ -73,7 +73,8 @@ async function spremiLozinku({ trenutna, nova }) {
 async function deaktiviraj() {
   const potvrda = await pitaj({
     naslov: 'Deaktivacija računa',
-    tekst: 'Nakon deaktivacije nema povratka. Deaktivirati račun?',
+    tekst:
+      'Deaktivirati račun? Ukoliko se poželite vratiti, račun može biti ponovno aktiviran od strane administratora',
     gumb: 'Deaktiviraj',
   })
   if (!potvrda) return

@@ -12,7 +12,7 @@ import { useSubjectsStore } from '../stores/subjects'
 import { useStatisticsStore } from '../stores/statistics'
 import { usePomodoroStore } from '../stores/pomodoro'
 import { STATUSI } from '../data/constants'
-import { bojaPredmeta, danaDo, prijeVremena, satiIMinute } from '../utils/format'
+import { bojaPredmeta, danaDo, decimalni, prijeVremena, sBrojem, satiIMinute } from '../utils/format'
 import { silazno } from '../utils/sort'
 
 const auth = useAuthStore()
@@ -106,8 +106,8 @@ const nadolazeci = computed(() => {
             <span class="text-3xl font-bold text-slate-900">{{ postotakCilja }}%</span>
           </RingProgress>
           <p class="mt-4 text-sm text-slate-500">
-            {{ (statistika.danasMinuta / 60).toFixed(1) }} / {{ auth.korisnik.dnevniCiljSati }} sati
-            odrađeno
+            {{ decimalni(statistika.danasMinuta / 60, 1) }} /
+            {{ sBrojem(auth.korisnik.dnevniCiljSati, 'sat', 'sata', 'sati') }} odrađeno
           </p>
           <p class="mt-1 text-sm font-semibold text-sb-teal">
             {{ porukaCilja }}

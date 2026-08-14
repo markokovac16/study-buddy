@@ -4,7 +4,7 @@ import { useAuthStore } from './auth'
 import { useSubjectsStore } from './subjects'
 import { useStatisticsStore } from './statistics'
 import { useNewsStore } from './news'
-import { danaDo, satiIMinute } from '../utils/format'
+import { danaDo, sBrojem, satiIMinute } from '../utils/format'
 import { silazno } from '../utils/sort'
 import { STATUSI } from '../data/constants'
 
@@ -19,7 +19,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
   const ukljuceno = (kljuc) => Boolean(auth.korisnik?.obavijesti?.[kljuc])
 
   const opisRoka = (dana) => {
-    if (dana < 0) return `Rok je prošao prije ${Math.abs(dana)} dana`
+    if (dana < 0) return `Rok je prošao prije ${sBrojem(Math.abs(dana), 'dan', 'dana', 'dana')}`
     return dana === 0 ? 'Rok istječe danas' : 'Rok je sutra'
   }
 
@@ -51,7 +51,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
         opis:
           preostalo <= 0
             ? `Danas ste odradili ${satiIMinute(statistika.danasMinuta)}.`
-            : `Još ${satiIMinute(preostalo)} do cilja od ${auth.korisnik.dnevniCiljSati} sati.`,
+            : `Još ${satiIMinute(preostalo)} do cilja od ${sBrojem(auth.korisnik.dnevniCiljSati, 'sat', 'sata', 'sati')}.`,
         poveznica: '/statistika',
       },
     ]

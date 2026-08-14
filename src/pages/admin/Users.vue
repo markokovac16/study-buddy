@@ -11,6 +11,7 @@ import { useConfirm } from '../../composables/useConfirm'
 import { usePagination } from '../../composables/pagination'
 import { useAdminStore } from '../../stores/admin'
 import { useAuthStore } from '../../stores/auth'
+import { sBrojem } from '../../utils/format'
 
 const admin = useAdminStore()
 const auth = useAuthStore()
@@ -170,7 +171,9 @@ async function obrisi(korisnik) {
       v-if="odabrani.length"
       class="mt-6 flex flex-wrap items-center gap-4 rounded-xl bg-indigo-50 px-5 py-3"
     >
-      <p class="text-sm font-semibold text-sb-blue">{{ odabrani.length }} korisnika odabrano</p>
+      <p class="text-sm font-semibold text-sb-blue">
+        {{ sBrojem(odabrani.length, 'korisnik odabran', 'korisnika odabrana', 'korisnika odabrano') }}
+      </p>
       <span class="h-5 w-px bg-indigo-200" />
       <button
         class="flex cursor-pointer items-center gap-2 text-sm text-slate-600 transition hover:text-sb-blue"
