@@ -63,6 +63,7 @@ export const useAuthStore = defineStore('auth', () => {
       profilnaSlika: racun.photoURL || '',
       uloga: racun.email.includes('admin') ? 'admin' : 'student',
       datumRegistracije: new Date().toISOString().slice(0, 10),
+      zadnjaPrijava: new Date().toISOString(),
     }
   }
 
@@ -78,6 +79,7 @@ export const useAuthStore = defineStore('auth', () => {
       await odjava()
       throw greska('auth/user-disabled')
     }
+    await azuriraj({ zadnjaPrijava: new Date().toISOString() })
   }
 
   async function prijava(email, lozinka) {

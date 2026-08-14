@@ -10,6 +10,7 @@ import Loader from '../../components/ui/Loader.vue'
 import ContentModal from '../../components/modals/ContentModal.vue'
 import ConfirmModal from '../../components/modals/ConfirmModal.vue'
 import { useConfirm } from '../../composables/useConfirm'
+import { prijeVremena } from '../../utils/format'
 import { useAdminStore } from '../../stores/admin'
 import { useNewsStore } from '../../stores/news'
 
@@ -20,9 +21,25 @@ const { upit, pitaj, odgovori } = useConfirm()
 const modal = ref(false)
 const zaUredivanje = ref(null)
 
-const dani = ['Pon', 'Uto', 'Sri', 'Čet', 'Pet', 'Sub', 'Ned']
-const aktivnihKorisnika = computed(
-  () => admin.korisnici.filter((korisnik) => korisnik.aktivan).length,
+const nedavno = computed(() =>
+  [
+    ...admin.korisnici.map((korisnik) => ({
+      id: `korisnik-${korisnik.korisnikId}`,
+      ikona: 'korisnici',
+      naslov: korisnik.ime,
+      opis: korisnik.uloga === 'admin' ? 'Registriran administrator' : 'Registriran student',
+      vrijeme: korisnik.datumRegistracije,
+    })),
+    ...novosti.objave.map((objava) => ({
+      id: `objava-${objava.sadrzajId}`,
+      ikona: 'iskra',
+      naslov: objava.naslov,
+      opis: `Objava u Novostima - ${objava.tip}`,
+      vrijeme: objava.datum,
+    })),
+  ]
+    .sort((prvi, drugi) => drugi.vrijeme.localeCompare(prvi.vrijeme))
+    .slice(0, 5),
 )
 
 function otvoriNovi() {
@@ -66,12 +83,10 @@ async function obrisi(stavka) {
           >
             <Icon name="korisnici" />
           </span>
-          <BaseBadge color="green">+{{ admin.metrike.rastAktivnih }}%</BaseBadge>
         </div>
-        <p class="text-sm text-slate-500">Aktivni korisnici danas</p>
-        <p class="mt-1 text-3xl font-bold text-slate-900">
-          {{ admin.metrike.aktivniDanas.toLocaleString('hr-HR') }}
-        </p>
+        <p class="text-sm text-slate-500">Prijavljeni danas</p>
+        <p class="mt-1 text-3xl font-bold text-slate-900">{{ admin.prijavljenihDanas }}</p>
+        <p class="mt-1 text-xs text-slate-400">od {{ admin.korisnici.length }} računa</p>
       </BaseCard>
 
       <BaseCard>
@@ -81,18 +96,19 @@ async function obrisi(stavka) {
           >
             <Icon name="munja" />
           </span>
-          <BaseBadge color="green">+{{ admin.metrike.rastRegistracija }}%</BaseBadge>
         </div>
         <p class="text-sm text-slate-500">Nove registracije</p>
-        <p class="mt-1 text-3xl font-bold text-slate-900">
-          {{ admin.metrike.noveRegistracije.toLocaleString('hr-HR') }}
-        </p>
+        <p class="mt-1 text-3xl font-bold text-slate-900">{{ admin.novihTjedan }}</p>
+        <p class="mt-1 text-xs text-slate-400">u zadnjih 7 dana</p>
       </BaseCard>
 
       <BaseCard class="lg:col-span-2">
-        <p class="mb-4 font-semibold text-slate-700">Tjedni rast registracija</p>
+        <p class="mb-4 font-semibold text-slate-700">Registracije zadnjih 7 dana</p>
         <div class="h-40">
-          <BarChart :labels="dani" :values="admin.metrike.tjedniRast" />
+          <BarChart
+            :labels="admin.registracijePoDanima.map((dan) => dan.oznaka)"
+            :values="admin.registracijePoDanima.map((dan) => dan.broj)"
+          />
         </div>
       </BaseCard>
     </div>
@@ -130,18 +146,21 @@ async function obrisi(stavka) {
             <div class="flex items-center gap-1">
               <button
                 class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo"
+                :title="stavka.vidljiv ? 'Sakrij objavu' : 'Objavi'"
                 @click="novosti.prebaciVidljivost(stavka)"
               >
                 <Icon :name="stavka.vidljiv ? 'zabrana' : 'kvacica'" size="h-4 w-4" />
               </button>
               <button
                 class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo"
+                title="Uredi objavu"
                 @click="otvoriUredi(stavka)"
               >
                 <Icon name="olovka" size="h-4 w-4" />
               </button>
               <button
                 class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-red-600"
+                title="Obriši objavu"
                 @click="obrisi(stavka)"
               >
                 <Icon name="kanta" size="h-4 w-4" />
@@ -162,27 +181,32 @@ async function obrisi(stavka) {
       <div class="space-y-6">
         <BaseCard>
           <p class="mb-4 text-[10px] font-semibold tracking-wide text-slate-400 uppercase">
-            Stanje sustava
+            Računi
           </p>
-          <div class="space-y-3">
-            <div
-              v-for="stavka in admin.metrike.stanjeSustava"
-              :key="stavka.naziv"
-              class="flex items-center gap-2 text-sm"
-            >
-              <span
-                class="h-2 w-2 rounded-full"
-                :class="stavka.status === 'ok' ? 'bg-emerald-500' : 'bg-amber-400'"
-              />
-              <span class="flex-1 text-slate-600">{{ stavka.naziv }}</span>
-              <span class="text-slate-400">{{ stavka.vrijednost }}</span>
-            </div>
-            <div class="flex items-center gap-2 border-t border-slate-100 pt-3 text-sm">
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center gap-2">
               <span class="h-2 w-2 rounded-full bg-emerald-500" />
-              <span class="flex-1 text-slate-600">Aktivni računi</span>
-              <span class="text-slate-400"
-                >{{ aktivnihKorisnika }} / {{ admin.korisnici.length }}</span
-              >
+              <span class="flex-1 text-slate-600">Aktivni</span>
+              <span class="text-slate-400">{{ admin.aktivnihKorisnika }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="h-2 w-2 rounded-full bg-amber-400" />
+              <span class="flex-1 text-slate-600">Deaktivirani</span>
+              <span class="text-slate-400">
+                {{ admin.korisnici.length - admin.aktivnihKorisnika }}
+              </span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="h-2 w-2 rounded-full bg-sb-indigo" />
+              <span class="flex-1 text-slate-600">Administratori</span>
+              <span class="text-slate-400">{{ admin.administratora }}</span>
+            </div>
+            <div class="flex items-center gap-2 border-t border-slate-100 pt-3">
+              <span class="h-2 w-2 rounded-full bg-slate-300" />
+              <span class="flex-1 text-slate-600">Objave u Novostima</span>
+              <span class="text-slate-400">
+                {{ novosti.vidljive.length }} / {{ novosti.objave.length }}
+              </span>
             </div>
           </div>
         </BaseCard>
@@ -191,24 +215,24 @@ async function obrisi(stavka) {
           <p class="mb-4 text-[10px] font-semibold tracking-wide text-slate-400 uppercase">
             Nedavna aktivnost
           </p>
-          <div class="space-y-4">
-            <div
-              v-for="stavka in admin.metrike.nedavnaAktivnost"
-              :key="stavka.id"
-              class="flex gap-3"
-            >
+          <p v-if="!nedavno.length" class="text-sm text-slate-500">
+            Još nema zabilježene aktivnosti.
+          </p>
+
+          <div v-else class="space-y-4">
+            <div v-for="stavka in nedavno" :key="stavka.id" class="flex gap-3">
               <span
                 class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sb-indigo"
               >
                 <Icon :name="stavka.ikona" size="h-4 w-4" />
               </span>
-              <div>
-                <p class="text-sm font-semibold text-slate-800">
+              <div class="min-w-0">
+                <p class="truncate text-sm font-semibold text-slate-800">
                   {{ stavka.naslov }}
                 </p>
                 <p class="text-xs text-slate-500">{{ stavka.opis }}</p>
                 <p class="mt-0.5 text-xs text-slate-400">
-                  {{ stavka.vrijeme }}
+                  {{ prijeVremena(stavka.vrijeme) }}
                 </p>
               </div>
             </div>

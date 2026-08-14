@@ -64,6 +64,18 @@ export function relativniRok(iso) {
   return `Rok ${formatDatum(iso)}`
 }
 
+export function prijeVremena(iso) {
+  const minuta = Math.round((Date.now() - new Date(iso)) / 60000)
+  if (minuta < 1) return 'upravo'
+  if (minuta < 60) return `prije ${minuta} min`
+  const sati = Math.round(minuta / 60)
+  if (sati < 24) return `prije ${sati} h`
+  const dana = Math.round(sati / 24)
+  if (dana === 1) return 'jučer'
+  if (dana < 7) return `prije ${dana} dana`
+  return formatDatum(iso)
+}
+
 export function formatVelicina(kb) {
   if (kb < 1024) return `${Math.round(kb)} KB`
   if (kb < 1024 * 1024) return `${(kb / 1024).toFixed(1).replace('.', ',')} MB`

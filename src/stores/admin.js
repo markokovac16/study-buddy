@@ -1,16 +1,23 @@
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { collection, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { useAuthStore } from './auth'
-import { metrikePlatforme } from '../data/mock'
+
+const kljucDatuma = (datum) => datum.toISOString().slice(0, 10)
+
+const zadnjihDana = (broj) =>
+  Array.from({ length: broj }, (_, indeks) => {
+    const datum = new Date()
+    datum.setDate(datum.getDate() - (broj - 1 - indeks))
+    return datum
+  })
 
 export const useAdminStore = defineStore('admin', () => {
   const auth = useAuthStore()
 
   const korisnici = ref([])
   const ucitavanje = ref(true)
-  const metrike = ref(metrikePlatforme)
 
   const zbirka = collection(db, 'korisnici')
   const zapis = (korisnikId) => doc(zbirka, korisnikId)
@@ -42,6 +49,31 @@ export const useAdminStore = defineStore('admin', () => {
     { immediate: true },
   )
 
+  const aktivnihKorisnika = computed(
+    () => korisnici.value.filter((korisnik) => korisnik.aktivan).length,
+  )
+  const administratora = computed(
+    () => korisnici.value.filter((korisnik) => korisnik.uloga === 'admin').length,
+  )
+  const prijavljenihDanas = computed(
+    () =>
+      korisnici.value.filter(
+        (korisnik) => korisnik.zadnjaPrijava?.slice(0, 10) === kljucDatuma(new Date()),
+      ).length,
+  )
+
+  const registracijePoDanima = computed(() =>
+    zadnjihDana(7).map((datum) => ({
+      oznaka: datum.toLocaleDateString('hr-HR', { weekday: 'short' }),
+      broj: korisnici.value.filter((korisnik) => korisnik.datumRegistracije === kljucDatuma(datum))
+        .length,
+    })),
+  )
+
+  const novihTjedan = computed(() =>
+    registracijePoDanima.value.reduce((zbroj, dan) => zbroj + dan.broj, 0),
+  )
+
   const tudji = (idevi) => idevi.filter((korisnikId) => korisnikId !== auth.korisnik?.korisnikId)
 
   function postaviAktivnost(korisnikId, aktivan) {
@@ -67,7 +99,11 @@ export const useAdminStore = defineStore('admin', () => {
   return {
     korisnici,
     ucitavanje,
-    metrike,
+    aktivnihKorisnika,
+    administratora,
+    prijavljenihDanas,
+    registracijePoDanima,
+    novihTjedan,
     postaviAktivnost,
     postaviUlogu,
     obrisiKorisnika,
