@@ -21,7 +21,9 @@ const modal = ref(false)
 const zaUredivanje = ref(null)
 
 const dani = ['Pon', 'Uto', 'Sri', 'Čet', 'Pet', 'Sub', 'Ned']
-const aktivnihKorisnika = computed(() => admin.korisnici.filter((k) => k.aktivan).length)
+const aktivnihKorisnika = computed(
+  () => admin.korisnici.filter((korisnik) => korisnik.aktivan).length,
+)
 
 function otvoriNovi() {
   zaUredivanje.value = null

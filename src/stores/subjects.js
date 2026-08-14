@@ -48,18 +48,20 @@ export const useSubjectsStore = defineStore('subjects', () => {
   const zadaciPredmeta = (predmetId) => zadaciPoPredmetu.value[predmetId] ?? []
   const biljeskePredmeta = (predmetId) => biljeskePoPredmetu.value[predmetId] ?? []
   const priloziPredmeta = (predmetId) => priloziPoPredmetu.value[predmetId] ?? []
-  const predmetPoId = (predmetId) => predmeti.value.find((p) => p.predmetId === predmetId)
-  const zadatakPoId = (zadatakId) => zadaci.value.find((z) => z.zadatakId === zadatakId)
-  const biljeskaPoId = (biljeskaId) => biljeske.value.find((b) => b.biljeskaId === biljeskaId)
-  const prilogPoId = (prilogId) => prilozi.value.find((p) => p.prilogId === prilogId)
+  const predmetPoId = (predmetId) =>
+    predmeti.value.find((predmet) => predmet.predmetId === predmetId)
+  const zadatakPoId = (zadatakId) => zadaci.value.find((zadatak) => zadatak.zadatakId === zadatakId)
+  const biljeskaPoId = (biljeskaId) =>
+    biljeske.value.find((biljeska) => biljeska.biljeskaId === biljeskaId)
+  const prilogPoId = (prilogId) => prilozi.value.find((prilog) => prilog.prilogId === prilogId)
 
   const naCekanju = (predmetId) =>
-    zadaciPredmeta(predmetId).filter((z) => z.status !== STATUSI.ZAVRSENO).length
+    zadaciPredmeta(predmetId).filter((zadatak) => zadatak.status !== STATUSI.ZAVRSENO).length
 
   function napredak(predmetId) {
     const svi = zadaciPredmeta(predmetId)
     if (!svi.length) return 0
-    const zavrseni = svi.filter((z) => z.status === STATUSI.ZAVRSENO).length
+    const zavrseni = svi.filter((zadatak) => zadatak.status === STATUSI.ZAVRSENO).length
     return Math.round((zavrseni / svi.length) * 100)
   }
 

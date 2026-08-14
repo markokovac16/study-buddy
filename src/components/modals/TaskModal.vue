@@ -21,11 +21,14 @@ const prazan = {
 }
 const obrazac = ref({ ...prazan })
 
-const prioritetOpcije = Object.values(PRIORITETI).map((p) => ({
-  value: p,
-  label: prioritetNaziv[p],
+const prioritetOpcije = Object.values(PRIORITETI).map((prioritet) => ({
+  value: prioritet,
+  label: prioritetNaziv[prioritet],
 }))
-const statusOpcije = Object.values(STATUSI).map((s) => ({ value: s, label: statusNaziv[s] }))
+const statusOpcije = Object.values(STATUSI).map((status) => ({
+  value: status,
+  label: statusNaziv[status],
+}))
 
 watch(open, (vrijednost) => {
   if (vrijednost) obrazac.value = props.zadatak ? { ...props.zadatak } : { ...prazan }

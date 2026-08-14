@@ -39,11 +39,11 @@ const porukaCilja = computed(() => {
 const tezinaPrioriteta = { VISOK: 0, SREDNJI: 1, NIZAK: 2 }
 
 const nadolazeci = computed(() => {
-  const otvoreni = predmetiStore.zadaci.filter((z) => z.status !== STATUSI.ZAVRSENO)
-  const poredani = [...otvoreni].sort((a, b) =>
+  const otvoreni = predmetiStore.zadaci.filter((zadatak) => zadatak.status !== STATUSI.ZAVRSENO)
+  const poredani = [...otvoreni].sort((prvi, drugi) =>
     sortiranje.value === 'datum'
-      ? danaDo(a.rokIzvrsenja) - danaDo(b.rokIzvrsenja)
-      : tezinaPrioriteta[a.prioritet] - tezinaPrioriteta[b.prioritet],
+      ? danaDo(prvi.rokIzvrsenja) - danaDo(drugi.rokIzvrsenja)
+      : tezinaPrioriteta[prvi.prioritet] - tezinaPrioriteta[drugi.prioritet],
   )
   return poredani.slice(0, 3)
 })

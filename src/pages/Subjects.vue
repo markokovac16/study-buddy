@@ -49,7 +49,10 @@ const odabrani = computed(() => store.predmetPoId(odabraniId.value))
 
 const prioritetOpcije = [
   { value: 'svi', label: 'Prioritet: svi' },
-  ...Object.values(PRIORITETI).map((p) => ({ value: p, label: prioritetNaziv[p] })),
+  ...Object.values(PRIORITETI).map((prioritet) => ({
+    value: prioritet,
+    label: prioritetNaziv[prioritet],
+  })),
 ]
 
 const zadaciOdabranog = computed(() => {
@@ -57,9 +60,9 @@ const zadaciOdabranog = computed(() => {
   const filtrirani =
     filterPrioriteta.value === 'svi'
       ? svi
-      : svi.filter((z) => z.prioritet === filterPrioriteta.value)
+      : svi.filter((zadatak) => zadatak.prioritet === filterPrioriteta.value)
   return [...filtrirani].sort(
-    (a, b) => (a.status === STATUSI.ZAVRSENO) - (b.status === STATUSI.ZAVRSENO),
+    (prvi, drugi) => (prvi.status === STATUSI.ZAVRSENO) - (drugi.status === STATUSI.ZAVRSENO),
   )
 })
 

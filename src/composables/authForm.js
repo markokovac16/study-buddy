@@ -32,8 +32,8 @@ export function useAuthForm(akcija) {
     try {
       await izvrsi()
       router.push(auth.jeAdmin ? '/admin/pregled' : '/ploca')
-    } catch (e) {
-      greska.value = porukaGreske(e)
+    } catch (iznimka) {
+      greska.value = porukaGreske(iznimka)
     }
     salje.value = false
   }

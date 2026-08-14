@@ -135,9 +135,9 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
             <p class="mb-2 text-xs font-semibold text-slate-600">Raspodjela predmeta</p>
             <div class="relative h-32">
               <DonutChart
-                :labels="raspodjela.map((s) => s.naziv)"
-                :values="raspodjela.map((s) => s.minuta)"
-                :colors="raspodjela.map((s) => bojaPredmeta(s.boja).hex)"
+                :labels="raspodjela.map((predmet) => predmet.naziv)"
+                :values="raspodjela.map((predmet) => predmet.minuta)"
+                :colors="raspodjela.map((predmet) => bojaPredmeta(predmet.boja).hex)"
               />
             </div>
             <div class="mt-3 space-y-1">

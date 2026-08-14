@@ -24,10 +24,10 @@ export const useStatisticsStore = defineStore('statistics', () => {
 
   const filtrirane = (predmetId) =>
     predmetId && predmetId !== 'svi'
-      ? pomodoro.sesije.filter((s) => s.predmetId === predmetId)
+      ? pomodoro.sesije.filter((sesija) => sesija.predmetId === predmetId)
       : pomodoro.sesije
 
-  const zbroj = (sesije) => sesije.reduce((ukupno, s) => ukupno + s.trajanje, 0)
+  const zbroj = (sesije) => sesije.reduce((ukupno, sesija) => ukupno + sesija.trajanje, 0)
 
   const ukupnoMinuta = computed(() => zbroj(pomodoro.sesije))
   const ukupnoSati = computed(() => uSate(ukupnoMinuta.value))
@@ -46,7 +46,7 @@ export const useStatisticsStore = defineStore('statistics', () => {
         }
       })
       .filter((stavka) => stavka.minuta > 0)
-      .sort((a, b) => b.minuta - a.minuta),
+      .sort((prvi, drugi) => drugi.minuta - prvi.minuta),
   )
 
   const najuceniPredmet = computed(() => poPredmetu.value[0] ?? null)
@@ -57,8 +57,8 @@ export const useStatisticsStore = defineStore('statistics', () => {
     const kraj = new Date(pocetak)
     kraj.setDate(kraj.getDate() + 7)
     return zbroj(
-      filtrirane(predmetId).filter((s) => {
-        const datum = new Date(s.pocetak)
+      filtrirane(predmetId).filter((sesija) => {
+        const datum = new Date(sesija.pocetak)
         return datum >= pocetak && datum < kraj
       }),
     )
@@ -71,7 +71,7 @@ export const useStatisticsStore = defineStore('statistics', () => {
       datum.setDate(datum.getDate() + indeks)
       const minuta = zbroj(
         filtrirane(predmetId).filter(
-          (s) => new Date(s.pocetak).toDateString() === datum.toDateString(),
+          (sesija) => new Date(sesija.pocetak).toDateString() === datum.toDateString(),
         ),
       )
       return { dan, minuta, sati: uSate(minuta) }
@@ -94,7 +94,7 @@ export const useStatisticsStore = defineStore('statistics', () => {
   const danasMinuta = computed(() =>
     zbroj(
       pomodoro.sesije.filter(
-        (s) => new Date(s.pocetak).toDateString() === new Date().toDateString(),
+        (sesija) => new Date(sesija.pocetak).toDateString() === new Date().toDateString(),
       ),
     ),
   )
@@ -105,7 +105,7 @@ export const useStatisticsStore = defineStore('statistics', () => {
   })
 
   const dovrseniZadaci = computed(
-    () => predmetiStore.zadaci.filter((z) => z.status === STATUSI.ZAVRSENO).length,
+    () => predmetiStore.zadaci.filter((zadatak) => zadatak.status === STATUSI.ZAVRSENO).length,
   )
   const ukupnoZadataka = computed(() => predmetiStore.zadaci.length)
 

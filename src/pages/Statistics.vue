@@ -26,7 +26,7 @@ const razdoblje = ref(4)
 
 const predmetOpcije = computed(() => [
   { value: 'svi', label: 'Svi predmeti' },
-  ...predmetiStore.predmeti.map((p) => ({ value: p.predmetId, label: p.naziv })),
+  ...predmetiStore.predmeti.map((predmet) => ({ value: predmet.predmetId, label: predmet.naziv })),
 ])
 
 const razdobljeOpcije = [
@@ -57,7 +57,8 @@ const postotakZadataka = computed(() =>
         <StatCard label="Ukupno vrijeme učenja" :value="`${statistika.ukupnoSati} sati`">
           <p
             v-if="statistika.promjenaTjedna"
-            class="mt-2 flex items-center gap-1.5 text-sm text-sb-teal"
+            class="mt-2 flex items-center gap-1.5 text-sm"
+            :class="statistika.promjenaTjedna > 0 ? 'text-sb-teal' : 'text-red-600'"
           >
             <Icon name="munja" size="h-4 w-4" />
             {{ statistika.promjenaTjedna > 0 ? '+' : '' }}{{ statistika.promjenaTjedna }}% u odnosu
@@ -106,7 +107,10 @@ const postotakZadataka = computed(() =>
         <BaseCard class="lg:col-span-2">
           <p class="mb-4 text-xl font-bold text-sb-indigo">Sati po danima</p>
           <div class="h-64">
-            <BarChart :labels="poDanima.map((d) => d.dan)" :values="poDanima.map((d) => d.sati)" />
+            <BarChart
+              :labels="poDanima.map((stavka) => stavka.dan)"
+              :values="poDanima.map((stavka) => stavka.sati)"
+            />
           </div>
         </BaseCard>
 
@@ -114,9 +118,9 @@ const postotakZadataka = computed(() =>
           <p class="mb-4 text-xl font-bold text-slate-900">Raspodjela po predmetima</p>
           <div class="relative h-48">
             <DonutChart
-              :labels="raspodjela.map((s) => s.naziv)"
-              :values="raspodjela.map((s) => s.minuta)"
-              :colors="raspodjela.map((s) => bojaPredmeta(s.boja).hex)"
+              :labels="raspodjela.map((predmet) => predmet.naziv)"
+              :values="raspodjela.map((predmet) => predmet.minuta)"
+              :colors="raspodjela.map((predmet) => bojaPredmeta(predmet.boja).hex)"
             />
             <div
               class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
@@ -144,8 +148,8 @@ const postotakZadataka = computed(() =>
         <p class="mb-4 text-xl font-bold text-slate-900">Sati po tjednima</p>
         <div class="h-64">
           <LineChart
-            :labels="poTjednima.map((t) => t.oznaka)"
-            :values="poTjednima.map((t) => t.sati)"
+            :labels="poTjednima.map((tjedan) => tjedan.oznaka)"
+            :values="poTjednima.map((tjedan) => tjedan.sati)"
           />
         </div>
       </BaseCard>
@@ -160,7 +164,7 @@ const postotakZadataka = computed(() =>
           </p>
           <p class="mt-6 flex items-center gap-2 font-semibold">
             <Icon name="munja" />
-            {{ statistika.poDanuTjedna().filter((d) => d.minuta > 0).length }} dana u flowu ovaj
+            {{ statistika.poDanuTjedna().filter((dan) => dan.minuta > 0).length }} dana u flowu ovaj
             tjedan
           </p>
         </div>
