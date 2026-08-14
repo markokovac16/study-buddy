@@ -36,7 +36,13 @@ watch(
 )
 
 const filterPrioriteta = ref('svi')
+const filterKategorije = ref('sve')
 const prikaziSveBiljeske = ref(false)
+
+watch(odabraniId, () => {
+  filterKategorije.value = 'sve'
+  prikaziSveBiljeske.value = false
+})
 
 const predmetModal = ref(false)
 const zadatakModal = ref(false)
@@ -66,14 +72,29 @@ const zadaciOdabranog = computed(() => {
   )
 })
 
-const biljeskeOdabranog = computed(() => {
+const kategorijeOdabranog = computed(() => store.kategorijePredmeta(odabraniId.value))
+
+const kategorijaOpcije = computed(() => [
+  { value: 'sve', label: 'Sve' },
+  ...kategorijeOdabranog.value.map((kategorija) => ({ value: kategorija, label: kategorija })),
+])
+
+const filtriraneBiljeske = computed(() => {
   const sve = store.biljeskePredmeta(odabraniId.value)
-  return prikaziSveBiljeske.value ? sve : sve.slice(0, 2)
+  return filterKategorije.value === 'sve'
+    ? sve
+    : sve.filter((biljeska) => biljeska.kategorija === filterKategorije.value)
 })
+
+const biljeskeOdabranog = computed(() =>
+  prikaziSveBiljeske.value ? filtriraneBiljeske.value : filtriraneBiljeske.value.slice(0, 2),
+)
 
 const priloziOdabranog = computed(() => store.priloziPredmeta(odabraniId.value))
 
-const iskoristenoKb = computed(() => store.prilozi.reduce((zbroj, p) => zbroj + p.velicinaKb, 0))
+const iskoristenoKb = computed(() =>
+  store.prilozi.reduce((zbroj, prilog) => zbroj + prilog.velicinaKb, 0),
+)
 const iskoristenoPostotak = computed(() =>
   Math.min(Math.round((iskoristenoKb.value / KVOTA_KB) * 1000) / 10, 100),
 )
@@ -148,8 +169,8 @@ function ucitajDatoteku(dogadaj) {
         title="Upravljanje predmetima"
         subtitle="Svi kolegiji, zadaci, bilješke i materijali na jednom mjestu."
       />
-      <BaseButton class="flex items-center gap-2" @click="otvoriNoviPredmet">
-        <Icon name="plus" size="h-4 w-4 inline" />
+      <BaseButton @click="otvoriNoviPredmet">
+        <Icon name="plus" size="h-4 w-4" />
         Dodaj novi predmet
       </BaseButton>
     </div>
@@ -207,8 +228,8 @@ function ucitajDatoteku(dogadaj) {
               </h3>
               <div class="flex items-center gap-3">
                 <BaseSelect v-model="filterPrioriteta" :options="prioritetOpcije" />
-                <BaseButton class="flex items-center gap-2" @click="otvoriNoviZadatak">
-                  <Icon name="plus" size="h-4 w-4 inline" />
+                <BaseButton @click="otvoriNoviZadatak">
+                  <Icon name="plus" size="h-4 w-4" />
                   Dodaj zadatak
                 </BaseButton>
               </div>
@@ -234,15 +255,20 @@ function ucitajDatoteku(dogadaj) {
                 Bilješke
               </h3>
               <div class="flex items-center gap-3">
+                <BaseSelect
+                  v-if="kategorijeOdabranog.length"
+                  v-model="filterKategorije"
+                  :options="kategorijaOpcije"
+                />
                 <button
-                  v-if="store.biljeskePredmeta(odabraniId).length > 2"
+                  v-if="filtriraneBiljeske.length > 2"
                   class="cursor-pointer text-sm font-semibold text-sb-indigo"
                   @click="prikaziSveBiljeske = !prikaziSveBiljeske"
                 >
                   {{ prikaziSveBiljeske ? 'Prikaži manje' : 'Prikaži sve bilješke' }}
                 </button>
-                <BaseButton class="flex items-center gap-2" @click="otvoriNovuBiljesku">
-                  <Icon name="plus" size="h-4 w-4 inline" />
+                <BaseButton @click="otvoriNovuBiljesku">
+                  <Icon name="plus" size="h-4 w-4" />
                   Nova bilješka
                 </BaseButton>
               </div>
@@ -257,7 +283,13 @@ function ucitajDatoteku(dogadaj) {
                 @obrisi="store.obrisiBiljesku(biljeska.biljeskaId)"
               />
             </div>
-            <p v-else class="text-sm text-slate-500">Još nema bilježaka za ovaj predmet.</p>
+            <p v-else class="text-sm text-slate-500">
+              {{
+                filterKategorije === 'sve'
+                  ? 'Još nema bilježaka za ovaj predmet.'
+                  : 'Nema bilježaka u odabranoj kategoriji.'
+              }}
+            </p>
           </div>
         </div>
 
@@ -303,7 +335,12 @@ function ucitajDatoteku(dogadaj) {
 
     <SubjectModal v-model="predmetModal" :predmet="predmetZaUredivanje" @spremi="spremiPredmet" />
     <TaskModal v-model="zadatakModal" :zadatak="zadatakZaUredivanje" @spremi="spremiZadatak" />
-    <NoteModal v-model="biljeskaModal" :biljeska="biljeskaZaUredivanje" @spremi="spremiBiljesku" />
+    <NoteModal
+      v-model="biljeskaModal"
+      :biljeska="biljeskaZaUredivanje"
+      :kategorije="kategorijeOdabranog"
+      @spremi="spremiBiljesku"
+    />
     <ConfirmModal :upit="upit" @odgovor="odgovori" />
   </div>
 </template>

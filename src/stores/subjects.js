@@ -55,6 +55,11 @@ export const useSubjectsStore = defineStore('subjects', () => {
     biljeske.value.find((biljeska) => biljeska.biljeskaId === biljeskaId)
   const prilogPoId = (prilogId) => prilozi.value.find((prilog) => prilog.prilogId === prilogId)
 
+  const kategorijePredmeta = (predmetId) =>
+    [...new Set(biljeskePredmeta(predmetId).map((biljeska) => biljeska.kategorija))]
+      .filter(Boolean)
+      .sort((prva, druga) => prva.localeCompare(druga))
+
   const naCekanju = (predmetId) =>
     zadaciPredmeta(predmetId).filter((zadatak) => zadatak.status !== STATUSI.ZAVRSENO).length
 
@@ -234,6 +239,7 @@ export const useSubjectsStore = defineStore('subjects', () => {
     predmetPoId,
     zadaciPredmeta,
     biljeskePredmeta,
+    kategorijePredmeta,
     priloziPredmeta,
     naCekanju,
     napredak,

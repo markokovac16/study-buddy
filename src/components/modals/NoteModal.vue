@@ -1,25 +1,41 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import BaseModal from '../ui/BaseModal.vue'
 import BaseInput from '../ui/BaseInput.vue'
+import BaseSelect from '../ui/BaseSelect.vue'
 import BaseTextarea from '../ui/BaseTextarea.vue'
 import BaseButton from '../ui/BaseButton.vue'
 
-const props = defineProps({ biljeska: Object })
+const props = defineProps({ biljeska: Object, kategorije: { type: Array, default: () => [] } })
 
 const open = defineModel({ type: Boolean })
 const emit = defineEmits(['spremi'])
 
-const prazna = { naslov: '', kategorija: 'Koncepti', sadrzaj: '' }
+const NOVA = '__nova'
+
+const prazna = { naslov: '', kategorija: '', sadrzaj: '' }
 const obrazac = ref({ ...prazna })
+const novaKategorija = ref('')
+
+const kategorijaOpcije = computed(() => [
+  ...props.kategorije.map((kategorija) => ({ value: kategorija, label: kategorija })),
+  { value: NOVA, label: 'Nova kategorija...' },
+])
 
 watch(open, (vrijednost) => {
-  if (vrijednost) obrazac.value = props.biljeska ? { ...props.biljeska } : { ...prazna }
+  if (!vrijednost) return
+  obrazac.value = props.biljeska
+    ? { ...props.biljeska }
+    : { ...prazna, kategorija: props.kategorije[0] ?? '' }
+  novaKategorija.value = ''
+  if (!props.kategorije.includes(obrazac.value.kategorija)) obrazac.value.kategorija = NOVA
 })
 
 function posalji() {
-  if (!obrazac.value.naslov.trim()) return
-  emit('spremi', { ...obrazac.value })
+  const kategorija =
+    obrazac.value.kategorija === NOVA ? novaKategorija.value.trim() : obrazac.value.kategorija
+  if (!obrazac.value.naslov.trim() || !kategorija) return
+  emit('spremi', { ...obrazac.value, kategorija })
   open.value = false
 }
 </script>
@@ -28,7 +44,21 @@ function posalji() {
   <BaseModal v-model="open" :title="biljeska ? 'Uredi bilješku' : 'Nova bilješka'">
     <form class="space-y-4" @submit.prevent="posalji">
       <BaseInput v-model="obrazac.naslov" label="Naslov" placeholder="npr. Kolizije hash tablice" />
-      <BaseInput v-model="obrazac.kategorija" label="Kategorija" placeholder="npr. Koncepti" />
+
+      <label class="block">
+        <span class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase">
+          Kategorija
+        </span>
+        <BaseSelect v-model="obrazac.kategorija" :options="kategorijaOpcije" class="w-full" />
+      </label>
+
+      <BaseInput
+        v-if="obrazac.kategorija === NOVA"
+        v-model="novaKategorija"
+        label="Naziv nove kategorije"
+        placeholder="npr. Koncepti"
+      />
+
       <BaseTextarea
         v-model="obrazac.sadrzaj"
         label="Sadržaj"

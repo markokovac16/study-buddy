@@ -18,7 +18,7 @@ const variants = {
   <component
     :is="to ? 'RouterLink' : 'button'"
     :to="to || undefined"
-    class="inline-block cursor-pointer rounded-xl px-5 py-2.5 text-center text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
+    class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-center text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50"
     :class="[variants[variant], block && 'w-full']"
   >
     <slot />
