@@ -1,5 +1,6 @@
 <script setup>
 import Icon from './ui/Icon.vue'
+import IconButton from './ui/IconButton.vue'
 import { formatDatum, formatVelicina } from '../utils/format'
 
 defineProps({ prilog: { type: Object, required: true } })
@@ -42,12 +43,6 @@ const boje = {
       <Icon name="preuzimanje" size="h-4 w-4" />
     </a>
 
-    <button
-      class="cursor-pointer text-slate-400 transition hover:text-red-600"
-      title="Obriši prilog"
-      @click="$emit('obrisi')"
-    >
-      <Icon name="kanta" size="h-4 w-4" />
-    </button>
+    <IconButton bare name="kanta" variant="danger" title="Obriši prilog" @click="$emit('obrisi')" />
   </div>
 </template>

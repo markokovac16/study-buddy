@@ -1,5 +1,6 @@
 <script setup>
 import Icon from './ui/Icon.vue'
+import IconButton from './ui/IconButton.vue'
 import BaseBadge from './ui/BaseBadge.vue'
 import { STATUSI } from '../data/mock'
 import { prioritetBoja, prioritetNaziv, relativniRok, statusNaziv } from '../utils/format'
@@ -44,20 +45,15 @@ defineEmits(['prebaci', 'uredi', 'obrisi'])
         prioritetNaziv[zadatak.prioritet]
       }}</BaseBadge>
 
-      <button
-        class="cursor-pointer text-slate-400 transition hover:text-sb-indigo"
-        title="Uredi zadatak"
-        @click="$emit('uredi')"
-      >
-        <Icon name="olovka" />
-      </button>
-      <button
-        class="cursor-pointer text-slate-400 transition hover:text-red-600"
+      <IconButton bare name="olovka" size="h-5 w-5" title="Uredi zadatak" @click="$emit('uredi')" />
+      <IconButton
+        bare
+        name="kanta"
+        size="h-5 w-5"
+        variant="danger"
         title="Obriši zadatak"
         @click="$emit('obrisi')"
-      >
-        <Icon name="kanta" />
-      </button>
+      />
     </div>
   </div>
 </template>

@@ -1,5 +1,6 @@
 <script setup>
 import Icon from './ui/Icon.vue'
+import IconButton from './ui/IconButton.vue'
 import { formatDatum } from '../utils/format'
 
 defineProps({ biljeska: { type: Object, required: true } })
@@ -14,20 +15,14 @@ defineEmits(['uredi', 'obrisi'])
         {{ biljeska.kategorija }}
       </p>
       <div class="flex gap-2">
-        <button
-          class="cursor-pointer text-slate-400 transition hover:text-sb-indigo"
-          title="Uredi bilješku"
-          @click="$emit('uredi')"
-        >
-          <Icon name="olovka" size="h-4 w-4" />
-        </button>
-        <button
-          class="cursor-pointer text-slate-400 transition hover:text-red-600"
+        <IconButton bare name="olovka" title="Uredi bilješku" @click="$emit('uredi')" />
+        <IconButton
+          bare
+          name="kanta"
+          variant="danger"
           title="Obriši bilješku"
           @click="$emit('obrisi')"
-        >
-          <Icon name="kanta" size="h-4 w-4" />
-        </button>
+        />
       </div>
     </div>
 

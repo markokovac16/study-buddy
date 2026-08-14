@@ -1,9 +1,9 @@
 <script setup>
 import { computed, ref } from 'vue'
 import BaseCard from '../../components/ui/BaseCard.vue'
-import BaseButton from '../../components/ui/BaseButton.vue'
 import BaseBadge from '../../components/ui/BaseBadge.vue'
 import Icon from '../../components/ui/Icon.vue'
+import IconButton from '../../components/ui/IconButton.vue'
 import PageHeading from '../../components/ui/PageHeading.vue'
 import BarChart from '../../components/charts/BarChart.vue'
 import Loader from '../../components/ui/Loader.vue'
@@ -144,27 +144,18 @@ async function obrisi(stavka) {
             </div>
 
             <div class="flex items-center gap-1">
-              <button
-                class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo"
+              <IconButton
+                :name="stavka.vidljiv ? 'zabrana' : 'kvacica'"
                 :title="stavka.vidljiv ? 'Sakrij objavu' : 'Objavi'"
                 @click="novosti.prebaciVidljivost(stavka)"
-              >
-                <Icon :name="stavka.vidljiv ? 'zabrana' : 'kvacica'" size="h-4 w-4" />
-              </button>
-              <button
-                class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo"
-                title="Uredi objavu"
-                @click="otvoriUredi(stavka)"
-              >
-                <Icon name="olovka" size="h-4 w-4" />
-              </button>
-              <button
-                class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-red-600"
+              />
+              <IconButton name="olovka" title="Uredi objavu" @click="otvoriUredi(stavka)" />
+              <IconButton
+                name="kanta"
+                variant="danger"
                 title="Obriši objavu"
                 @click="obrisi(stavka)"
-              >
-                <Icon name="kanta" size="h-4 w-4" />
-              </button>
+              />
             </div>
           </div>
 

@@ -49,18 +49,18 @@ function posalji() {
       <BaseInput v-model="obrazac.rokIzvrsenja" label="Rok izvršenja" type="date" />
 
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <label class="block">
-          <span class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase"
-            >Prioritet</span
-          >
-          <BaseSelect v-model="obrazac.prioritet" :options="prioritetOpcije" class="w-full" />
-        </label>
-        <label class="block">
-          <span class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase"
-            >Status</span
-          >
-          <BaseSelect v-model="obrazac.status" :options="statusOpcije" class="w-full" />
-        </label>
+        <BaseSelect
+          v-model="obrazac.prioritet"
+          :options="prioritetOpcije"
+          label="Prioritet"
+          class="w-full"
+        />
+        <BaseSelect
+          v-model="obrazac.status"
+          :options="statusOpcije"
+          label="Status"
+          class="w-full"
+        />
       </div>
 
       <div class="flex justify-end gap-3 pt-2">

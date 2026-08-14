@@ -1,4 +1,6 @@
 <script setup>
+import FieldLabel from './FieldLabel.vue'
+
 defineProps({
   label: String,
   placeholder: String,
@@ -10,12 +12,7 @@ const model = defineModel()
 
 <template>
   <label class="block">
-    <span
-      v-if="label"
-      class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase"
-    >
-      {{ label }}
-    </span>
+    <FieldLabel v-if="label">{{ label }}</FieldLabel>
     <textarea
       v-model="model"
       :rows="rows"

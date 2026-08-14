@@ -5,6 +5,7 @@ import BaseCard from '../components/ui/BaseCard.vue'
 import BaseInput from '../components/ui/BaseInput.vue'
 import BaseButton from '../components/ui/BaseButton.vue'
 import Avatar from '../components/ui/Avatar.vue'
+import FieldLabel from '../components/ui/FieldLabel.vue'
 import Icon from '../components/ui/Icon.vue'
 import PageHeading from '../components/ui/PageHeading.vue'
 import SaveBar from '../components/SaveBar.vue'
@@ -104,9 +105,7 @@ async function deaktiviraj() {
         <form class="space-y-4" @submit.prevent="spremi">
           <BaseInput v-model="obrazac.ime" label="Ime i prezime" />
           <div>
-            <span class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase">
-              Adresa e-pošte
-            </span>
+            <FieldLabel>Adresa e-pošte</FieldLabel>
             <p class="rounded-xl bg-slate-100 px-4 py-3 break-all text-slate-500">
               {{ auth.korisnik.email }}
             </p>

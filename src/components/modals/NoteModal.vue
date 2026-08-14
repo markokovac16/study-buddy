@@ -45,12 +45,12 @@ function posalji() {
     <form class="space-y-4" @submit.prevent="posalji">
       <BaseInput v-model="obrazac.naslov" label="Naslov" placeholder="npr. Kolizije hash tablice" />
 
-      <label class="block">
-        <span class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase">
-          Kategorija
-        </span>
-        <BaseSelect v-model="obrazac.kategorija" :options="kategorijaOpcije" class="w-full" />
-      </label>
+      <BaseSelect
+        v-model="obrazac.kategorija"
+        :options="kategorijaOpcije"
+        label="Kategorija"
+        class="w-full"
+      />
 
       <BaseInput
         v-if="obrazac.kategorija === NOVA"

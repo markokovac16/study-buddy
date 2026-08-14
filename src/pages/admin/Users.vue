@@ -4,6 +4,7 @@ import BaseSelect from '../../components/ui/BaseSelect.vue'
 import BaseBadge from '../../components/ui/BaseBadge.vue'
 import Avatar from '../../components/ui/Avatar.vue'
 import Icon from '../../components/ui/Icon.vue'
+import IconButton from '../../components/ui/IconButton.vue'
 import Loader from '../../components/ui/Loader.vue'
 import PageHeading from '../../components/ui/PageHeading.vue'
 import ConfirmModal from '../../components/modals/ConfirmModal.vue'
@@ -271,8 +272,8 @@ async function obrisi(korisnik) {
 
               <td class="px-6 py-4">
                 <div class="flex justify-end gap-1">
-                  <button
-                    class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:cursor-default disabled:opacity-30"
+                  <IconButton
+                    name="stit"
                     :disabled="korisnik.korisnikId === mojId"
                     :title="
                       korisnik.korisnikId === mojId
@@ -282,11 +283,9 @@ async function obrisi(korisnik) {
                           : 'Postavi kao administratora'
                     "
                     @click="prebaciUlogu(korisnik)"
-                  >
-                    <Icon name="stit" size="h-4 w-4" />
-                  </button>
-                  <button
-                    class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:cursor-default disabled:opacity-30"
+                  />
+                  <IconButton
+                    :name="korisnik.aktivan ? 'zabrana' : 'kvacica'"
                     :disabled="korisnik.korisnikId === mojId"
                     :title="
                       korisnik.korisnikId === mojId
@@ -296,11 +295,10 @@ async function obrisi(korisnik) {
                           : 'Aktiviraj račun'
                     "
                     @click="prebaciAktivnost(korisnik)"
-                  >
-                    <Icon :name="korisnik.aktivan ? 'zabrana' : 'kvacica'" size="h-4 w-4" />
-                  </button>
-                  <button
-                    class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-red-600 disabled:cursor-default disabled:opacity-30"
+                  />
+                  <IconButton
+                    name="kanta"
+                    variant="danger"
                     :disabled="korisnik.korisnikId === mojId"
                     :title="
                       korisnik.korisnikId === mojId
@@ -308,9 +306,7 @@ async function obrisi(korisnik) {
                         : 'Obriši korisnika'
                     "
                     @click="obrisi(korisnik)"
-                  >
-                    <Icon name="kanta" size="h-4 w-4" />
-                  </button>
+                  />
                 </div>
               </td>
             </tr>
@@ -332,14 +328,12 @@ async function obrisi(korisnik) {
         </p>
 
         <div class="flex items-center gap-1">
-          <button
-            class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:opacity-30"
+          <IconButton
+            name="lijevo"
             :disabled="stranica === 1"
             title="Prethodna stranica"
             @click="stranica--"
-          >
-            <Icon name="lijevo" size="h-4 w-4" />
-          </button>
+          />
 
           <button
             v-for="broj in brojStranica"
@@ -353,14 +347,12 @@ async function obrisi(korisnik) {
             {{ broj }}
           </button>
 
-          <button
-            class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:opacity-30"
+          <IconButton
+            name="desno"
             :disabled="stranica === brojStranica"
             title="Sljedeća stranica"
             @click="stranica++"
-          >
-            <Icon name="desno" size="h-4 w-4" />
-          </button>
+          />
         </div>
       </div>
     </div>

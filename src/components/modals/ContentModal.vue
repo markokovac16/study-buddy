@@ -39,12 +39,7 @@ function posalji() {
 <template>
   <BaseModal v-model="open" :title="stavka ? 'Uredi objavu' : 'Nova objava'">
     <form class="space-y-4" @submit.prevent="posalji">
-      <label class="block">
-        <span class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase"
-          >Tip</span
-        >
-        <BaseSelect v-model="obrazac.tip" :options="tipOpcije" class="w-full" />
-      </label>
+      <BaseSelect v-model="obrazac.tip" :options="tipOpcije" label="Tip" class="w-full" />
       <BaseInput v-model="obrazac.naslov" label="Naslov" />
       <BaseTextarea v-model="obrazac.sadrzaj" label="Sadržaj" :rows="6" />
       <BaseInput

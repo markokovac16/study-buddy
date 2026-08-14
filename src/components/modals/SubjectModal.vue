@@ -41,18 +41,8 @@ function posalji() {
       <BaseInput v-model="obrazac.opis" label="Opis" placeholder="npr. Računalne znanosti 202" />
 
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <label class="block">
-          <span class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase"
-            >Boja</span
-          >
-          <BaseSelect v-model="obrazac.boja" :options="bojeOpcije" class="w-full" />
-        </label>
-        <label class="block">
-          <span class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase"
-            >Ikona</span
-          >
-          <BaseSelect v-model="obrazac.ikona" :options="ikoneOpcije" class="w-full" />
-        </label>
+        <BaseSelect v-model="obrazac.boja" :options="bojeOpcije" label="Boja" class="w-full" />
+        <BaseSelect v-model="obrazac.ikona" :options="ikoneOpcije" label="Ikona" class="w-full" />
       </div>
 
       <div class="flex justify-end gap-3 pt-2">

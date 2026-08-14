@@ -6,6 +6,7 @@ import BaseCard from '../components/ui/BaseCard.vue'
 import ProgressBar from '../components/ui/ProgressBar.vue'
 import Icon from '../components/ui/Icon.vue'
 import PageHeading from '../components/ui/PageHeading.vue'
+import SectionPanel from '../components/ui/SectionPanel.vue'
 import Loader from '../components/ui/Loader.vue'
 import SubjectCard from '../components/SubjectCard.vue'
 import TaskRow from '../components/TaskRow.vue'
@@ -221,20 +222,14 @@ function ucitajDatoteku(dogadaj) {
 
       <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
         <div class="space-y-6 xl:col-span-2">
-          <div class="rounded-card bg-slate-100 p-4 sm:p-6">
-            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <h3 class="flex items-center gap-2 text-xl font-bold text-slate-900">
-                <Icon name="kvacica" />
-                Aktivni zadaci
-              </h3>
-              <div class="flex flex-wrap items-center gap-3">
-                <BaseSelect v-model="filterPrioriteta" :options="prioritetOpcije" />
-                <BaseButton @click="otvoriNoviZadatak">
-                  <Icon name="plus" size="h-4 w-4" />
-                  Dodaj zadatak
-                </BaseButton>
-              </div>
-            </div>
+          <SectionPanel title="Aktivni zadaci" icon="kvacica">
+            <template #akcije>
+              <BaseSelect v-model="filterPrioriteta" :options="prioritetOpcije" />
+              <BaseButton @click="otvoriNoviZadatak">
+                <Icon name="plus" size="h-4 w-4" />
+                Dodaj zadatak
+              </BaseButton>
+            </template>
 
             <div v-if="zadaciOdabranog.length" class="space-y-3">
               <TaskRow
@@ -247,33 +242,27 @@ function ucitajDatoteku(dogadaj) {
               />
             </div>
             <p v-else class="text-sm text-slate-500">Nema zadataka za odabrani filter.</p>
-          </div>
+          </SectionPanel>
 
-          <div class="rounded-card bg-slate-100 p-4 sm:p-6">
-            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <h3 class="flex items-center gap-2 text-xl font-bold text-slate-900">
-                <Icon name="dokument" />
-                Bilješke
-              </h3>
-              <div class="flex flex-wrap items-center gap-3">
-                <BaseSelect
-                  v-if="kategorijeOdabranog.length"
-                  v-model="filterKategorije"
-                  :options="kategorijaOpcije"
-                />
-                <button
-                  v-if="filtriraneBiljeske.length > 2"
-                  class="cursor-pointer text-sm font-semibold text-sb-indigo"
-                  @click="prikaziSveBiljeske = !prikaziSveBiljeske"
-                >
-                  {{ prikaziSveBiljeske ? 'Prikaži manje' : 'Prikaži sve bilješke' }}
-                </button>
-                <BaseButton @click="otvoriNovuBiljesku">
-                  <Icon name="plus" size="h-4 w-4" />
-                  Nova bilješka
-                </BaseButton>
-              </div>
-            </div>
+          <SectionPanel title="Bilješke" icon="dokument">
+            <template #akcije>
+              <BaseSelect
+                v-if="kategorijeOdabranog.length"
+                v-model="filterKategorije"
+                :options="kategorijaOpcije"
+              />
+              <button
+                v-if="filtriraneBiljeske.length > 2"
+                class="cursor-pointer text-sm font-semibold text-sb-indigo"
+                @click="prikaziSveBiljeske = !prikaziSveBiljeske"
+              >
+                {{ prikaziSveBiljeske ? 'Prikaži manje' : 'Prikaži sve bilješke' }}
+              </button>
+              <BaseButton @click="otvoriNovuBiljesku">
+                <Icon name="plus" size="h-4 w-4" />
+                Nova bilješka
+              </BaseButton>
+            </template>
 
             <div v-if="biljeskeOdabranog.length" class="grid grid-cols-1 gap-4 md:grid-cols-2">
               <NoteCard
@@ -291,25 +280,21 @@ function ucitajDatoteku(dogadaj) {
                   : 'Nema bilježaka u odabranoj kategoriji.'
               }}
             </p>
-          </div>
+          </SectionPanel>
         </div>
 
         <div class="space-y-6">
           <TimerCard :predmet-id="odabraniId" />
 
-          <div class="rounded-card bg-slate-100 p-4 sm:p-6">
-            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <h3 class="flex items-center gap-2 text-xl font-bold text-slate-900">
-                <Icon name="mapa" />
-                Resursi
-              </h3>
+          <SectionPanel title="Resursi" icon="mapa">
+            <template #akcije>
               <label
                 class="cursor-pointer rounded-xl bg-white p-2.5 text-slate-600 shadow-sm transition hover:bg-slate-50"
               >
                 <Icon name="upload" />
                 <input type="file" class="hidden" @change="ucitajDatoteku" />
               </label>
-            </div>
+            </template>
 
             <Loader v-if="store.slanjePriloga" tekst="Slanje datoteke" />
             <div v-else-if="priloziOdabranog.length" class="space-y-3">
@@ -329,7 +314,7 @@ function ucitajDatoteku(dogadaj) {
               </p>
               <ProgressBar :value="iskoristenoPostotak" />
             </div>
-          </div>
+          </SectionPanel>
         </div>
       </div>
     </template>

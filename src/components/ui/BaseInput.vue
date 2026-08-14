@@ -1,4 +1,6 @@
 <script setup>
+import FieldLabel from './FieldLabel.vue'
+
 defineProps({
   label: String,
   type: { type: String, default: 'text' },
@@ -11,12 +13,7 @@ const model = defineModel()
 
 <template>
   <label class="block">
-    <span
-      v-if="label"
-      class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase"
-    >
-      {{ label }}
-    </span>
+    <FieldLabel v-if="label">{{ label }}</FieldLabel>
     <input
       v-model="model"
       :type="type"

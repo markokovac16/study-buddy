@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import BaseCard from '../components/ui/BaseCard.vue'
 import Icon from '../components/ui/Icon.vue'
 import RingProgress from '../components/ui/RingProgress.vue'
+import SectionPanel from '../components/ui/SectionPanel.vue'
 import TimerCard from '../components/TimerCard.vue'
 import TaskCard from '../components/TaskCard.vue'
 import Loader from '../components/ui/Loader.vue'
@@ -17,6 +18,11 @@ const auth = useAuthStore()
 const predmetiStore = useSubjectsStore()
 const statistika = useStatisticsStore()
 const pomodoro = usePomodoroStore()
+
+const SORTIRANJA = [
+  { kljuc: 'datum', naziv: 'Po datumu' },
+  { kljuc: 'prioritet', naziv: 'Prioritet' },
+]
 
 const sortiranje = ref('datum')
 
@@ -136,26 +142,20 @@ const nadolazeci = computed(() => {
       </BaseCard>
     </div>
 
-    <div class="rounded-card mt-6 bg-slate-100 p-4 sm:p-6">
-      <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <h2 class="text-2xl font-bold text-slate-900">Nadolazeći zadaci</h2>
-        <div class="flex gap-2">
-          <button
-            v-for="opcija in [
-              { kljuc: 'datum', naziv: 'Po datumu' },
-              { kljuc: 'prioritet', naziv: 'Prioritet' },
-            ]"
-            :key="opcija.kljuc"
-            class="cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition"
-            :class="
-              sortiranje === opcija.kljuc ? 'bg-sb-indigo text-sb-light' : 'bg-white text-slate-600'
-            "
-            @click="sortiranje = opcija.kljuc"
-          >
-            {{ opcija.naziv }}
-          </button>
-        </div>
-      </div>
+    <SectionPanel title="Nadolazeći zadaci" tag="h2" size="text-2xl" class="mt-6">
+      <template #akcije>
+        <button
+          v-for="opcija in SORTIRANJA"
+          :key="opcija.kljuc"
+          class="cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition"
+          :class="
+            sortiranje === opcija.kljuc ? 'bg-sb-indigo text-sb-light' : 'bg-white text-slate-600'
+          "
+          @click="sortiranje = opcija.kljuc"
+        >
+          {{ opcija.naziv }}
+        </button>
+      </template>
 
       <Loader v-if="predmetiStore.ucitavanje" tekst="Učitavanje zadataka" />
       <div
@@ -170,6 +170,6 @@ const nadolazeci = computed(() => {
         />
       </div>
       <p v-else class="text-sm text-slate-500">Nema otvorenih zadataka. Odlično!</p>
-    </div>
+    </SectionPanel>
   </div>
 </template>
