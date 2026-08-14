@@ -113,9 +113,13 @@ export const usePomodoroStore = defineStore('pomodoro', () => {
     predmetId.value = id
   }
 
-  watch(trajanjeFaze, (trajanje) => {
-    if (!radi.value) sekunde.value = trajanje
-  })
+  watch(
+    trajanjeFaze,
+    (trajanje) => {
+      if (!radi.value) sekunde.value = trajanje
+    },
+    { immediate: true },
+  )
 
   return {
     sesije,
