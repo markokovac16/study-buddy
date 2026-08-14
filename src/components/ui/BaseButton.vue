@@ -6,11 +6,11 @@ defineProps({
 })
 
 const variants = {
-  primary: 'bg-sb-indigo text-white hover:bg-sb-blue',
+  primary: 'bg-sb-indigo text-sb-light hover:bg-sb-hover',
   secondary: 'bg-slate-200 text-slate-700 hover:bg-slate-300',
   outline: 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50',
   ghost: 'text-slate-600 hover:bg-slate-100',
-  danger: 'bg-red-600 text-white hover:bg-red-700',
+  danger: 'bg-red-600 text-sb-light hover:bg-red-700',
 }
 </script>
 

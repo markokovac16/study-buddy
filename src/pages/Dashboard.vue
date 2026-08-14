@@ -148,7 +148,7 @@ const nadolazeci = computed(() => {
             :key="opcija.kljuc"
             class="cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition"
             :class="
-              sortiranje === opcija.kljuc ? 'bg-sb-indigo text-white' : 'bg-white text-slate-600'
+              sortiranje === opcija.kljuc ? 'bg-sb-indigo text-sb-light' : 'bg-white text-slate-600'
             "
             @click="sortiranje = opcija.kljuc"
           >
@@ -158,7 +158,10 @@ const nadolazeci = computed(() => {
       </div>
 
       <Loader v-if="predmetiStore.ucitavanje" tekst="Učitavanje zadataka" />
-      <div v-else-if="nadolazeci.length" class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div
+        v-else-if="nadolazeci.length"
+        class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+      >
         <TaskCard
           v-for="zadatak in nadolazeci"
           :key="zadatak.zadatakId"

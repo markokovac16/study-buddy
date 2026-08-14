@@ -9,7 +9,7 @@ const model = defineModel()
 </script>
 
 <template>
-  <span class="relative inline-block">
+  <span class="relative inline-block max-w-full">
     <select
       v-model="model"
       class="w-full cursor-pointer appearance-none rounded-xl bg-slate-200/70 py-2.5 pr-11 pl-4 text-sm text-slate-700 outline-none focus-visible:ring-2 focus-visible:ring-sb-indigo"

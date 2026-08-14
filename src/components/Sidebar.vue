@@ -54,11 +54,7 @@ async function odjava() {
 </script>
 
 <template>
-  <div
-    v-if="otvoren"
-    class="fixed inset-0 z-40 bg-slate-900/40 lg:hidden"
-    @click="otvoren = false"
-  />
+  <div v-if="otvoren" class="fixed inset-0 z-40 bg-black/50 lg:hidden" @click="otvoren = false" />
 
   <aside
     class="fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col justify-between overflow-y-auto bg-sb-bg px-6 py-8 transition-transform duration-200"
@@ -92,7 +88,7 @@ async function odjava() {
         <RouterLink
           v-else
           to="/ploca"
-          class="rounded-card mb-8 block bg-sb-indigo px-4 py-3 text-center text-white"
+          class="rounded-card mb-8 block bg-sb-indigo px-4 py-3 text-center text-sb-light"
         >
           <span class="text-2xl font-bold tabular-nums">{{ pomodoro.prikaz }}</span>
           <span class="mt-0.5 block text-xs opacity-80">

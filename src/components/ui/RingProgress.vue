@@ -21,7 +21,7 @@ const offset = computed(() => circumference.value * (1 - Math.min(props.value, 1
         :cy="size / 2"
         :r="radius"
         :stroke-width="stroke"
-        stroke="#e2e8f0"
+        class="stroke-slate-200"
         fill="none"
       />
       <circle

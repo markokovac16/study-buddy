@@ -346,7 +346,7 @@ async function obrisi(korisnik) {
             :key="broj"
             class="h-9 w-9 cursor-pointer rounded-lg text-sm font-medium transition"
             :class="
-              broj === stranica ? 'bg-sb-indigo text-white' : 'text-slate-500 hover:bg-slate-100'
+              broj === stranica ? 'bg-sb-indigo text-sb-light' : 'text-slate-500 hover:bg-slate-100'
             "
             @click="stranica = broj"
           >

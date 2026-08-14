@@ -72,7 +72,7 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
             pripadaju, a ne u istoj hrpi.
           </p>
 
-          <div class="grid grid-cols-3 gap-3 rounded-xl bg-slate-50 p-4">
+          <div class="grid grid-cols-1 gap-3 rounded-xl bg-slate-50 p-4 sm:grid-cols-3">
             <div
               v-for="predmet in prikazaniPredmeti"
               :key="predmet.predmetId"
@@ -99,7 +99,7 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
         </div>
 
         <div
-          class="grid grid-cols-1 items-center gap-6 rounded-3xl bg-white p-6 shadow-sm sm:p-8 sm:grid-cols-2"
+          class="grid grid-cols-1 items-center gap-6 rounded-3xl bg-white p-6 shadow-sm sm:p-8 lg:grid-cols-2"
         >
           <div>
             <span
@@ -116,7 +116,7 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
         </div>
 
         <div
-          class="grid grid-cols-1 items-center gap-6 rounded-3xl bg-white p-6 shadow-sm sm:p-8 sm:grid-cols-2"
+          class="grid grid-cols-1 items-center gap-6 rounded-3xl bg-white p-6 shadow-sm sm:p-8 lg:grid-cols-2"
         >
           <div>
             <span

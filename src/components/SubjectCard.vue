@@ -26,7 +26,7 @@ defineProps({
     <p class="text-xl font-bold text-slate-900">{{ predmet.naziv }}</p>
     <p class="mb-4 text-sm text-slate-500 italic">{{ predmet.opis }}</p>
 
-    <div class="mb-3 flex items-center gap-4 text-xs">
+    <div class="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
       <span
         class="flex items-center gap-1.5"
         :class="naCekanju > 5 ? 'text-red-600' : 'text-sb-indigo'"

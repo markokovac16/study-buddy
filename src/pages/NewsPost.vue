@@ -27,7 +27,7 @@ const objava = computed(() => novosti.objavaPoId(route.params.sadrzajId))
 
     <Loader v-if="novosti.ucitavanje" />
 
-    <div v-else-if="!objava || !objava.vidljiv" class="rounded-card bg-white p-8">
+    <div v-else-if="!objava || !objava.vidljiv" class="rounded-card bg-white p-6 sm:p-8">
       <p class="text-lg font-bold text-slate-900">Objava nije pronađena</p>
       <p class="mt-1 mb-5 text-sm text-slate-500">
         Objava je uklonjena ili je poveznica neispravna.

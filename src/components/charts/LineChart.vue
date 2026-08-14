@@ -29,7 +29,7 @@ const options = {
   scales: {
     x: { grid: { display: false }, border: { display: false }, ticks: { color: '#94a3b8' } },
     y: {
-      grid: { color: '#f1f5f9' },
+      grid: { color: 'rgba(148, 163, 184, 0.2)' },
       border: { display: false },
       ticks: { color: '#94a3b8' },
       beginAtZero: true,

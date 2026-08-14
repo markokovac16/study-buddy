@@ -1,4 +1,5 @@
 <script setup>
+import { onBeforeUnmount, watch } from 'vue'
 import BaseCard from '../components/ui/BaseCard.vue'
 import BaseInput from '../components/ui/BaseInput.vue'
 import BaseSelect from '../components/ui/BaseSelect.vue'
@@ -7,6 +8,7 @@ import Icon from '../components/ui/Icon.vue'
 import PageHeading from '../components/ui/PageHeading.vue'
 import SaveBar from '../components/SaveBar.vue'
 import { useProfileForm } from '../composables/profileForm'
+import { useTheme } from '../composables/theme'
 import { POMODORO_ZADANO, useAuthStore } from '../stores/auth'
 
 const auth = useAuthStore()
@@ -27,6 +29,22 @@ const pretvori = (podaci) => ({
 })
 
 const { obrazac, promijenjeno, spremljeno, spremi, odbaci } = useProfileForm(pocetno, pretvori)
+
+const { prikazi, ocisti } = useTheme()
+
+watch(() => obrazac.value.preferencije.tema, prikazi)
+
+onBeforeUnmount(ocisti)
+
+function spremiPostavke() {
+  spremi()
+  ocisti()
+}
+
+function odbaciPostavke() {
+  odbaci()
+  ocisti()
+}
 
 const jezikOpcije = [{ value: 'hr', label: 'Hrvatski' }]
 
@@ -122,7 +140,7 @@ const obavijestiStavke = [
           <div
             v-for="stavka in obavijestiStavke"
             :key="stavka.kljuc"
-            class="flex items-center gap-4 rounded-xl bg-slate-100 px-5 py-4"
+            class="flex items-center gap-3 rounded-xl bg-slate-100 px-4 py-3 sm:gap-4 sm:px-5 sm:py-4"
           >
             <span
               class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-sb-indigo"
@@ -144,8 +162,8 @@ const obavijestiStavke = [
     <SaveBar
       :promijenjeno="promijenjeno"
       :spremljeno="spremljeno"
-      @spremi="spremi"
-      @odbaci="odbaci"
+      @spremi="spremiPostavke"
+      @odbaci="odbaciPostavke"
     />
   </div>
 </template>

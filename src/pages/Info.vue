@@ -42,18 +42,8 @@ const STRANICE = {
         tekst: 'Marko Kovač, student Fakulteta informatike u Puli.',
       },
       {
-        naslov: 'Kolegij i mentor',
-        tekst:
-          'Projekt nastaje na kolegiju Programsko inženjerstvo, koji vodi doc. dr. sc. Nikola Tanković.',
-      },
-      {
-        naslov: 'Prijava problema',
-        tekst:
-          'Ako nešto ne radi kako piše na stranici Pomoć, opišite što ste radili i što se dogodilo. Pomaže i podatak o pregledniku te je li se poruka o grešci pojavila na ekranu.',
-      },
-      {
         naslov: 'Vrijeme odgovora',
-        tekst: 'Aplikacija nema dežurnu podršku. Odgovor ovisi o tome koliko je semestar gust.',
+        tekst: 'Aplikacija nema dežurnu podršku.',
       },
     ],
     poveznice: POVEZNICE,
@@ -109,19 +99,9 @@ const STRANICE = {
           'Za bilješke i priloge koje unesete odgovarate vi. Nemojte slati materijale na koje nemate pravo niti sadržaj koji vrijeđa druge.',
       },
       {
-        naslov: 'Dostupnost',
-        tekst:
-          'Aplikacija se razvija kroz semestar. Moguć je prekid rada, promjena funkcionalnosti i gubitak podataka, pa je nemojte držati kao jedinu kopiju važnih materijala.',
-      },
-      {
         naslov: 'Prestanak korištenja',
         tekst:
           'Račun deaktivirate u profilu kad god želite. Administrator može deaktivirati ili obrisati račun koji krši ova pravila.',
-      },
-      {
-        naslov: 'Odgovornost',
-        tekst:
-          'Aplikacija se nudi takva kakva jest, bez jamstava o točnosti podataka ili neprekidnoj dostupnosti.',
       },
     ],
   },

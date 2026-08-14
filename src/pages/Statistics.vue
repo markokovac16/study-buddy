@@ -155,11 +155,13 @@ const postotakZadataka = computed(() =>
       </BaseCard>
 
       <div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div class="rounded-card bg-sb-indigo p-8 text-white">
+        <div class="rounded-card bg-sb-indigo p-6 text-sb-light sm:p-8">
           <p class="text-2xl font-bold">Najbolji dan</p>
-          <p class="mt-3 text-indigo-100">
+          <p class="mt-3 text-sb-light/80">
             Najproduktivniji dan ovog tjedna je
-            <span class="font-semibold text-white">{{ statistika.najproduktivnijiDan.dan }}</span>
+            <span class="font-semibold text-sb-light">{{
+              statistika.najproduktivnijiDan.dan
+            }}</span>
             s {{ satiIMinute(statistika.najproduktivnijiDan.minuta) }} fokusiranog rada.
           </p>
           <p class="mt-6 flex items-center gap-2 font-semibold">

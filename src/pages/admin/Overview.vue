@@ -75,7 +75,7 @@ async function obrisi(stavka) {
       subtitle="Ključni brojevi platforme i objave u Novostima."
     />
 
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       <BaseCard>
         <div class="mb-4 flex items-start justify-between">
           <span
@@ -129,7 +129,7 @@ async function obrisi(stavka) {
             class="flex flex-wrap items-center gap-4 rounded-xl bg-slate-100 p-4"
           >
             <span
-              class="flex h-14 w-20 shrink-0 flex-col items-center justify-center rounded-lg bg-sb-blue text-white"
+              class="flex h-14 w-20 shrink-0 flex-col items-center justify-center rounded-lg bg-sb-indigo text-sb-light"
             >
               <span class="text-lg font-bold tabular-nums">{{ novosti.rezultat(stavka) }}</span>
               <span class="text-[10px] opacity-80">glasova</span>

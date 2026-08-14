@@ -15,7 +15,7 @@ const inicijali = (ime) =>
 
 <template>
   <span
-    class="flex shrink-0 items-center justify-center rounded-full bg-sb-indigo font-semibold text-white"
+    class="flex shrink-0 items-center justify-center rounded-full bg-sb-indigo font-semibold text-sb-light"
     :class="size"
   >
     {{ inicijali(ime) }}

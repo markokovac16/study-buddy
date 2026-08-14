@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { computed, ref } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
 import Logo from './Logo.vue'
 import Icon from './ui/Icon.vue'
 import Avatar from './ui/Avatar.vue'
 import { useAuthStore } from '../stores/auth'
 import { useNotificationsStore } from '../stores/notifications'
+import { useTheme } from '../composables/theme'
 
 defineProps({ izbornik: Boolean })
 
@@ -13,6 +14,10 @@ defineEmits(['izbornik'])
 
 const auth = useAuthStore()
 const obavijesti = useNotificationsStore()
+const route = useRoute()
+const { tema, prebaci: prebaciTemu } = useTheme()
+
+const prijavljen = computed(() => auth.prijavljen && !route.meta.gost)
 
 const otvorene = ref(false)
 const istaknute = ref([])
@@ -27,7 +32,7 @@ function prebaci() {
 
 <template>
   <header
-    class="relative flex h-16 items-center justify-between bg-sb-surface px-4 shadow-sm sm:px-6 lg:px-12"
+    class="relative flex h-16 items-center justify-between bg-sb-surface px-4 shadow-sm tamna:border-b tamna:border-slate-200 sm:px-6 lg:px-12"
   >
     <div class="flex min-w-0 items-center gap-2 sm:gap-3">
       <button
@@ -39,13 +44,22 @@ function prebaci() {
         <Icon name="izbornik" size="h-6 w-6" />
       </button>
 
-      <RouterLink :to="auth.prijavljen ? '/ploca' : '/'" class="min-w-0">
+      <RouterLink :to="prijavljen ? '/ploca' : '/'" class="min-w-0">
         <Logo size="text-lg sm:text-2xl" />
       </RouterLink>
     </div>
 
-    <div v-if="auth.prijavljen" class="flex shrink-0 items-center gap-3 sm:gap-4">
-      <div class="relative">
+    <div class="flex shrink-0 items-center gap-3 sm:gap-4">
+      <button
+        v-if="!prijavljen"
+        class="cursor-pointer rounded-xl p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-sb-indigo"
+        :title="tema === 'tamna' ? 'Prebaci na svijetlu temu' : 'Prebaci na tamnu temu'"
+        @click="prebaciTemu"
+      >
+        <Icon :name="tema === 'tamna' ? 'sunce' : 'mjesec'" size="h-6 w-6" />
+      </button>
+
+      <div v-if="prijavljen" class="relative">
         <button
           class="relative cursor-pointer rounded-xl p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-sb-indigo"
           title="Obavijesti"
@@ -54,7 +68,7 @@ function prebaci() {
           <Icon name="zvono" size="h-6 w-6" />
           <span
             v-if="obavijesti.broj"
-            class="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white"
+            class="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-sb-light"
           >
             {{ obavijesti.broj }}
           </span>
@@ -113,7 +127,7 @@ function prebaci() {
         </template>
       </div>
 
-      <RouterLink to="/profil">
+      <RouterLink v-if="prijavljen" to="/profil">
         <Avatar :ime="auth.korisnik.ime" size="h-9 w-9 text-xs" />
       </RouterLink>
     </div>

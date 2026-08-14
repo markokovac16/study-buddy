@@ -90,10 +90,12 @@ async function deaktiviraj() {
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <BaseCard class="lg:col-span-2">
-        <div class="mb-6 flex items-center gap-5">
-          <Avatar :ime="obrazac.ime" size="h-20 w-20 text-2xl" />
-          <div>
-            <p class="text-2xl font-bold text-slate-900">{{ obrazac.ime }}</p>
+        <div class="mb-6 flex items-center gap-4 sm:gap-5">
+          <Avatar :ime="obrazac.ime" size="h-16 w-16 text-xl sm:h-20 sm:w-20 sm:text-2xl" />
+          <div class="min-w-0">
+            <p class="text-xl font-bold break-words text-slate-900 sm:text-2xl">
+              {{ obrazac.ime }}
+            </p>
             <p class="text-sm text-slate-500">
               {{ auth.jeAdmin ? 'Administrator' : 'Student' }} • {{ obrazac.godina }}. godina
             </p>

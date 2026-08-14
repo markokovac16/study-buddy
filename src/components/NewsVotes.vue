@@ -20,7 +20,7 @@ const bojaRezultata = computed(() => {
   <div class="flex w-12 shrink-0 flex-col items-center">
     <button
       class="cursor-pointer rounded-lg p-1 transition"
-      :class="moj === 1 ? 'text-sb-teal' : 'text-slate-300 hover:text-sb-teal'"
+      :class="moj === 1 ? 'text-sb-teal' : 'text-slate-400 hover:text-sb-teal'"
       :title="moj === 1 ? 'Ukloni glas' : 'Glas za'"
       @click="novosti.glasaj(objava.sadrzajId, 1)"
     >
@@ -29,7 +29,7 @@ const bojaRezultata = computed(() => {
     <span class="text-sm font-bold tabular-nums" :class="bojaRezultata">{{ rezultat }}</span>
     <button
       class="cursor-pointer rounded-lg p-1 transition"
-      :class="moj === -1 ? 'text-red-600' : 'text-slate-300 hover:text-red-600'"
+      :class="moj === -1 ? 'text-red-600' : 'text-slate-400 hover:text-red-600'"
       :title="moj === -1 ? 'Ukloni glas' : 'Glas protiv'"
       @click="novosti.glasaj(objava.sadrzajId, -1)"
     >

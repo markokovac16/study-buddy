@@ -1,11 +1,15 @@
 @import 'tailwindcss';
 
+@custom-variant tamna (&:where(.tamna, .tamna *));
+
 @theme {
   --color-sb-blue: #312e81;
   --color-sb-indigo: #24389c;
   --color-sb-teal: #006a6a;
   --color-sb-bg: #f3f4f5;
   --color-sb-surface: #f8fafc;
+  --color-sb-light: #ffffff;
+  --color-sb-hover: #312e81;
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-heading: 'Manrope', ui-sans-serif, system-ui, sans-serif;
   --radius-card: 0.75rem;
@@ -19,4 +23,68 @@ h1,
 h2,
 h3 {
   @apply font-heading;
+}
+
+:root.tamna {
+  --color-white: #232029;
+
+  --color-slate-50: #19181e;
+  --color-slate-100: #201e26;
+  --color-slate-200: #2e2b36;
+  --color-slate-300: #403c4b;
+  --color-slate-400: #8f8a9c;
+  --color-slate-500: #a8a3b6;
+  --color-slate-600: #c0bcca;
+  --color-slate-700: #d5d2dd;
+  --color-slate-800: #e8e6ee;
+  --color-slate-900: #f5f4f8;
+
+  --color-sb-bg: #141318;
+  --color-sb-surface: #1c1a22;
+  --color-sb-blue: #a5abf2;
+  --color-sb-indigo: #656fce;
+  --color-sb-hover: #4a52a6;
+  --color-sb-teal: #3ad0ba;
+
+  --color-indigo-50: #201f3a;
+  --color-indigo-100: #2a2850;
+  --color-indigo-200: #363364;
+  --color-teal-100: #12352f;
+  --color-amber-100: #38290f;
+  --color-red-50: #331619;
+  --color-red-100: #401b20;
+  --color-rose-100: #3a1724;
+  --color-sky-100: #112e3f;
+  --color-emerald-100: #12332b;
+
+  --color-red-600: #f05252;
+  --color-red-700: #f87171;
+  --color-teal-600: #56dcc5;
+  --color-teal-700: #8eecd9;
+  --color-amber-600: #f5bb2e;
+  --color-amber-700: #f8d372;
+  --color-sky-700: #74d0f7;
+  --color-rose-600: #f76b85;
+  --color-emerald-700: #67e2ae;
+}
+
+:root.prijelaz,
+:root.prijelaz *,
+:root.prijelaz *::before,
+:root.prijelaz *::after {
+  transition:
+    background-color 250ms ease,
+    border-color 250ms ease,
+    color 250ms ease,
+    fill 250ms ease,
+    stroke 250ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root.prijelaz,
+  :root.prijelaz *,
+  :root.prijelaz *::before,
+  :root.prijelaz *::after {
+    transition: none;
+  }
 }

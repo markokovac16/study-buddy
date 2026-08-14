@@ -17,7 +17,7 @@ defineEmits(['spremi', 'odbaci'])
     <div
       v-if="promijenjeno"
       key="promjene"
-      class="rounded-card fixed right-8 bottom-8 z-40 flex items-center gap-5 bg-white p-4 pl-6 shadow-xl"
+      class="rounded-card fixed inset-x-4 bottom-4 z-40 flex flex-wrap items-center justify-between gap-3 bg-white p-4 shadow-xl sm:inset-x-auto sm:right-8 sm:bottom-8 sm:gap-5 sm:pl-6"
     >
       <p class="text-sm font-semibold text-slate-700">Imate nespremljene promjene</p>
       <div class="flex items-center gap-2">
@@ -28,7 +28,7 @@ defineEmits(['spremi', 'odbaci'])
     <p
       v-else-if="spremljeno"
       key="spremljeno"
-      class="rounded-card fixed right-8 bottom-8 z-40 flex items-center gap-2 bg-white px-6 py-4 text-sm font-semibold text-sb-teal shadow-xl"
+      class="rounded-card fixed right-4 bottom-4 z-40 flex items-center gap-2 bg-white px-6 py-4 text-sm font-semibold text-sb-teal shadow-xl sm:right-8 sm:bottom-8"
     >
       <Icon name="kvacica" size="h-4 w-4" />
       Spremljeno

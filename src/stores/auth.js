@@ -13,6 +13,7 @@ import {
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { auth, db, googleProvider } from '../firebase'
+import { lokalnaTema } from '../utils/theme'
 
 export const POMODORO_ZADANO = { minutaRada: 25, minutaPauze: 5, automatskiNastavak: true }
 
@@ -72,6 +73,10 @@ export const useAuthStore = defineStore('auth', () => {
       ime: racun.displayName || imeIzEmaila(racun.email),
       googleId: googleId(racun),
       profilnaSlika: racun.photoURL || '',
+      preferencije: {
+        ...PREDLOZAK.preferencije,
+        tema: lokalnaTema() ?? PREDLOZAK.preferencije.tema,
+      },
       uloga: racun.email.includes('admin') ? 'admin' : 'student',
       datumRegistracije: new Date().toISOString().slice(0, 10),
       zadnjaPrijava: new Date().toISOString(),

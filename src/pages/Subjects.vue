@@ -164,8 +164,9 @@ function ucitajDatoteku(dogadaj) {
 
 <template>
   <div>
-    <div class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:gap-6">
+    <div class="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:gap-6">
       <PageHeading
+        spacing=""
         title="Upravljanje predmetima"
         subtitle="Svi kolegiji, zadaci, bilješke i materijali na jednom mjestu."
       />

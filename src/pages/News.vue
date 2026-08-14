@@ -18,7 +18,7 @@ const novosti = useNewsStore()
 
     <p
       v-else-if="!novosti.vidljive.length"
-      class="rounded-card bg-white p-8 text-sm text-slate-500"
+      class="rounded-card bg-white p-6 text-sm text-slate-500 sm:p-8"
     >
       Trenutno nema objava.
     </p>
