@@ -1,8 +1,32 @@
 # StudyBuddy
 
-Web aplikacija za organizaciju učenja. Projekt iz kolegija Programsko inženjerstvo.
+Web aplikacija za organizaciju učenja.
 
 Student tijekom semestra prati više kolegija odjednom, a rokovi, bilješke i materijali obično završe razbacani po bilježnicama, mailovima i chatovima. StudyBuddy ih drži na jednom mjestu i uz to mjeri koliko je vremena stvarno potrošeno na učenje, umjesto da se student oslanja na dojam.
+
+## Projekt
+
+| | |
+|---|---|
+| Ustanova | [Fakultet informatike u Puli](https://fipu.unipu.hr) |
+| Kolegij | [Programsko inženjerstvo](https://ntankovic.unipu.hr/pi) |
+| Mentor | [doc. dr. sc. Nikola Tanković](https://ntankovic.unipu.hr) |
+| Prototip | [Figma](https://www.figma.com/proto/QLYnM1YAySGg950vzNdzDI/Untitled?node-id=0-1) |
+
+## Tim
+
+Marko Kovač - samostalan rad na cijelom projektu.
+
+### Planirana zaduženja
+
+| Područje | Što obuhvaća |
+|---|---|
+| Dizajn i prototip | Figma prototip, dizajn tokeni, bazne UI komponente |
+| Arhitektura frontenda | Vue Router s tri layouta, Pinia storeovi, struktura mapa |
+| Korisnički dio | Predmeti, zadaci, bilješke, prilozi, Pomodoro timer, statistika, profil |
+| Administracija | Pregled platforme, objave u Novostima, upravljanje korisnicima |
+| Firebase | Authentication, Firestore po class dijagramu, Storage, sigurnosna pravila |
+| Dokumentacija | Dijagrami, README, plan rada i vođenje git historyja |
 
 ## Što aplikacija radi
 
