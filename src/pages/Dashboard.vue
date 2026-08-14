@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import BaseCard from '../components/ui/BaseCard.vue'
-import Icon from '../components/ui/Icon.vue'
+import IconTile from '../components/ui/IconTile.vue'
 import RingProgress from '../components/ui/RingProgress.vue'
 import SectionPanel from '../components/ui/SectionPanel.vue'
 import TimerCard from '../components/TimerCard.vue'
@@ -13,6 +13,7 @@ import { useStatisticsStore } from '../stores/statistics'
 import { usePomodoroStore } from '../stores/pomodoro'
 import { STATUSI } from '../data/constants'
 import { bojaPredmeta, danaDo, prijeVremena, satiIMinute } from '../utils/format'
+import { silazno } from '../utils/sort'
 
 const auth = useAuthStore()
 const predmetiStore = useSubjectsStore()
@@ -73,7 +74,7 @@ const nedavno = computed(() =>
       vrijeme: prilog.datum,
     })),
   ]
-    .sort((prvi, drugi) => drugi.vrijeme.localeCompare(prvi.vrijeme))
+    .sort(silazno('vrijeme'))
     .slice(0, 4),
 )
 
@@ -123,12 +124,10 @@ const nadolazeci = computed(() => {
 
         <div v-else class="space-y-4">
           <div v-for="stavka in nedavno" :key="stavka.id" class="flex gap-3">
-            <span
-              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            <IconTile
+              :name="stavka.ikona"
               :class="[bojaPredmeta(stavka.boja).pozadina, bojaPredmeta(stavka.boja).tekst]"
-            >
-              <Icon :name="stavka.ikona" />
-            </span>
+            />
             <div class="min-w-0">
               <p class="truncate text-sm font-semibold text-slate-800">
                 {{ stavka.naslov }}

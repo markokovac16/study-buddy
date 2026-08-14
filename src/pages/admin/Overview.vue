@@ -4,6 +4,8 @@ import BaseCard from '../../components/ui/BaseCard.vue'
 import BaseBadge from '../../components/ui/BaseBadge.vue'
 import Icon from '../../components/ui/Icon.vue'
 import IconButton from '../../components/ui/IconButton.vue'
+import IconTile from '../../components/ui/IconTile.vue'
+import MicroLabel from '../../components/ui/MicroLabel.vue'
 import PageHeading from '../../components/ui/PageHeading.vue'
 import BarChart from '../../components/charts/BarChart.vue'
 import Loader from '../../components/ui/Loader.vue'
@@ -12,6 +14,7 @@ import ConfirmModal from '../../components/modals/ConfirmModal.vue'
 import { useConfirm } from '../../composables/useConfirm'
 import { useEditing } from '../../composables/editing'
 import { prijeVremena } from '../../utils/format'
+import { silazno } from '../../utils/sort'
 import { useAdminStore } from '../../stores/admin'
 import { useNewsStore } from '../../stores/news'
 
@@ -38,7 +41,7 @@ const nedavno = computed(() =>
       vrijeme: objava.datum,
     })),
   ]
-    .sort((prvi, drugi) => drugi.vrijeme.localeCompare(prvi.vrijeme))
+    .sort(silazno('vrijeme'))
     .slice(0, 5),
 )
 
@@ -62,26 +65,14 @@ async function obrisi(stavka) {
 
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       <BaseCard>
-        <div class="mb-4 flex items-start justify-between">
-          <span
-            class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-sb-indigo"
-          >
-            <Icon name="korisnici" />
-          </span>
-        </div>
+        <IconTile name="korisnici" class="mb-4 bg-indigo-100 text-sb-indigo" />
         <p class="text-sm text-slate-500">Prijavljeni danas</p>
         <p class="mt-1 text-3xl font-bold text-slate-900">{{ admin.prijavljenihDanas }}</p>
         <p class="mt-1 text-xs text-slate-400">od {{ admin.korisnici.length }} računa</p>
       </BaseCard>
 
       <BaseCard>
-        <div class="mb-4 flex items-start justify-between">
-          <span
-            class="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 text-teal-600"
-          >
-            <Icon name="munja" />
-          </span>
-        </div>
+        <IconTile name="munja" class="mb-4 bg-teal-100 text-teal-600" />
         <p class="text-sm text-slate-500">Nove registracije</p>
         <p class="mt-1 text-3xl font-bold text-slate-900">{{ admin.novihTjedan }}</p>
         <p class="mt-1 text-xs text-slate-400">u zadnjih 7 dana</p>
@@ -160,9 +151,7 @@ async function obrisi(stavka) {
 
       <div class="space-y-6">
         <BaseCard>
-          <p class="mb-4 text-[10px] font-semibold tracking-wide text-slate-400 uppercase">
-            Računi
-          </p>
+          <MicroLabel class="mb-4">Računi</MicroLabel>
           <div class="space-y-3 text-sm">
             <div class="flex items-center gap-2">
               <span class="h-2 w-2 rounded-full bg-emerald-500" />
@@ -192,9 +181,7 @@ async function obrisi(stavka) {
         </BaseCard>
 
         <BaseCard>
-          <p class="mb-4 text-[10px] font-semibold tracking-wide text-slate-400 uppercase">
-            Nedavna aktivnost
-          </p>
+          <MicroLabel class="mb-4">Nedavna aktivnost</MicroLabel>
           <p v-if="!nedavno.length" class="text-sm text-slate-500">
             Još nema zabilježene aktivnosti.
           </p>

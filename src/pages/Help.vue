@@ -1,6 +1,6 @@
 <script setup>
 import BaseCard from '../components/ui/BaseCard.vue'
-import Icon from '../components/ui/Icon.vue'
+import IconTile from '../components/ui/IconTile.vue'
 import PageHeading from '../components/ui/PageHeading.vue'
 
 const teme = [
@@ -52,11 +52,7 @@ const teme = [
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <BaseCard v-for="tema in teme" :key="tema.naslov">
         <div class="flex gap-4">
-          <span
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-sb-indigo"
-          >
-            <Icon :name="tema.ikona" size="h-5 w-5" />
-          </span>
+          <IconTile :name="tema.ikona" class="bg-indigo-100 text-sb-indigo" />
           <div>
             <p class="font-bold text-slate-900">{{ tema.naslov }}</p>
             <p class="mt-1 text-sm text-slate-600">{{ tema.opis }}</p>

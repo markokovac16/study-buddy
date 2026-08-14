@@ -1,5 +1,6 @@
 <script setup>
 import Icon from './ui/Icon.vue'
+import IconTile from './ui/IconTile.vue'
 import ProgressBar from './ui/ProgressBar.vue'
 import { bojaPredmeta } from '../utils/format'
 
@@ -16,12 +17,12 @@ defineProps({
     class="rounded-card w-full cursor-pointer bg-white p-6 text-left shadow-sm transition hover:shadow-md"
     :class="aktivan && 'ring-2 ring-sb-indigo'"
   >
-    <span
-      class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl"
-      :class="[bojaPredmeta(predmet.boja).pozadina, bojaPredmeta(predmet.boja).tekst]"
-    >
-      <Icon :name="predmet.ikona" size="h-6 w-6" />
-    </span>
+    <IconTile
+      :name="predmet.ikona"
+      size="h-12 w-12"
+      icon-size="h-6 w-6"
+      :class="['mb-4', bojaPredmeta(predmet.boja).pozadina, bojaPredmeta(predmet.boja).tekst]"
+    />
 
     <p class="text-xl font-bold text-slate-900">{{ predmet.naziv }}</p>
     <p class="mb-4 text-sm text-slate-500 italic">{{ predmet.opis }}</p>

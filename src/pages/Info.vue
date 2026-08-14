@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import BaseCard from '../components/ui/BaseCard.vue'
+import MicroLabel from '../components/ui/MicroLabel.vue'
 import PageHeading from '../components/ui/PageHeading.vue'
 
 const POVEZNICE = [
@@ -124,9 +125,7 @@ const stranica = computed(() => STRANICE[route.name])
     </div>
 
     <BaseCard v-if="stranica.poveznice" class="mt-6">
-      <p class="mb-3 text-[10px] font-semibold tracking-wide text-slate-400 uppercase">
-        Korisne poveznice
-      </p>
+      <MicroLabel class="mb-3">Korisne poveznice</MicroLabel>
       <div class="flex flex-col gap-2">
         <a
           v-for="poveznica in stranica.poveznice"

@@ -5,6 +5,7 @@ import BaseSelect from '../components/ui/BaseSelect.vue'
 import BaseCard from '../components/ui/BaseCard.vue'
 import ProgressBar from '../components/ui/ProgressBar.vue'
 import Icon from '../components/ui/Icon.vue'
+import IconTile from '../components/ui/IconTile.vue'
 import PageHeading from '../components/ui/PageHeading.vue'
 import SectionPanel from '../components/ui/SectionPanel.vue'
 import Loader from '../components/ui/Loader.vue'
@@ -164,12 +165,12 @@ function ucitajDatoteku(dogadaj) {
     <template v-if="odabrani">
       <div class="mt-12 flex flex-wrap items-center justify-between gap-4">
         <div class="flex min-w-0 items-center gap-4">
-          <span
-            class="flex h-12 w-12 items-center justify-center rounded-xl"
+          <IconTile
+            :name="odabrani.ikona"
+            size="h-12 w-12"
+            icon-size="h-6 w-6"
             :class="[bojaPredmeta(odabrani.boja).pozadina, bojaPredmeta(odabrani.boja).tekst]"
-          >
-            <Icon :name="odabrani.ikona" size="h-6 w-6" />
-          </span>
+          />
           <h2 class="min-w-0 text-2xl font-bold wrap-break-word text-slate-900 sm:text-3xl">
             {{ odabrani.naziv }}
           </h2>

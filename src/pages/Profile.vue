@@ -7,6 +7,7 @@ import BaseButton from '../components/ui/BaseButton.vue'
 import Avatar from '../components/ui/Avatar.vue'
 import FieldLabel from '../components/ui/FieldLabel.vue'
 import Icon from '../components/ui/Icon.vue'
+import MicroLabel from '../components/ui/MicroLabel.vue'
 import PageHeading from '../components/ui/PageHeading.vue'
 import SaveBar from '../components/SaveBar.vue'
 import ConfirmModal from '../components/modals/ConfirmModal.vue'
@@ -141,9 +142,7 @@ async function deaktiviraj() {
           }}
         </p>
 
-        <p class="mt-5 mb-2 text-[10px] font-semibold tracking-wide text-slate-400 uppercase">
-          Povezani računi
-        </p>
+        <MicroLabel class="mt-5 mb-2">Povezani računi</MicroLabel>
         <div class="flex items-center justify-between rounded-xl bg-slate-100 px-4 py-3">
           <span class="flex items-center gap-2 text-sm text-slate-700">
             <Icon name="korisnik" size="h-4 w-4" />
@@ -163,7 +162,7 @@ async function deaktiviraj() {
       <div>
         <p class="text-xl font-bold text-red-700">Opasna zona</p>
         <p class="mt-1 text-sm text-red-600">
-          Nakon brisanja računa nema povratka! Budite sigurni u svoju odluku.
+          Nakon deaktivacije računa morate kontaktirati administratora za ponovnu aktivaciju.
         </p>
       </div>
       <div class="flex gap-3">

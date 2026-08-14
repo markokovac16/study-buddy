@@ -5,6 +5,7 @@ import BaseInput from '../components/ui/BaseInput.vue'
 import BaseSelect from '../components/ui/BaseSelect.vue'
 import BaseToggle from '../components/ui/BaseToggle.vue'
 import Icon from '../components/ui/Icon.vue'
+import IconTile from '../components/ui/IconTile.vue'
 import PageHeading from '../components/ui/PageHeading.vue'
 import SaveBar from '../components/SaveBar.vue'
 import { useProfileForm } from '../composables/profileForm'
@@ -142,11 +143,7 @@ const obavijestiStavke = [
             :key="stavka.kljuc"
             class="flex items-center gap-3 rounded-xl bg-slate-100 px-4 py-3 sm:gap-4 sm:px-5 sm:py-4"
           >
-            <span
-              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-sb-indigo"
-            >
-              <Icon :name="stavka.ikona" />
-            </span>
+            <IconTile :name="stavka.ikona" class="bg-white text-sb-indigo" />
             <div class="flex-1">
               <p class="text-sm font-semibold text-slate-800">
                 {{ stavka.naslov }}

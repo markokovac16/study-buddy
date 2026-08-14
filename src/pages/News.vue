@@ -12,7 +12,10 @@ const novosti = useNewsStore()
 
 <template>
   <div>
-    <PageHeading title="Novosti" subtitle="Objave uredništva, poredane po glasovima korisnika." />
+    <PageHeading
+      title="Novosti"
+      subtitle="Objave administratora, poredane po glasovima korisnika."
+    />
 
     <Loader v-if="novosti.ucitavanje" />
 

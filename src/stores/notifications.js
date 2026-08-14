@@ -5,6 +5,7 @@ import { useSubjectsStore } from './subjects'
 import { useStatisticsStore } from './statistics'
 import { useNewsStore } from './news'
 import { danaDo, satiIMinute } from '../utils/format'
+import { silazno } from '../utils/sort'
 import { STATUSI } from '../data/constants'
 
 const DANA_NOVOSTI = 3
@@ -58,7 +59,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
 
   const objave = computed(() =>
     [...novosti.vidljive]
-      .sort((prva, druga) => druga.datum.localeCompare(prva.datum))
+      .sort(silazno('datum'))
       .filter((objava) => danaDo(objava.datum) > -DANA_NOVOSTI)
       .slice(0, 3)
       .map((objava) => ({

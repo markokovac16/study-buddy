@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import BaseButton from '../components/ui/BaseButton.vue'
 import BaseBadge from '../components/ui/BaseBadge.vue'
 import Icon from '../components/ui/Icon.vue'
+import IconTile from '../components/ui/IconTile.vue'
 import ProgressBar from '../components/ui/ProgressBar.vue'
 import TimerCard from '../components/TimerCard.vue'
 import DonutChart from '../components/charts/DonutChart.vue'
@@ -58,15 +59,16 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
   <section class="bg-slate-100 px-4 py-14 sm:px-6 sm:py-20 lg:px-12">
     <div class="mx-auto max-w-7xl">
       <h2 class="text-3xl font-bold text-sb-indigo sm:text-4xl">Vladajte svojim vremenom</h2>
-      <p class="mt-2 text-slate-500">Alati skrojeni za svakodnevicu studenta.</p>
+      <p class="mt-2 text-slate-500">Alati skrojeni za svakodnevnicu studenta.</p>
 
       <div class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div class="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
-          <span
-            class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-100 text-teal-600"
-          >
-            <Icon name="mapa" size="h-6 w-6" />
-          </span>
+          <IconTile
+            name="mapa"
+            size="h-12 w-12"
+            icon-size="h-6 w-6"
+            class="mb-5 bg-teal-100 text-teal-600"
+          />
           <h3 class="text-2xl font-bold text-slate-900">Organizirani kolegiji</h3>
           <p class="mt-2 mb-6 text-slate-500">
             Svaki kolegij dobiva svoj prostor. Materijali, zadaci i bilješke stoje uz predmet kojem
@@ -103,11 +105,12 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
           class="grid grid-cols-1 items-center gap-6 rounded-3xl bg-white p-6 shadow-sm sm:p-8 lg:grid-cols-2"
         >
           <div>
-            <span
-              class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-sb-indigo"
-            >
-              <Icon name="sat" size="h-6 w-6" />
-            </span>
+            <IconTile
+              name="sat"
+              size="h-12 w-12"
+              icon-size="h-6 w-6"
+              class="mb-5 bg-indigo-100 text-sb-indigo"
+            />
             <h3 class="text-2xl font-bold text-slate-900">Pomodoro timer</h3>
             <p class="mt-2 text-slate-500">
               Dokazana metoda: 25 minuta rada, pa kratka pauza. I tako ukrug.
@@ -120,11 +123,12 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
           class="grid grid-cols-1 items-center gap-6 rounded-3xl bg-white p-6 shadow-sm sm:p-8 lg:grid-cols-2"
         >
           <div>
-            <span
-              class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-600"
-            >
-              <Icon name="graf" size="h-6 w-6" />
-            </span>
+            <IconTile
+              name="graf"
+              size="h-12 w-12"
+              icon-size="h-6 w-6"
+              class="mb-5 bg-amber-100 text-amber-600"
+            />
             <h3 class="text-2xl font-bold text-slate-900">Vizualna statistika</h3>
             <p class="mt-2 text-slate-500">
               Grafovi pokazuju koliko ste vremena uložili u koji kolegij i kako napredujete kroz
@@ -156,11 +160,12 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
         </div>
 
         <div class="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
-          <span
-            class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-100 text-teal-600"
-          >
-            <Icon name="kvacica" size="h-6 w-6" />
-          </span>
+          <IconTile
+            name="kvacica"
+            size="h-12 w-12"
+            icon-size="h-6 w-6"
+            class="mb-5 bg-teal-100 text-teal-600"
+          />
           <h3 class="text-2xl font-bold text-slate-900">Zadaci pod kontrolom</h3>
           <p class="mt-2 mb-6 text-slate-500">
             Popis poredajte po roku ili po prioritetu, ovisno o tome što vam je tog dana važnije.

@@ -5,6 +5,7 @@ import { db } from '../firebase'
 import { useCollection } from '../composables/collection'
 import { useAuthStore } from './auth'
 import { isoDatum } from '../utils/format'
+import { uzlazno } from '../utils/sort'
 
 const zadnjihDana = (broj) =>
   Array.from({ length: broj }, (_, indeks) => {
@@ -23,7 +24,7 @@ export const useAdminStore = defineStore('admin', () => {
     () => auth.jeAdmin,
     () => zbirka,
     'korisnikId',
-    { sortiraj: (prvi, drugi) => prvi.ime.localeCompare(drugi.ime) },
+    { sortiraj: uzlazno('ime') },
   )
 
   const aktivnihKorisnika = computed(

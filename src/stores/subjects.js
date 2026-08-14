@@ -7,6 +7,7 @@ import { useCollection } from '../composables/collection'
 import { useAuthStore } from './auth'
 import { STATUSI } from '../data/constants'
 import { isoDatum } from '../utils/format'
+import { uzlazno } from '../utils/sort'
 
 function tipDatoteke(datoteka) {
   if (datoteka.type.startsWith('image/')) return 'slika'
@@ -77,7 +78,7 @@ export const useSubjectsStore = defineStore('subjects', () => {
     zbirkaPredmeta,
     'predmetId',
     {
-      sortiraj: (prvi, drugi) => prvi.naziv.localeCompare(drugi.naziv),
+      sortiraj: uzlazno('naziv'),
       nakon: (dohvaceni) => uskladiPodzbirke(dohvaceni.map((predmet) => predmet.predmetId)),
       priPrekidu: ocistiPodzbirke,
     },

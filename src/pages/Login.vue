@@ -1,6 +1,7 @@
 <script setup>
 import BaseInput from '../components/ui/BaseInput.vue'
 import BaseButton from '../components/ui/BaseButton.vue'
+import MicroLabel from '../components/ui/MicroLabel.vue'
 import { useAuthForm } from '../composables/authForm'
 
 const { email, lozinka, salje, greska, greskaEmaila, greskaLozinke, posalji, google } =
@@ -20,9 +21,7 @@ const { email, lozinka, salje, greska, greskaEmaila, greskaLozinke, posalji, goo
 
       <div class="my-6 flex items-center gap-4">
         <span class="h-px flex-1 bg-slate-200" />
-        <span class="text-[10px] font-semibold tracking-wide text-slate-400 uppercase"
-          >ili koristite e-poštu</span
-        >
+        <MicroLabel>ili koristite e-poštu</MicroLabel>
         <span class="h-px flex-1 bg-slate-200" />
       </div>
 
