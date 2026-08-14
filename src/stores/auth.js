@@ -103,6 +103,7 @@ export const useAuthStore = defineStore('auth', () => {
     const promjene = { zadnjaPrijava: new Date().toISOString() }
     const google = googleId(racun)
     if (google && korisnik.value.googleId !== google) promjene.googleId = google
+    if (korisnik.value.email !== racun.email) promjene.email = racun.email
     await azuriraj(promjene)
   }
 

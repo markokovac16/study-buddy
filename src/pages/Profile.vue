@@ -21,7 +21,6 @@ const { upit, pitaj, odgovori } = useConfirm()
 
 const pocetno = () => ({
   ime: auth.korisnik.ime,
-  email: auth.korisnik.email,
   sveuciliste: auth.korisnik.sveuciliste,
   godina: auth.korisnik.godina,
   dnevniCiljSati: auth.korisnik.dnevniCiljSati,
@@ -104,7 +103,14 @@ async function deaktiviraj() {
 
         <form class="space-y-4" @submit.prevent="spremi">
           <BaseInput v-model="obrazac.ime" label="Ime i prezime" />
-          <BaseInput v-model="obrazac.email" label="Adresa e-pošte" type="email" />
+          <div>
+            <span class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase">
+              Adresa e-pošte
+            </span>
+            <p class="rounded-xl bg-slate-100 px-4 py-3 break-all text-slate-500">
+              {{ auth.korisnik.email }}
+            </p>
+          </div>
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div class="sm:col-span-2">
               <BaseInput
