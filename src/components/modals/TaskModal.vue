@@ -1,9 +1,9 @@
 <script setup>
-import { ref, watch } from 'vue'
 import BaseModal from '../ui/BaseModal.vue'
 import BaseInput from '../ui/BaseInput.vue'
 import BaseSelect from '../ui/BaseSelect.vue'
 import BaseButton from '../ui/BaseButton.vue'
+import { useModalForm } from '../../composables/modalForm'
 import { PRIORITETI, STATUSI } from '../../data/mock'
 import { prioritetNaziv, statusNaziv } from '../../utils/format'
 
@@ -19,7 +19,11 @@ const prazan = {
   prioritet: PRIORITETI.SREDNJI,
   status: STATUSI.NA_CEKANJU,
 }
-const obrazac = ref({ ...prazan })
+
+const { obrazac, posalji } = useModalForm(open, prazan, {
+  stavka: () => props.zadatak,
+  spremi: (podaci) => emit('spremi', podaci),
+})
 
 const prioritetOpcije = Object.values(PRIORITETI).map((prioritet) => ({
   value: prioritet,
@@ -29,16 +33,6 @@ const statusOpcije = Object.values(STATUSI).map((status) => ({
   value: status,
   label: statusNaziv[status],
 }))
-
-watch(open, (vrijednost) => {
-  if (vrijednost) obrazac.value = props.zadatak ? { ...props.zadatak } : { ...prazan }
-})
-
-function posalji() {
-  if (!obrazac.value.naslov.trim()) return
-  emit('spremi', { ...obrazac.value })
-  open.value = false
-}
 </script>
 
 <template>

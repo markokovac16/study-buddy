@@ -17,6 +17,7 @@ import TaskModal from '../components/modals/TaskModal.vue'
 import NoteModal from '../components/modals/NoteModal.vue'
 import ConfirmModal from '../components/modals/ConfirmModal.vue'
 import { useConfirm } from '../composables/useConfirm'
+import { useEditing } from '../composables/editing'
 import TimerCard from '../components/TimerCard.vue'
 import { useSubjectsStore } from '../stores/subjects'
 import { KVOTA_KB, PRIORITETI, STATUSI } from '../data/mock'
@@ -45,12 +46,19 @@ watch(odabraniId, () => {
   prikaziSveBiljeske.value = false
 })
 
-const predmetModal = ref(false)
-const zadatakModal = ref(false)
-const biljeskaModal = ref(false)
-const predmetZaUredivanje = ref(null)
-const zadatakZaUredivanje = ref(null)
-const biljeskaZaUredivanje = ref(null)
+const predmetModal = useEditing(store.dodajPredmet, store.urediPredmet, 'predmetId')
+
+const zadatakModal = useEditing(
+  (podaci) => store.dodajZadatak({ ...podaci, predmetId: odabraniId.value }),
+  store.urediZadatak,
+  'zadatakId',
+)
+
+const biljeskaModal = useEditing(
+  (podaci) => store.dodajBiljesku({ ...podaci, predmetId: odabraniId.value }),
+  store.urediBiljesku,
+  'biljeskaId',
+)
 
 const odabrani = computed(() => store.predmetPoId(odabraniId.value))
 
@@ -100,21 +108,6 @@ const iskoristenoPostotak = computed(() =>
   Math.min(Math.round((iskoristenoKb.value / KVOTA_KB) * 1000) / 10, 100),
 )
 
-function otvoriNoviPredmet() {
-  predmetZaUredivanje.value = null
-  predmetModal.value = true
-}
-
-function otvoriUrediPredmet() {
-  predmetZaUredivanje.value = odabrani.value
-  predmetModal.value = true
-}
-
-function spremiPredmet(podaci) {
-  if (predmetZaUredivanje.value) store.urediPredmet(predmetZaUredivanje.value.predmetId, podaci)
-  else store.dodajPredmet(podaci)
-}
-
 async function obrisiPredmet() {
   const potvrda = await pitaj({
     naslov: 'Brisanje predmeta',
@@ -123,36 +116,6 @@ async function obrisiPredmet() {
   })
   if (!potvrda) return
   store.obrisiPredmet(odabraniId.value)
-}
-
-function otvoriNoviZadatak() {
-  zadatakZaUredivanje.value = null
-  zadatakModal.value = true
-}
-
-function otvoriUrediZadatak(zadatak) {
-  zadatakZaUredivanje.value = zadatak
-  zadatakModal.value = true
-}
-
-function spremiZadatak(podaci) {
-  if (zadatakZaUredivanje.value) store.urediZadatak(zadatakZaUredivanje.value.zadatakId, podaci)
-  else store.dodajZadatak({ ...podaci, predmetId: odabraniId.value })
-}
-
-function otvoriNovuBiljesku() {
-  biljeskaZaUredivanje.value = null
-  biljeskaModal.value = true
-}
-
-function otvoriUrediBiljesku(biljeska) {
-  biljeskaZaUredivanje.value = biljeska
-  biljeskaModal.value = true
-}
-
-function spremiBiljesku(podaci) {
-  if (biljeskaZaUredivanje.value) store.urediBiljesku(biljeskaZaUredivanje.value.biljeskaId, podaci)
-  else store.dodajBiljesku({ ...podaci, predmetId: odabraniId.value })
 }
 
 function ucitajDatoteku(dogadaj) {
@@ -171,7 +134,7 @@ function ucitajDatoteku(dogadaj) {
         title="Upravljanje predmetima"
         subtitle="Svi kolegiji, zadaci, bilješke i materijali na jednom mjestu."
       />
-      <BaseButton @click="otvoriNoviPredmet">
+      <BaseButton @click="predmetModal.otvoriNovu()">
         <Icon name="plus" size="h-4 w-4" />
         Dodaj novi predmet
       </BaseButton>
@@ -213,7 +176,9 @@ function ucitajDatoteku(dogadaj) {
         </div>
 
         <div class="flex items-center gap-3">
-          <BaseButton variant="ghost" @click="otvoriUrediPredmet">Uredi predmet</BaseButton>
+          <BaseButton variant="ghost" @click="predmetModal.otvoriUredi(odabrani)">
+            Uredi predmet
+          </BaseButton>
           <BaseButton variant="ghost" class="text-red-600 hover:bg-red-50" @click="obrisiPredmet"
             >Obriši</BaseButton
           >
@@ -225,7 +190,7 @@ function ucitajDatoteku(dogadaj) {
           <SectionPanel title="Aktivni zadaci" icon="kvacica">
             <template #akcije>
               <BaseSelect v-model="filterPrioriteta" :options="prioritetOpcije" />
-              <BaseButton @click="otvoriNoviZadatak">
+              <BaseButton @click="zadatakModal.otvoriNovu()">
                 <Icon name="plus" size="h-4 w-4" />
                 Dodaj zadatak
               </BaseButton>
@@ -237,7 +202,7 @@ function ucitajDatoteku(dogadaj) {
                 :key="zadatak.zadatakId"
                 :zadatak="zadatak"
                 @prebaci="store.prebaciStatus(zadatak.zadatakId)"
-                @uredi="otvoriUrediZadatak(zadatak)"
+                @uredi="zadatakModal.otvoriUredi(zadatak)"
                 @obrisi="store.obrisiZadatak(zadatak.zadatakId)"
               />
             </div>
@@ -258,7 +223,7 @@ function ucitajDatoteku(dogadaj) {
               >
                 {{ prikaziSveBiljeske ? 'Prikaži manje' : 'Prikaži sve bilješke' }}
               </button>
-              <BaseButton @click="otvoriNovuBiljesku">
+              <BaseButton @click="biljeskaModal.otvoriNovu()">
                 <Icon name="plus" size="h-4 w-4" />
                 Nova bilješka
               </BaseButton>
@@ -269,7 +234,7 @@ function ucitajDatoteku(dogadaj) {
                 v-for="biljeska in biljeskeOdabranog"
                 :key="biljeska.biljeskaId"
                 :biljeska="biljeska"
-                @uredi="otvoriUrediBiljesku(biljeska)"
+                @uredi="biljeskaModal.otvoriUredi(biljeska)"
                 @obrisi="store.obrisiBiljesku(biljeska.biljeskaId)"
               />
             </div>
@@ -319,13 +284,21 @@ function ucitajDatoteku(dogadaj) {
       </div>
     </template>
 
-    <SubjectModal v-model="predmetModal" :predmet="predmetZaUredivanje" @spremi="spremiPredmet" />
-    <TaskModal v-model="zadatakModal" :zadatak="zadatakZaUredivanje" @spremi="spremiZadatak" />
+    <SubjectModal
+      v-model="predmetModal.otvoren"
+      :predmet="predmetModal.stavka"
+      @spremi="predmetModal.spremi"
+    />
+    <TaskModal
+      v-model="zadatakModal.otvoren"
+      :zadatak="zadatakModal.stavka"
+      @spremi="zadatakModal.spremi"
+    />
     <NoteModal
-      v-model="biljeskaModal"
-      :biljeska="biljeskaZaUredivanje"
+      v-model="biljeskaModal.otvoren"
+      :biljeska="biljeskaModal.stavka"
       :kategorije="kategorijeOdabranog"
-      @spremi="spremiBiljesku"
+      @spremi="biljeskaModal.spremi"
     />
     <ConfirmModal :upit="upit" @odgovor="odgovori" />
   </div>

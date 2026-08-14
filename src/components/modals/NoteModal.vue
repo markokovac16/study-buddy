@@ -1,10 +1,11 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import BaseModal from '../ui/BaseModal.vue'
 import BaseInput from '../ui/BaseInput.vue'
 import BaseSelect from '../ui/BaseSelect.vue'
 import BaseTextarea from '../ui/BaseTextarea.vue'
 import BaseButton from '../ui/BaseButton.vue'
+import { useModalForm } from '../../composables/modalForm'
 
 const props = defineProps({ biljeska: Object, kategorije: { type: Array, default: () => [] } })
 
@@ -14,7 +15,6 @@ const emit = defineEmits(['spremi'])
 const NOVA = '__nova'
 
 const prazna = { naslov: '', kategorija: '', sadrzaj: '' }
-const obrazac = ref({ ...prazna })
 const novaKategorija = ref('')
 
 const kategorijaOpcije = computed(() => [
@@ -22,22 +22,19 @@ const kategorijaOpcije = computed(() => [
   { value: NOVA, label: 'Nova kategorija...' },
 ])
 
-watch(open, (vrijednost) => {
-  if (!vrijednost) return
-  obrazac.value = props.biljeska
-    ? { ...props.biljeska }
-    : { ...prazna, kategorija: props.kategorije[0] ?? '' }
-  novaKategorija.value = ''
-  if (!props.kategorije.includes(obrazac.value.kategorija)) obrazac.value.kategorija = NOVA
+const { obrazac, posalji } = useModalForm(open, prazna, {
+  stavka: () => props.biljeska,
+  nakon: (podaci) => {
+    novaKategorija.value = ''
+    if (!props.biljeska) podaci.kategorija = props.kategorije[0] ?? ''
+    if (!props.kategorije.includes(podaci.kategorija)) podaci.kategorija = NOVA
+  },
+  pretvori: (podaci) => {
+    const kategorija = podaci.kategorija === NOVA ? novaKategorija.value.trim() : podaci.kategorija
+    return kategorija ? { ...podaci, kategorija } : null
+  },
+  spremi: (podaci) => emit('spremi', podaci),
 })
-
-function posalji() {
-  const kategorija =
-    obrazac.value.kategorija === NOVA ? novaKategorija.value.trim() : obrazac.value.kategorija
-  if (!obrazac.value.naslov.trim() || !kategorija) return
-  emit('spremi', { ...obrazac.value, kategorija })
-  open.value = false
-}
 </script>
 
 <template>

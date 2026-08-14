@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import BaseCard from '../../components/ui/BaseCard.vue'
 import BaseBadge from '../../components/ui/BaseBadge.vue'
 import Icon from '../../components/ui/Icon.vue'
@@ -10,6 +10,7 @@ import Loader from '../../components/ui/Loader.vue'
 import ContentModal from '../../components/modals/ContentModal.vue'
 import ConfirmModal from '../../components/modals/ConfirmModal.vue'
 import { useConfirm } from '../../composables/useConfirm'
+import { useEditing } from '../../composables/editing'
 import { prijeVremena } from '../../utils/format'
 import { useAdminStore } from '../../stores/admin'
 import { useNewsStore } from '../../stores/news'
@@ -18,8 +19,7 @@ const admin = useAdminStore()
 const novosti = useNewsStore()
 const { upit, pitaj, odgovori } = useConfirm()
 
-const modal = ref(false)
-const zaUredivanje = ref(null)
+const objavaModal = useEditing(novosti.dodaj, novosti.uredi, 'sadrzajId')
 
 const nedavno = computed(() =>
   [
@@ -41,21 +41,6 @@ const nedavno = computed(() =>
     .sort((prvi, drugi) => drugi.vrijeme.localeCompare(prvi.vrijeme))
     .slice(0, 5),
 )
-
-function otvoriNovi() {
-  zaUredivanje.value = null
-  modal.value = true
-}
-
-function otvoriUredi(stavka) {
-  zaUredivanje.value = stavka
-  modal.value = true
-}
-
-function spremi(podaci) {
-  if (zaUredivanje.value) novosti.uredi(zaUredivanje.value.sadrzajId, podaci)
-  else novosti.dodaj(podaci)
-}
 
 async function obrisi(stavka) {
   const potvrda = await pitaj({
@@ -149,7 +134,11 @@ async function obrisi(stavka) {
                 :title="stavka.vidljiv ? 'Sakrij objavu' : 'Objavi'"
                 @click="novosti.prebaciVidljivost(stavka)"
               />
-              <IconButton name="olovka" title="Uredi objavu" @click="otvoriUredi(stavka)" />
+              <IconButton
+                name="olovka"
+                title="Uredi objavu"
+                @click="objavaModal.otvoriUredi(stavka)"
+              />
               <IconButton
                 name="kanta"
                 variant="danger"
@@ -161,7 +150,7 @@ async function obrisi(stavka) {
 
           <button
             class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 py-5 text-sm font-semibold text-slate-500 transition hover:border-sb-indigo hover:text-sb-indigo"
-            @click="otvoriNovi"
+            @click="objavaModal.otvoriNovu()"
           >
             <Icon name="plus" size="h-4 w-4" />
             Nova objava
@@ -232,7 +221,11 @@ async function obrisi(stavka) {
       </div>
     </div>
 
-    <ContentModal v-model="modal" :stavka="zaUredivanje" @spremi="spremi" />
+    <ContentModal
+      v-model="objavaModal.otvoren"
+      :stavka="objavaModal.stavka"
+      @spremi="objavaModal.spremi"
+    />
     <ConfirmModal :upit="upit" @odgovor="odgovori" />
   </div>
 </template>

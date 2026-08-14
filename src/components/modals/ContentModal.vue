@@ -1,11 +1,11 @@
 <script setup>
-import { ref, watch } from 'vue'
 import BaseModal from '../ui/BaseModal.vue'
 import BaseInput from '../ui/BaseInput.vue'
 import BaseSelect from '../ui/BaseSelect.vue'
 import BaseTextarea from '../ui/BaseTextarea.vue'
 import BaseToggle from '../ui/BaseToggle.vue'
 import BaseButton from '../ui/BaseButton.vue'
+import { useModalForm } from '../../composables/modalForm'
 
 const props = defineProps({ stavka: Object })
 
@@ -18,22 +18,11 @@ const tipOpcije = ['Obavijest', 'Savjet', 'Događanje', 'Ažuriranje'].map((tip)
 }))
 
 const prazna = { tip: 'Obavijest', naslov: '', sadrzaj: '', poveznica: '', vidljiv: true }
-const obrazac = ref({ ...prazna })
 
-watch(open, (vrijednost) => {
-  if (!vrijednost) return
-  obrazac.value = props.stavka
-    ? Object.fromEntries(
-        Object.keys(prazna).map((polje) => [polje, props.stavka[polje] ?? prazna[polje]]),
-      )
-    : { ...prazna }
+const { obrazac, posalji } = useModalForm(open, prazna, {
+  stavka: () => props.stavka,
+  spremi: (podaci) => emit('spremi', podaci),
 })
-
-function posalji() {
-  if (!obrazac.value.naslov.trim()) return
-  emit('spremi', { ...obrazac.value })
-  open.value = false
-}
 </script>
 
 <template>

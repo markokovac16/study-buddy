@@ -1,9 +1,9 @@
 <script setup>
-import { ref, watch } from 'vue'
 import BaseModal from '../ui/BaseModal.vue'
 import BaseInput from '../ui/BaseInput.vue'
 import BaseSelect from '../ui/BaseSelect.vue'
 import BaseButton from '../ui/BaseButton.vue'
+import { useModalForm } from '../../composables/modalForm'
 import { bojePredmeta } from '../../utils/format'
 
 const props = defineProps({ predmet: Object })
@@ -12,7 +12,12 @@ const open = defineModel({ type: Boolean })
 const emit = defineEmits(['spremi'])
 
 const prazan = { naziv: '', opis: '', boja: 'indigo', ikona: 'knjiga' }
-const obrazac = ref({ ...prazan })
+
+const { obrazac, posalji } = useModalForm(open, prazan, {
+  stavka: () => props.predmet,
+  spremi: (podaci) => emit('spremi', podaci),
+  obavezno: 'naziv',
+})
 
 const bojeOpcije = Object.keys(bojePredmeta).map((boja) => ({ value: boja, label: boja }))
 const ikoneOpcije = [
@@ -22,16 +27,6 @@ const ikoneOpcije = [
   { value: 'iskra', label: 'Iskra' },
   { value: 'sat', label: 'Sat' },
 ]
-
-watch(open, (vrijednost) => {
-  if (vrijednost) obrazac.value = props.predmet ? { ...props.predmet } : { ...prazan }
-})
-
-function posalji() {
-  if (!obrazac.value.naziv.trim()) return
-  emit('spremi', { ...obrazac.value })
-  open.value = false
-}
 </script>
 
 <template>
