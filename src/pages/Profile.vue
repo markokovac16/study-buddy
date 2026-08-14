@@ -9,10 +9,13 @@ import BaseToggle from '../components/ui/BaseToggle.vue'
 import Avatar from '../components/ui/Avatar.vue'
 import Icon from '../components/ui/Icon.vue'
 import PageHeading from '../components/ui/PageHeading.vue'
+import ConfirmModal from '../components/modals/ConfirmModal.vue'
+import { useConfirm } from '../composables/useConfirm'
 import { POMODORO_ZADANO, useAuthStore } from '../stores/auth'
 
 const auth = useAuthStore()
 const router = useRouter()
+const { upit, pitaj, odgovori } = useConfirm()
 
 const pocetno = () => ({
   ime: auth.korisnik.ime,
@@ -83,7 +86,12 @@ async function odjava() {
 }
 
 async function deaktiviraj() {
-  if (!confirm('Deaktivirati račun? Nakon deaktivacije nema povratka.')) return
+  const potvrda = await pitaj({
+    naslov: 'Deaktivacija računa',
+    tekst: 'Nakon deaktivacije nema povratka. Deaktivirati račun?',
+    gumb: 'Deaktiviraj',
+  })
+  if (!potvrda) return
   await auth.deaktiviraj()
   router.push('/')
 }
@@ -263,5 +271,6 @@ async function deaktiviraj() {
         Spremljeno
       </p>
     </Transition>
+    <ConfirmModal :upit="upit" @odgovor="odgovori" />
   </div>
 </template>

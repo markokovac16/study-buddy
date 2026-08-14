@@ -14,12 +14,15 @@ import FileRow from '../components/FileRow.vue'
 import SubjectModal from '../components/modals/SubjectModal.vue'
 import TaskModal from '../components/modals/TaskModal.vue'
 import NoteModal from '../components/modals/NoteModal.vue'
+import ConfirmModal from '../components/modals/ConfirmModal.vue'
+import { useConfirm } from '../composables/useConfirm'
 import TimerCard from '../components/TimerCard.vue'
 import { useSubjectsStore } from '../stores/subjects'
 import { KVOTA_KB, PRIORITETI, STATUSI } from '../data/mock'
 import { bojaPredmeta, formatVelicina, prioritetNaziv } from '../utils/format'
 
 const store = useSubjectsStore()
+const { upit, pitaj, odgovori } = useConfirm()
 
 const odabraniId = ref(null)
 
@@ -87,8 +90,13 @@ function spremiPredmet(podaci) {
   else store.dodajPredmet(podaci)
 }
 
-function obrisiPredmet() {
-  if (!confirm(`Obrisati predmet "${odabrani.value.naziv}" sa svim zadacima i bilješkama?`)) return
+async function obrisiPredmet() {
+  const potvrda = await pitaj({
+    naslov: 'Brisanje predmeta',
+    tekst: `Obrisati predmet "${odabrani.value.naziv}" sa svim zadacima, bilješkama i prilozima?`,
+    gumb: 'Obriši',
+  })
+  if (!potvrda) return
   store.obrisiPredmet(odabraniId.value)
 }
 
@@ -293,5 +301,6 @@ function ucitajDatoteku(dogadaj) {
     <SubjectModal v-model="predmetModal" :predmet="predmetZaUredivanje" @spremi="spremiPredmet" />
     <TaskModal v-model="zadatakModal" :zadatak="zadatakZaUredivanje" @spremi="spremiZadatak" />
     <NoteModal v-model="biljeskaModal" :biljeska="biljeskaZaUredivanje" @spremi="spremiBiljesku" />
+    <ConfirmModal :upit="upit" @odgovor="odgovori" />
   </div>
 </template>

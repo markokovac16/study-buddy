@@ -4,11 +4,17 @@ import BaseSelect from '../../components/ui/BaseSelect.vue'
 import BaseBadge from '../../components/ui/BaseBadge.vue'
 import Avatar from '../../components/ui/Avatar.vue'
 import Icon from '../../components/ui/Icon.vue'
+import Loader from '../../components/ui/Loader.vue'
 import PageHeading from '../../components/ui/PageHeading.vue'
+import ConfirmModal from '../../components/modals/ConfirmModal.vue'
+import { useConfirm } from '../../composables/useConfirm'
 import { useAdminStore } from '../../stores/admin'
+import { useAuthStore } from '../../stores/auth'
 import { formatDatum } from '../../utils/format'
 
 const admin = useAdminStore()
+const auth = useAuthStore()
+const { upit: potvrdaUpit, pitaj, odgovori } = useConfirm()
 
 const PO_STRANICI = 8
 
@@ -46,10 +52,16 @@ const stranicaKorisnika = computed(() =>
   filtrirani.value.slice((stranica.value - 1) * PO_STRANICI, stranica.value * PO_STRANICI),
 )
 
+const mojId = computed(() => auth.korisnik.korisnikId)
+
+const oznacivi = computed(() =>
+  stranicaKorisnika.value.filter((korisnik) => korisnik.korisnikId !== mojId.value),
+)
+
 const sviOdabrani = computed(
   () =>
-    stranicaKorisnika.value.length > 0 &&
-    stranicaKorisnika.value.every((k) => odabrani.value.includes(k.korisnikId)),
+    oznacivi.value.length > 0 &&
+    oznacivi.value.every((korisnik) => odabrani.value.includes(korisnik.korisnikId)),
 )
 
 watch([upit, filterUloge, filterStatusa], () => {
@@ -67,25 +79,68 @@ function prebaciOdabir(korisnikId) {
 }
 
 function prebaciSve() {
-  const idevi = stranicaKorisnika.value.map((k) => k.korisnikId)
+  const idevi = oznacivi.value.map((korisnik) => korisnik.korisnikId)
   odabrani.value = sviOdabrani.value
     ? odabrani.value.filter((id) => !idevi.includes(id))
     : [...new Set([...odabrani.value, ...idevi])]
 }
 
-function skupnaDeaktivacija() {
+async function skupnaDeaktivacija() {
+  const potvrda = await pitaj({
+    naslov: 'Skupna deaktivacija',
+    tekst: `Deaktivirati ${odabrani.value.length} korisnika? Neće se moći prijaviti dok ih ponovno ne aktivirate.`,
+    gumb: 'Deaktiviraj',
+  })
+  if (!potvrda) return
   admin.skupnaDeaktivacija(odabrani.value)
   odabrani.value = []
 }
 
-function skupnoBrisanje() {
-  if (!confirm(`Trajno obrisati ${odabrani.value.length} korisnika?`)) return
+async function prebaciAktivnost(korisnik) {
+  const aktivan = !korisnik.aktivan
+  const potvrda = await pitaj({
+    naslov: aktivan ? 'Aktivacija računa' : 'Deaktivacija računa',
+    tekst: aktivan
+      ? `Vratiti pristup korisniku ${korisnik.ime}?`
+      : `Deaktivirati korisnika ${korisnik.ime}? Neće se moći prijaviti dok ga ponovno ne aktivirate.`,
+    gumb: aktivan ? 'Aktiviraj' : 'Deaktiviraj',
+    opasno: !aktivan,
+  })
+  if (!potvrda) return
+  admin.postaviAktivnost(korisnik.korisnikId, aktivan)
+}
+
+async function skupnoBrisanje() {
+  const potvrda = await pitaj({
+    naslov: 'Skupno brisanje',
+    tekst: `Trajno obrisati ${odabrani.value.length} korisnika?`,
+    gumb: 'Obriši',
+  })
+  if (!potvrda) return
   admin.skupnoBrisanje(odabrani.value)
   odabrani.value = []
 }
 
-function obrisi(korisnik) {
-  if (!confirm(`Trajno obrisati korisnika ${korisnik.ime}?`)) return
+async function prebaciUlogu(korisnik) {
+  const nova = korisnik.uloga === 'admin' ? 'student' : 'admin'
+  const opis = nova === 'admin' ? 'administratora' : 'studenta'
+  const potvrda = await pitaj({
+    naslov: 'Promjena uloge',
+    tekst: `Postaviti korisnika ${korisnik.ime} kao ${opis}?`,
+    gumb: 'Postavi',
+    opasno: false,
+  })
+  if (!potvrda) return
+  admin.postaviUlogu(korisnik.korisnikId, nova)
+}
+
+async function obrisi(korisnik) {
+  const potvrda = await pitaj({
+    naslov: 'Brisanje korisnika',
+    tekst: `Trajno obrisati korisnika ${korisnik.ime}?`,
+    gumb: 'Obriši',
+  })
+  if (!potvrda) return
   admin.obrisiKorisnika(korisnik.korisnikId)
   odabrani.value = odabrani.value.filter((id) => id !== korisnik.korisnikId)
 }
@@ -137,7 +192,9 @@ function obrisi(korisnik) {
       </button>
     </div>
 
-    <div class="rounded-card mt-6 overflow-hidden bg-white shadow-sm">
+    <Loader v-if="admin.ucitavanje" />
+
+    <div v-else class="rounded-card mt-6 overflow-hidden bg-white shadow-sm">
       <table class="w-full text-left">
         <thead class="bg-slate-100 text-[10px] tracking-wide text-slate-500 uppercase">
           <tr>
@@ -165,6 +222,7 @@ function obrisi(korisnik) {
           >
             <td class="px-6 py-4">
               <input
+                v-if="korisnik.korisnikId !== mojId"
                 type="checkbox"
                 :checked="odabrani.includes(korisnik.korisnikId)"
                 class="h-4 w-4 cursor-pointer"
@@ -213,14 +271,28 @@ function obrisi(korisnik) {
             <td class="px-6 py-4">
               <div class="flex justify-end gap-1">
                 <button
-                  class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo"
+                  class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:cursor-default disabled:opacity-30"
+                  :disabled="korisnik.korisnikId === mojId"
+                  :title="
+                    korisnik.uloga === 'admin'
+                      ? 'Postavi kao studenta'
+                      : 'Postavi kao administratora'
+                  "
+                  @click="prebaciUlogu(korisnik)"
+                >
+                  <Icon name="stit" size="h-4 w-4" />
+                </button>
+                <button
+                  class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:cursor-default disabled:opacity-30"
+                  :disabled="korisnik.korisnikId === mojId"
                   :title="korisnik.aktivan ? 'Deaktiviraj' : 'Aktiviraj'"
-                  @click="admin.postaviAktivnost(korisnik.korisnikId, !korisnik.aktivan)"
+                  @click="prebaciAktivnost(korisnik)"
                 >
                   <Icon :name="korisnik.aktivan ? 'zabrana' : 'kvacica'" size="h-4 w-4" />
                 </button>
                 <button
-                  class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-red-600"
+                  class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-red-600 disabled:cursor-default disabled:opacity-30"
+                  :disabled="korisnik.korisnikId === mojId"
                   title="Obriši"
                   @click="obrisi(korisnik)"
                 >
@@ -276,5 +348,6 @@ function obrisi(korisnik) {
         </div>
       </div>
     </div>
+    <ConfirmModal :upit="potvrdaUpit" @odgovor="odgovori" />
   </div>
 </template>

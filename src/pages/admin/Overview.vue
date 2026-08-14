@@ -8,11 +8,14 @@ import PageHeading from '../../components/ui/PageHeading.vue'
 import BarChart from '../../components/charts/BarChart.vue'
 import Loader from '../../components/ui/Loader.vue'
 import ContentModal from '../../components/modals/ContentModal.vue'
+import ConfirmModal from '../../components/modals/ConfirmModal.vue'
+import { useConfirm } from '../../composables/useConfirm'
 import { useAdminStore } from '../../stores/admin'
 import { useNewsStore } from '../../stores/news'
 
 const admin = useAdminStore()
 const novosti = useNewsStore()
+const { upit, pitaj, odgovori } = useConfirm()
 
 const modal = ref(false)
 const zaUredivanje = ref(null)
@@ -35,8 +38,13 @@ function spremi(podaci) {
   else novosti.dodaj(podaci)
 }
 
-function obrisi(stavka) {
-  if (!confirm(`Obrisati objavu "${stavka.naslov}"?`)) return
+async function obrisi(stavka) {
+  const potvrda = await pitaj({
+    naslov: 'Brisanje objave',
+    tekst: `Obrisati objavu "${stavka.naslov}"?`,
+    gumb: 'Obriši',
+  })
+  if (!potvrda) return
   novosti.obrisi(stavka.sadrzajId)
 }
 </script>
@@ -208,5 +216,6 @@ function obrisi(stavka) {
     </div>
 
     <ContentModal v-model="modal" :stavka="zaUredivanje" @spremi="spremi" />
+    <ConfirmModal :upit="upit" @odgovor="odgovori" />
   </div>
 </template>
