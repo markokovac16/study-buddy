@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BaseCard from '../components/ui/BaseCard.vue'
 import BaseInput from '../components/ui/BaseInput.vue'
@@ -8,9 +9,11 @@ import Icon from '../components/ui/Icon.vue'
 import PageHeading from '../components/ui/PageHeading.vue'
 import SaveBar from '../components/SaveBar.vue'
 import ConfirmModal from '../components/modals/ConfirmModal.vue'
+import PasswordModal from '../components/modals/PasswordModal.vue'
 import { useConfirm } from '../composables/useConfirm'
 import { useProfileForm } from '../composables/profileForm'
 import { useAuthStore } from '../stores/auth'
+import { porukaGreske } from '../utils/errors'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -31,6 +34,38 @@ const pretvori = (podaci) => ({
 })
 
 const { obrazac, promijenjeno, spremljeno, spremi, odbaci } = useProfileForm(pocetno, pretvori)
+
+const KRIVA_LOZINKA = ['auth/invalid-credential', 'auth/wrong-password']
+
+const lozinkaModal = ref(false)
+const saljeLozinku = ref(false)
+const porukaLozinke = ref('')
+const greskaModala = ref('')
+
+function otvoriLozinku() {
+  greskaModala.value = ''
+  porukaLozinke.value = ''
+  lozinkaModal.value = true
+}
+
+async function spremiLozinku({ trenutna, nova }) {
+  const promjena = auth.imaLozinku
+  saljeLozinku.value = true
+  greskaModala.value = ''
+  try {
+    if (promjena) await auth.promijeniLozinku(trenutna, nova)
+    else await auth.postaviLozinku(nova)
+    lozinkaModal.value = false
+    porukaLozinke.value = promjena
+      ? 'Lozinka je promijenjena.'
+      : 'Lozinka je postavljena. Odsad se možete prijaviti i adresom e-pošte.'
+  } catch (iznimka) {
+    greskaModala.value = KRIVA_LOZINKA.includes(iznimka.code)
+      ? 'Trenutna lozinka nije točna.'
+      : porukaGreske(iznimka)
+  }
+  saljeLozinku.value = false
+}
 
 async function odjava() {
   await auth.odjava()
@@ -60,7 +95,7 @@ async function deaktiviraj() {
           <div>
             <p class="text-2xl font-bold text-slate-900">{{ obrazac.ime }}</p>
             <p class="text-sm text-slate-500">
-              {{ auth.korisnik.opis }} • {{ obrazac.godina }}. godina
+              {{ auth.jeAdmin ? 'Administrator' : 'Student' }} • {{ obrazac.godina }}. godina
             </p>
           </div>
         </div>
@@ -87,7 +122,20 @@ async function deaktiviraj() {
           <Icon name="stit" />
           Sigurnost
         </p>
-        <BaseButton variant="secondary" block>Promijeni lozinku</BaseButton>
+        <BaseButton variant="secondary" block @click="otvoriLozinku">
+          {{ auth.imaLozinku ? 'Promijeni lozinku' : 'Postavi lozinku' }}
+        </BaseButton>
+
+        <p v-if="porukaLozinke" class="mt-2 text-xs font-semibold text-sb-teal">
+          {{ porukaLozinke }}
+        </p>
+        <p v-else class="mt-2 text-xs text-slate-500">
+          {{
+            auth.imaLozinku
+              ? 'Lozinku mijenjate ovdje, uz potvrdu trenutne.'
+              : 'Račun je otvoren Google prijavom i još nema lozinku.'
+          }}
+        </p>
 
         <p class="mt-5 mb-2 text-[10px] font-semibold tracking-wide text-slate-400 uppercase">
           Povezani računi
@@ -97,7 +145,12 @@ async function deaktiviraj() {
             <Icon name="korisnik" size="h-4 w-4" />
             Google
           </span>
-          <span class="text-sm font-semibold text-sb-teal">Povezano</span>
+          <span
+            class="text-sm font-semibold"
+            :class="auth.korisnik.googleId ? 'text-sb-teal' : 'text-slate-400'"
+          >
+            {{ auth.korisnik.googleId ? 'Povezano' : 'Nije povezano' }}
+          </span>
         </div>
       </BaseCard>
     </div>
@@ -120,6 +173,13 @@ async function deaktiviraj() {
       :spremljeno="spremljeno"
       @spremi="spremi"
       @odbaci="odbaci"
+    />
+    <PasswordModal
+      v-model="lozinkaModal"
+      :promjena="auth.imaLozinku"
+      :salje="saljeLozinku"
+      :greska="greskaModala"
+      @spremi="spremiLozinku"
     />
     <ConfirmModal :upit="upit" @odgovor="odgovori" />
   </div>

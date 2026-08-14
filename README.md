@@ -30,7 +30,7 @@ Marko Kovač - samostalan rad na cijelom projektu.
 
 ## Što aplikacija radi
 
-- **Predmeti** - svaki kolegij ima boju, ikonu, profesora i ECTS bodove, a kartica predmeta prikazuje napredak u postocima izračunat iz omjera dovršenih zadataka.
+- **Predmeti** - svaki kolegij ima naziv, kratki opis, boju i ikonu, a kartica predmeta prikazuje napredak u postocima izračunat iz omjera dovršenih zadataka.
 - **Zadaci** - naslov, opis, rok, prioritet i status. Nadzorna ploča izdvaja nadolazeće zadatke po roku, a zadaci se označavaju dovršenima izravno s liste.
 - **Bilješke i prilozi** - bilješke vezane uz predmet i materijali koji se šalju na Firebase Storage, s prikazom tipa, veličine i zauzeća kvote.
 - **Pomodoro timer** - ciklus od četiri sesije, 25 minuta rada i 5 minuta pauze. Timer se pokreće za odabrani predmet i vidljiv je u sidebaru kroz cijelu aplikaciju, a svaka dovršena sesija se sprema.

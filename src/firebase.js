@@ -13,6 +13,7 @@ const aplikacija = initializeApp({
 })
 
 export const auth = getAuth(aplikacija)
+auth.languageCode = 'hr'
 export const db = getFirestore(aplikacija)
 export const spremiste = getStorage(aplikacija)
 export const googleProvider = new GoogleAuthProvider()
