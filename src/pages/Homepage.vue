@@ -7,7 +7,8 @@ import ProgressBar from '../components/ui/ProgressBar.vue'
 import TimerCard from '../components/TimerCard.vue'
 import DonutChart from '../components/charts/DonutChart.vue'
 import { useNewsStore } from '../stores/news'
-import { predmeti, zadaci, STATUSI } from '../data/mock'
+import { STATUSI } from '../data/constants'
+import { predmeti, zadaci } from '../data/showcase'
 import { bojaPredmeta, prioritetBoja, prioritetNaziv, relativniRok } from '../utils/format'
 
 const novosti = useNewsStore()

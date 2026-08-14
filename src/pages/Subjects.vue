@@ -20,7 +20,7 @@ import { useConfirm } from '../composables/useConfirm'
 import { useEditing } from '../composables/editing'
 import TimerCard from '../components/TimerCard.vue'
 import { useSubjectsStore } from '../stores/subjects'
-import { KVOTA_KB, PRIORITETI, STATUSI } from '../data/mock'
+import { KVOTA_KB, PRIORITETI, STATUSI } from '../data/constants'
 import { bojaPredmeta, formatVelicina, prioritetNaziv } from '../utils/format'
 
 const store = useSubjectsStore()
@@ -170,7 +170,7 @@ function ucitajDatoteku(dogadaj) {
           >
             <Icon :name="odabrani.ikona" size="h-6 w-6" />
           </span>
-          <h2 class="min-w-0 text-2xl font-bold break-words text-slate-900 sm:text-3xl">
+          <h2 class="min-w-0 text-2xl font-bold wrap-break-word text-slate-900 sm:text-3xl">
             {{ odabrani.naziv }}
           </h2>
         </div>

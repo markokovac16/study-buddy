@@ -1,10 +1,10 @@
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { defineStore } from 'pinia'
-import { collection, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore'
+import { collection, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
+import { useCollection } from '../composables/collection'
 import { useAuthStore } from './auth'
-
-const kljucDatuma = (datum) => datum.toISOString().slice(0, 10)
+import { isoDatum } from '../utils/format'
 
 const zadnjihDana = (broj) =>
   Array.from({ length: broj }, (_, indeks) => {
@@ -16,37 +16,14 @@ const zadnjihDana = (broj) =>
 export const useAdminStore = defineStore('admin', () => {
   const auth = useAuthStore()
 
-  const korisnici = ref([])
-  const ucitavanje = ref(true)
-
   const zbirka = collection(db, 'korisnici')
   const zapis = (korisnikId) => doc(zbirka, korisnikId)
 
-  let odjavaKorisnika = null
-
-  function pretplati() {
-    ucitavanje.value = true
-    odjavaKorisnika = onSnapshot(zbirka, (snimka) => {
-      korisnici.value = snimka.docs
-        .map((dokument) => ({ korisnikId: dokument.id, ...dokument.data() }))
-        .sort((prvi, drugi) => prvi.ime.localeCompare(drugi.ime))
-      ucitavanje.value = false
-    })
-  }
-
-  function odjavi() {
-    if (odjavaKorisnika) odjavaKorisnika()
-    odjavaKorisnika = null
-    korisnici.value = []
-  }
-
-  watch(
+  const { stavke: korisnici, ucitavanje } = useCollection(
     () => auth.jeAdmin,
-    (jeAdmin) => {
-      odjavi()
-      if (jeAdmin) pretplati()
-    },
-    { immediate: true },
+    () => zbirka,
+    'korisnikId',
+    { sortiraj: (prvi, drugi) => prvi.ime.localeCompare(drugi.ime) },
   )
 
   const aktivnihKorisnika = computed(
@@ -57,15 +34,14 @@ export const useAdminStore = defineStore('admin', () => {
   )
   const prijavljenihDanas = computed(
     () =>
-      korisnici.value.filter(
-        (korisnik) => korisnik.zadnjaPrijava?.slice(0, 10) === kljucDatuma(new Date()),
-      ).length,
+      korisnici.value.filter((korisnik) => korisnik.zadnjaPrijava?.slice(0, 10) === isoDatum())
+        .length,
   )
 
   const registracijePoDanima = computed(() =>
     zadnjihDana(7).map((datum) => ({
       oznaka: datum.toLocaleDateString('hr-HR', { weekday: 'short' }),
-      broj: korisnici.value.filter((korisnik) => korisnik.datumRegistracije === kljucDatuma(datum))
+      broj: korisnici.value.filter((korisnik) => korisnik.datumRegistracije === isoDatum(datum))
         .length,
     })),
   )

@@ -1,7 +1,8 @@
 import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { addDoc, collection, onSnapshot } from 'firebase/firestore'
+import { addDoc, collection } from 'firebase/firestore'
 import { db } from '../firebase'
+import { useCollection } from '../composables/collection'
 import { POMODORO_ZADANO, useAuthStore } from './auth'
 import { pripremiZvuk, zvukKraja } from '../utils/sound'
 
@@ -12,8 +13,6 @@ let interval = null
 export const usePomodoroStore = defineStore('pomodoro', () => {
   const auth = useAuthStore()
 
-  const sesije = ref([])
-  const ucitavanje = ref(true)
   const faza = ref('rad')
   const sekunde = ref(POMODORO_ZADANO.minutaRada * 60)
   const radi = ref(false)
@@ -33,29 +32,10 @@ export const usePomodoroStore = defineStore('pomodoro', () => {
 
   const zbirkaSesija = () => collection(db, 'korisnici', auth.korisnik.korisnikId, 'pomodoroSesije')
 
-  let odjavaSesija = null
-
-  function pretplati() {
-    ucitavanje.value = true
-    odjavaSesija = onSnapshot(zbirkaSesija(), (snimka) => {
-      sesije.value = snimka.docs.map((dokument) => ({ sesijaId: dokument.id, ...dokument.data() }))
-      ucitavanje.value = false
-    })
-  }
-
-  function odjavi() {
-    if (odjavaSesija) odjavaSesija()
-    odjavaSesija = null
-    sesije.value = []
-  }
-
-  watch(
+  const { stavke: sesije, ucitavanje } = useCollection(
     () => auth.korisnik?.korisnikId,
-    (korisnikId) => {
-      odjavi()
-      if (korisnikId) pretplati()
-    },
-    { immediate: true },
+    zbirkaSesija,
+    'sesijaId',
   )
 
   function spremiSesiju() {

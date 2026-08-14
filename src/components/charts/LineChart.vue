@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { Line } from 'vue-chartjs'
+import { BOJA, osi, osnovne } from './options'
 
 const props = defineProps({
   labels: { type: Array, required: true },
@@ -12,9 +13,9 @@ const data = computed(() => ({
   datasets: [
     {
       data: props.values,
-      borderColor: '#3f45b5',
+      borderColor: BOJA,
       backgroundColor: 'rgba(63, 69, 181, 0.12)',
-      pointBackgroundColor: '#3f45b5',
+      pointBackgroundColor: BOJA,
       pointRadius: 4,
       tension: 0.35,
       fill: true,
@@ -22,20 +23,7 @@ const data = computed(() => ({
   ],
 }))
 
-const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: { legend: { display: false } },
-  scales: {
-    x: { grid: { display: false }, border: { display: false }, ticks: { color: '#94a3b8' } },
-    y: {
-      grid: { color: 'rgba(148, 163, 184, 0.2)' },
-      border: { display: false },
-      ticks: { color: '#94a3b8' },
-      beginAtZero: true,
-    },
-  },
-}
+const options = { ...osnovne, scales: osi }
 </script>
 
 <template>

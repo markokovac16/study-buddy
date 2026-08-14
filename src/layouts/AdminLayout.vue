@@ -30,7 +30,7 @@ async function odjava() {
         <Logo size="text-lg sm:text-2xl" />
 
         <nav
-          class="order-last flex w-full gap-5 overflow-x-auto whitespace-nowrap lg:order-none lg:ml-10 lg:w-auto lg:flex-1 lg:gap-6 lg:overflow-visible"
+          class="order-last flex w-full gap-5 overflow-x-auto whitespace-nowrap lg:order-0 lg:ml-10 lg:w-auto lg:flex-1 lg:gap-6 lg:overflow-visible"
         >
           <RouterLink
             v-for="stavka in stavke"

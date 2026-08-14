@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import { defineStore } from 'pinia'
 import { usePomodoroStore } from './pomodoro'
 import { useSubjectsStore } from './subjects'
-import { STATUSI } from '../data/mock'
+import { STATUSI } from '../data/constants'
 
 const DANI = ['Pon', 'Uto', 'Sri', 'Čet', 'Pet', 'Sub', 'Ned']
 

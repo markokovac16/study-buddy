@@ -1,6 +1,4 @@
-export const PRIORITETI = { NIZAK: 'NIZAK', SREDNJI: 'SREDNJI', VISOK: 'VISOK' }
-
-export const STATUSI = { NA_CEKANJU: 'NA_CEKANJU', U_TIJEKU: 'U_TIJEKU', ZAVRSENO: 'ZAVRSENO' }
+import { PRIORITETI, STATUSI } from './constants'
 
 function danOd(pomak) {
   const datum = new Date()
@@ -109,5 +107,3 @@ export const zadaci = [
     status: STATUSI.NA_CEKANJU,
   },
 ]
-
-export const KVOTA_KB = 5 * 1024 * 1024

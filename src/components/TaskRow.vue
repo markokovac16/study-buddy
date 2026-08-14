@@ -2,7 +2,7 @@
 import Icon from './ui/Icon.vue'
 import IconButton from './ui/IconButton.vue'
 import BaseBadge from './ui/BaseBadge.vue'
-import { STATUSI } from '../data/mock'
+import { STATUSI } from '../data/constants'
 import { prioritetBoja, prioritetNaziv, relativniRok, statusNaziv } from '../utils/format'
 
 defineProps({ zadatak: { type: Object, required: true } })
@@ -27,7 +27,7 @@ defineEmits(['prebaci', 'uredi', 'obrisi'])
 
     <div class="min-w-0 flex-1 basis-40">
       <p
-        class="text-sm font-semibold break-words"
+        class="text-sm font-semibold wrap-break-word"
         :class="
           zadatak.status === STATUSI.ZAVRSENO ? 'text-slate-400 line-through' : 'text-slate-800'
         "

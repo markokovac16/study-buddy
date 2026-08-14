@@ -93,7 +93,7 @@ async function deaktiviraj() {
         <div class="mb-6 flex items-center gap-4 sm:gap-5">
           <Avatar :ime="obrazac.ime" size="h-16 w-16 text-xl sm:h-20 sm:w-20 sm:text-2xl" />
           <div class="min-w-0">
-            <p class="text-xl font-bold break-words text-slate-900 sm:text-2xl">
+            <p class="text-xl font-bold wrap-break-word text-slate-900 sm:text-2xl">
               {{ obrazac.ime }}
             </p>
             <p class="text-sm text-slate-500">

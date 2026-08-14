@@ -11,7 +11,7 @@ import { useAuthStore } from '../stores/auth'
 import { useSubjectsStore } from '../stores/subjects'
 import { useStatisticsStore } from '../stores/statistics'
 import { usePomodoroStore } from '../stores/pomodoro'
-import { STATUSI } from '../data/mock'
+import { STATUSI } from '../data/constants'
 import { bojaPredmeta, danaDo, prijeVremena, satiIMinute } from '../utils/format'
 
 const auth = useAuthStore()

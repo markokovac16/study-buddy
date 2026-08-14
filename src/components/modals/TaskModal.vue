@@ -4,8 +4,8 @@ import BaseInput from '../ui/BaseInput.vue'
 import BaseSelect from '../ui/BaseSelect.vue'
 import BaseButton from '../ui/BaseButton.vue'
 import { useModalForm } from '../../composables/modalForm'
-import { PRIORITETI, STATUSI } from '../../data/mock'
-import { prioritetNaziv, statusNaziv } from '../../utils/format'
+import { PRIORITETI, STATUSI } from '../../data/constants'
+import { isoDatum, prioritetNaziv, statusNaziv } from '../../utils/format'
 
 const props = defineProps({ zadatak: Object })
 
@@ -15,7 +15,7 @@ const emit = defineEmits(['spremi'])
 const prazan = {
   naslov: '',
   opis: '',
-  rokIzvrsenja: new Date().toISOString().slice(0, 10),
+  rokIzvrsenja: isoDatum(),
   prioritet: PRIORITETI.SREDNJI,
   status: STATUSI.NA_CEKANJU,
 }

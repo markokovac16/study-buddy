@@ -5,7 +5,7 @@ import { useSubjectsStore } from './subjects'
 import { useStatisticsStore } from './statistics'
 import { useNewsStore } from './news'
 import { danaDo, satiIMinute } from '../utils/format'
-import { STATUSI } from '../data/mock'
+import { STATUSI } from '../data/constants'
 
 const DANA_NOVOSTI = 3
 

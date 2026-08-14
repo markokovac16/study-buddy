@@ -1,17 +1,16 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import BaseSelect from '../../components/ui/BaseSelect.vue'
-import BaseBadge from '../../components/ui/BaseBadge.vue'
-import Avatar from '../../components/ui/Avatar.vue'
 import Icon from '../../components/ui/Icon.vue'
 import IconButton from '../../components/ui/IconButton.vue'
 import Loader from '../../components/ui/Loader.vue'
 import PageHeading from '../../components/ui/PageHeading.vue'
+import UserRow from '../../components/UserRow.vue'
 import ConfirmModal from '../../components/modals/ConfirmModal.vue'
 import { useConfirm } from '../../composables/useConfirm'
+import { usePagination } from '../../composables/pagination'
 import { useAdminStore } from '../../stores/admin'
 import { useAuthStore } from '../../stores/auth'
-import { formatDatum } from '../../utils/format'
 
 const admin = useAdminStore()
 const auth = useAuthStore()
@@ -22,7 +21,6 @@ const PO_STRANICI = 8
 const upit = ref('')
 const filterUloge = ref('sve')
 const filterStatusa = ref('svi')
-const stranica = ref(1)
 const odabrani = ref([])
 
 const ulogaOpcije = [
@@ -48,10 +46,11 @@ const filtrirani = computed(() =>
   }),
 )
 
-const brojStranica = computed(() => Math.max(1, Math.ceil(filtrirani.value.length / PO_STRANICI)))
-const stranicaKorisnika = computed(() =>
-  filtrirani.value.slice((stranica.value - 1) * PO_STRANICI, stranica.value * PO_STRANICI),
-)
+const {
+  stranica,
+  brojStranica,
+  stranicaStavki: stranicaKorisnika,
+} = usePagination(filtrirani, PO_STRANICI)
 
 const mojId = computed(() => auth.korisnik.korisnikId)
 
@@ -67,10 +66,6 @@ const sviOdabrani = computed(
 
 watch([upit, filterUloge, filterStatusa], () => {
   stranica.value = 1
-})
-
-watch(brojStranica, (broj) => {
-  if (stranica.value > broj) stranica.value = broj
 })
 
 function prebaciOdabir(korisnikId) {
@@ -217,99 +212,17 @@ async function obrisi(korisnik) {
           </thead>
 
           <tbody class="divide-y divide-slate-100">
-            <tr
+            <UserRow
               v-for="korisnik in stranicaKorisnika"
               :key="korisnik.korisnikId"
-              class="hover:bg-slate-50"
-            >
-              <td class="px-6 py-4">
-                <input
-                  v-if="korisnik.korisnikId !== mojId"
-                  type="checkbox"
-                  :checked="odabrani.includes(korisnik.korisnikId)"
-                  class="h-4 w-4 cursor-pointer"
-                  @change="prebaciOdabir(korisnik.korisnikId)"
-                />
-              </td>
-
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-3">
-                  <Avatar :ime="korisnik.ime" size="h-9 w-9 text-xs" />
-                  <div>
-                    <p
-                      class="text-sm font-semibold"
-                      :class="korisnik.aktivan ? 'text-slate-800' : 'text-slate-400'"
-                    >
-                      {{ korisnik.ime }}
-                    </p>
-                    <p class="text-xs text-slate-400">{{ korisnik.email }}</p>
-                  </div>
-                </div>
-              </td>
-
-              <td class="px-6 py-4">
-                <BaseBadge :color="korisnik.uloga === 'admin' ? 'amber' : 'indigo'">
-                  {{ korisnik.uloga === 'admin' ? 'Administrator' : 'Student' }}
-                </BaseBadge>
-              </td>
-
-              <td class="px-6 py-4 text-sm text-slate-500">
-                {{ formatDatum(korisnik.datumRegistracije) }}
-              </td>
-
-              <td class="px-6 py-4">
-                <span
-                  class="flex items-center gap-2 text-sm"
-                  :class="korisnik.aktivan ? 'text-sb-teal' : 'text-rose-500'"
-                >
-                  <span
-                    class="h-2 w-2 rounded-full"
-                    :class="korisnik.aktivan ? 'bg-sb-teal' : 'bg-rose-400'"
-                  />
-                  {{ korisnik.aktivan ? 'Aktivan' : 'Deaktiviran' }}
-                </span>
-              </td>
-
-              <td class="px-6 py-4">
-                <div class="flex justify-end gap-1">
-                  <IconButton
-                    name="stit"
-                    :disabled="korisnik.korisnikId === mojId"
-                    :title="
-                      korisnik.korisnikId === mojId
-                        ? 'Ne možete mijenjati vlastiti račun'
-                        : korisnik.uloga === 'admin'
-                          ? 'Postavi kao studenta'
-                          : 'Postavi kao administratora'
-                    "
-                    @click="prebaciUlogu(korisnik)"
-                  />
-                  <IconButton
-                    :name="korisnik.aktivan ? 'zabrana' : 'kvacica'"
-                    :disabled="korisnik.korisnikId === mojId"
-                    :title="
-                      korisnik.korisnikId === mojId
-                        ? 'Ne možete mijenjati vlastiti račun'
-                        : korisnik.aktivan
-                          ? 'Deaktiviraj račun'
-                          : 'Aktiviraj račun'
-                    "
-                    @click="prebaciAktivnost(korisnik)"
-                  />
-                  <IconButton
-                    name="kanta"
-                    variant="danger"
-                    :disabled="korisnik.korisnikId === mojId"
-                    :title="
-                      korisnik.korisnikId === mojId
-                        ? 'Ne možete obrisati vlastiti račun'
-                        : 'Obriši korisnika'
-                    "
-                    @click="obrisi(korisnik)"
-                  />
-                </div>
-              </td>
-            </tr>
+              :korisnik="korisnik"
+              :moj="korisnik.korisnikId === mojId"
+              :odabran="odabrani.includes(korisnik.korisnikId)"
+              @oznaci="prebaciOdabir(korisnik.korisnikId)"
+              @uloga="prebaciUlogu(korisnik)"
+              @aktivnost="prebaciAktivnost(korisnik)"
+              @obrisi="obrisi(korisnik)"
+            />
 
             <tr v-if="!stranicaKorisnika.length">
               <td colspan="6" class="px-6 py-10 text-center text-sm text-slate-500">

@@ -1,12 +1,12 @@
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { addDoc, collection, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { deleteObject, getDownloadURL, ref as mjestoDatoteke, uploadBytes } from 'firebase/storage'
 import { db, spremiste } from '../firebase'
+import { useCollection } from '../composables/collection'
 import { useAuthStore } from './auth'
-import { STATUSI } from '../data/mock'
-
-const danas = () => new Date().toISOString().slice(0, 10)
+import { STATUSI } from '../data/constants'
+import { isoDatum } from '../utils/format'
 
 function tipDatoteke(datoteka) {
   if (datoteka.type.startsWith('image/')) return 'slika'
@@ -16,11 +16,9 @@ function tipDatoteke(datoteka) {
 export const useSubjectsStore = defineStore('subjects', () => {
   const auth = useAuthStore()
 
-  const predmeti = ref([])
   const zadaciPoPredmetu = ref({})
   const biljeskePoPredmetu = ref({})
   const priloziPoPredmetu = ref({})
-  const ucitavanjePredmeta = ref(true)
   const slanjePriloga = ref(false)
 
   const PODZBIRKE = [
@@ -32,6 +30,58 @@ export const useSubjectsStore = defineStore('subjects', () => {
   const zbirkaPredmeta = () => collection(db, 'korisnici', auth.korisnik.korisnikId, 'predmeti')
   const zapisPredmeta = (predmetId) => doc(zbirkaPredmeta(), predmetId)
   const podzbirka = (predmetId, naziv) => collection(zapisPredmeta(predmetId), naziv)
+
+  const odjavePodzbirki = new Map()
+
+  function pratiPodzbirke(predmetId) {
+    const odjave = PODZBIRKE.map(({ naziv, kljuc, spremnik }) =>
+      onSnapshot(podzbirka(predmetId, naziv), (snimka) => {
+        spremnik.value = {
+          ...spremnik.value,
+          [predmetId]: snimka.docs.map((dokument) => ({
+            [kljuc]: dokument.id,
+            predmetId,
+            ...dokument.data(),
+          })),
+        }
+      }),
+    )
+    odjavePodzbirki.set(predmetId, odjave)
+  }
+
+  function prestaniPratiti(predmetId) {
+    odjavePodzbirki.get(predmetId).forEach((odjava) => odjava())
+    odjavePodzbirki.delete(predmetId)
+    PODZBIRKE.forEach(({ spremnik }) => {
+      const preostali = { ...spremnik.value }
+      delete preostali[predmetId]
+      spremnik.value = preostali
+    })
+  }
+
+  function uskladiPodzbirke(idevi) {
+    idevi.filter((predmetId) => !odjavePodzbirki.has(predmetId)).forEach(pratiPodzbirke)
+    ;[...odjavePodzbirki.keys()]
+      .filter((predmetId) => !idevi.includes(predmetId))
+      .forEach(prestaniPratiti)
+  }
+
+  function ocistiPodzbirke() {
+    odjavePodzbirki.forEach((odjave) => odjave.forEach((odjava) => odjava()))
+    odjavePodzbirki.clear()
+    PODZBIRKE.forEach(({ spremnik }) => (spremnik.value = {}))
+  }
+
+  const { stavke: predmeti, ucitavanje: ucitavanjePredmeta } = useCollection(
+    () => auth.korisnik?.korisnikId,
+    zbirkaPredmeta,
+    'predmetId',
+    {
+      sortiraj: (prvi, drugi) => prvi.naziv.localeCompare(drugi.naziv),
+      nakon: (dohvaceni) => uskladiPodzbirke(dohvaceni.map((predmet) => predmet.predmetId)),
+      priPrekidu: ocistiPodzbirke,
+    },
+  )
 
   const zadaci = computed(() => Object.values(zadaciPoPredmetu.value).flat())
   const biljeske = computed(() => Object.values(biljeskePoPredmetu.value).flat())
@@ -69,71 +119,6 @@ export const useSubjectsStore = defineStore('subjects', () => {
     const zavrseni = svi.filter((zadatak) => zadatak.status === STATUSI.ZAVRSENO).length
     return Math.round((zavrseni / svi.length) * 100)
   }
-
-  let odjavaPredmeta = null
-  const odjavePodzbirki = new Map()
-
-  function pratiPodzbirke(predmetId) {
-    const odjave = PODZBIRKE.map(({ naziv, kljuc, spremnik }) =>
-      onSnapshot(podzbirka(predmetId, naziv), (snimka) => {
-        spremnik.value = {
-          ...spremnik.value,
-          [predmetId]: snimka.docs.map((dokument) => ({
-            [kljuc]: dokument.id,
-            predmetId,
-            ...dokument.data(),
-          })),
-        }
-      }),
-    )
-    odjavePodzbirki.set(predmetId, odjave)
-  }
-
-  function prestaniPratiti(predmetId) {
-    odjavePodzbirki.get(predmetId).forEach((odjava) => odjava())
-    odjavePodzbirki.delete(predmetId)
-    PODZBIRKE.forEach(({ spremnik }) => {
-      const preostali = { ...spremnik.value }
-      delete preostali[predmetId]
-      spremnik.value = preostali
-    })
-  }
-
-  function uskladiPodzbirke(idevi) {
-    idevi.filter((predmetId) => !odjavePodzbirki.has(predmetId)).forEach(pratiPodzbirke)
-    ;[...odjavePodzbirki.keys()]
-      .filter((predmetId) => !idevi.includes(predmetId))
-      .forEach(prestaniPratiti)
-  }
-
-  function pretplati() {
-    ucitavanjePredmeta.value = true
-    odjavaPredmeta = onSnapshot(zbirkaPredmeta(), (snimka) => {
-      predmeti.value = snimka.docs
-        .map((dokument) => ({ predmetId: dokument.id, ...dokument.data() }))
-        .sort((prvi, drugi) => prvi.naziv.localeCompare(drugi.naziv))
-      uskladiPodzbirke(predmeti.value.map((predmet) => predmet.predmetId))
-      ucitavanjePredmeta.value = false
-    })
-  }
-
-  function odjaviSve() {
-    if (odjavaPredmeta) odjavaPredmeta()
-    odjavaPredmeta = null
-    odjavePodzbirki.forEach((odjave) => odjave.forEach((odjava) => odjava()))
-    odjavePodzbirki.clear()
-    predmeti.value = []
-    PODZBIRKE.forEach(({ spremnik }) => (spremnik.value = {}))
-  }
-
-  watch(
-    () => auth.korisnik?.korisnikId,
-    (korisnikId) => {
-      odjaviSve()
-      if (korisnikId) pretplati()
-    },
-    { immediate: true },
-  )
 
   function dodajPredmet(predmet) {
     return addDoc(zbirkaPredmeta(), { ikona: 'knjiga', ...predmet })
@@ -183,7 +168,7 @@ export const useSubjectsStore = defineStore('subjects', () => {
   }
 
   function dodajBiljesku({ predmetId, ...biljeska }) {
-    return addDoc(podzbirka(predmetId, 'biljeske'), { datum: danas(), ...biljeska })
+    return addDoc(podzbirka(predmetId, 'biljeske'), { datum: isoDatum(), ...biljeska })
   }
 
   function urediBiljesku(biljeskaId, promjene) {
@@ -215,7 +200,7 @@ export const useSubjectsStore = defineStore('subjects', () => {
         velicinaKb: Math.round(datoteka.size / 1024),
         url: await getDownloadURL(mjesto),
         putanja,
-        datum: danas(),
+        datum: isoDatum(),
       })
     } finally {
       slanjePriloga.value = false

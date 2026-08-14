@@ -14,6 +14,7 @@ import {
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { auth, db, googleProvider } from '../firebase'
 import { lokalnaTema } from '../utils/theme'
+import { isoDatum } from '../utils/format'
 
 export const POMODORO_ZADANO = { minutaRada: 25, minutaPauze: 5, automatskiNastavak: true }
 
@@ -78,7 +79,7 @@ export const useAuthStore = defineStore('auth', () => {
         tema: lokalnaTema() ?? PREDLOZAK.preferencije.tema,
       },
       uloga: racun.email.includes('admin') ? 'admin' : 'student',
-      datumRegistracije: new Date().toISOString().slice(0, 10),
+      datumRegistracije: isoDatum(),
       zadnjaPrijava: new Date().toISOString(),
     }
   }

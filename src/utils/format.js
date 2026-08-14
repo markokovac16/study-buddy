@@ -1,4 +1,4 @@
-import { PRIORITETI, STATUSI } from '../data/mock'
+import { PRIORITETI, STATUSI } from '../data/constants'
 
 export const bojePredmeta = {
   amber: {
@@ -37,6 +37,8 @@ export const statusNaziv = {
   [STATUSI.U_TIJEKU]: 'U tijeku',
   [STATUSI.ZAVRSENO]: 'Završeno',
 }
+
+export const isoDatum = (datum = new Date()) => datum.toISOString().slice(0, 10)
 
 export function formatDatum(iso) {
   return new Date(iso).toLocaleDateString('hr-HR', {

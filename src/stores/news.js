@@ -1,15 +1,8 @@
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { defineStore } from 'pinia'
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  deleteField,
-  doc,
-  onSnapshot,
-  updateDoc,
-} from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, deleteField, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
+import { useCollection } from '../composables/collection'
 import { useAuthStore } from './auth'
 
 const zbroj = (glasovi) => Object.values(glasovi ?? {}).reduce((suma, glas) => suma + glas, 0)
@@ -17,21 +10,18 @@ const zbroj = (glasovi) => Object.values(glasovi ?? {}).reduce((suma, glas) => s
 export const useNewsStore = defineStore('news', () => {
   const auth = useAuthStore()
 
-  const objave = ref([])
-  const ucitavanje = ref(true)
-
   const zbirka = collection(db, 'sadrzajNaslovnice')
   const zapis = (sadrzajId) => doc(zbirka, sadrzajId)
 
-  onSnapshot(zbirka, (snimka) => {
-    objave.value = snimka.docs
-      .map((dokument) => ({ sadrzajId: dokument.id, ...dokument.data() }))
-      .sort(
-        (prva, druga) =>
-          zbroj(druga.glasovi) - zbroj(prva.glasovi) || druga.datum.localeCompare(prva.datum),
-      )
-    ucitavanje.value = false
-  })
+  const { stavke: objave, ucitavanje } = useCollection(
+    () => true,
+    () => zbirka,
+    'sadrzajId',
+    {
+      sortiraj: (prva, druga) =>
+        zbroj(druga.glasovi) - zbroj(prva.glasovi) || druga.datum.localeCompare(prva.datum),
+    },
+  )
 
   const vidljive = computed(() => objave.value.filter((objava) => objava.vidljiv))
 
