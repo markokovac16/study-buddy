@@ -22,6 +22,7 @@ const PREDLOZAK = {
   dnevniCiljSati: 6,
   preferencije: { jezik: 'hr', tema: 'svijetla' },
   obavijesti: { podsjetnici: true, pauze: true, ciljevi: false },
+  vidjeneObavijesti: [],
   pomodoro: { ...POMODORO_ZADANO },
 }
 

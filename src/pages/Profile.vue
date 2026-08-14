@@ -41,7 +41,7 @@ const obavijestiStavke = [
     kljuc: 'podsjetnici',
     ikona: 'kvacica',
     naslov: 'Podsjetnici za zadatke',
-    opis: 'Obavijesti me kada se rok približava.',
+    opis: 'Zadaci kojima rok istječe pojavljuju se u zvonu.',
   },
   {
     kljuc: 'pauze',
@@ -53,7 +53,7 @@ const obavijestiStavke = [
     kljuc: 'ciljevi',
     ikona: 'pehar',
     naslov: 'Obavijesti o ciljevima učenja',
-    opis: 'Tjedni sažetak i proslave prekretnica.',
+    opis: 'Zvono javlja kada se dnevni cilj približi ili ispuni.',
   },
 ]
 
