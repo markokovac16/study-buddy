@@ -1,43 +1,78 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { pomodoroSesije } from '../data/mock'
+import { addDoc, collection, onSnapshot } from 'firebase/firestore'
+import { db } from '../firebase'
+import { POMODORO_ZADANO, useAuthStore } from './auth'
+import { pripremiZvuk, zvukKraja } from '../utils/sound'
 
-const MINUTA_RADA = 25
-const MINUTA_PAUZE = 5
 const SESIJA_U_CIKLUSU = 4
 
 let interval = null
-let brojac = 100
 
 export const usePomodoroStore = defineStore('pomodoro', () => {
-  const sesije = ref([...pomodoroSesije])
+  const auth = useAuthStore()
+
+  const sesije = ref([])
+  const ucitavanje = ref(true)
   const faza = ref('rad')
-  const sekunde = ref(MINUTA_RADA * 60)
+  const sekunde = ref(POMODORO_ZADANO.minutaRada * 60)
   const radi = ref(false)
   const sesija = ref(1)
   const predmetId = ref(null)
 
+  const postavke = computed(() => ({ ...POMODORO_ZADANO, ...auth.korisnik?.pomodoro }))
+
   const minute = computed(() => String(Math.floor(sekunde.value / 60)).padStart(2, '0'))
   const preostaleSekunde = computed(() => String(sekunde.value % 60).padStart(2, '0'))
   const prikaz = computed(() => `${minute.value}:${preostaleSekunde.value}`)
-  const trajanjeFaze = computed(() => (faza.value === 'rad' ? MINUTA_RADA : MINUTA_PAUZE) * 60)
+  const trajanjeFaze = computed(
+    () => (faza.value === 'rad' ? postavke.value.minutaRada : postavke.value.minutaPauze) * 60,
+  )
   const napredak = computed(() => ((trajanjeFaze.value - sekunde.value) / trajanjeFaze.value) * 100)
   const opisSesije = computed(() => `Sesija ${sesija.value} od ${SESIJA_U_CIKLUSU}`)
 
+  const zbirkaSesija = () => collection(db, 'korisnici', auth.korisnik.korisnikId, 'pomodoroSesije')
+
+  let odjavaSesija = null
+
+  function pretplati() {
+    ucitavanje.value = true
+    odjavaSesija = onSnapshot(zbirkaSesija(), (snimka) => {
+      sesije.value = snimka.docs.map((dokument) => ({ sesijaId: dokument.id, ...dokument.data() }))
+      ucitavanje.value = false
+    })
+  }
+
+  function odjavi() {
+    if (odjavaSesija) odjavaSesija()
+    odjavaSesija = null
+    sesije.value = []
+  }
+
+  watch(
+    () => auth.korisnik?.korisnikId,
+    (korisnikId) => {
+      odjavi()
+      if (korisnikId) pretplati()
+    },
+    { immediate: true },
+  )
+
   function spremiSesiju() {
+    const trajanje = postavke.value.minutaRada
     const zavrsetak = new Date()
-    const pocetak = new Date(zavrsetak.getTime() - MINUTA_RADA * 60000)
-    sesije.value.push({
-      sesijaId: `s${++brojac}`,
+    const pocetak = new Date(zavrsetak.getTime() - trajanje * 60000)
+    return addDoc(zbirkaSesija(), {
       predmetId: predmetId.value,
       pocetak: pocetak.toISOString(),
       zavrsetak: zavrsetak.toISOString(),
-      trajanje: MINUTA_RADA,
+      trajanje,
     })
   }
 
   function sljedecaFaza() {
-    if (faza.value === 'rad') {
+    const zavrsenRad = faza.value === 'rad'
+    if (zavrsenRad) {
       spremiSesiju()
       faza.value = 'pauza'
       sesija.value = (sesija.value % SESIJA_U_CIKLUSU) + 1
@@ -45,6 +80,8 @@ export const usePomodoroStore = defineStore('pomodoro', () => {
       faza.value = 'rad'
     }
     sekunde.value = trajanjeFaze.value
+    if (auth.korisnik?.obavijesti?.pauze) zvukKraja(zavrsenRad ? 880 : 660)
+    if (postavke.value.automatskiNastavak) pokreni()
   }
 
   function zaustavi() {
@@ -55,6 +92,7 @@ export const usePomodoroStore = defineStore('pomodoro', () => {
 
   function pokreni() {
     if (radi.value) return
+    pripremiZvuk()
     radi.value = true
     interval = setInterval(() => {
       if (sekunde.value > 0) sekunde.value--
@@ -68,15 +106,21 @@ export const usePomodoroStore = defineStore('pomodoro', () => {
   function resetiraj() {
     zaustavi()
     faza.value = 'rad'
-    sekunde.value = MINUTA_RADA * 60
+    sekunde.value = trajanjeFaze.value
   }
 
   function postaviPredmet(id) {
     predmetId.value = id
   }
 
+  watch(trajanjeFaze, (trajanje) => {
+    if (!radi.value) sekunde.value = trajanje
+  })
+
   return {
     sesije,
+    ucitavanje,
+    postavke,
     faza,
     sekunde,
     radi,

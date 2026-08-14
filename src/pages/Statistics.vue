@@ -12,10 +12,14 @@ import LineChart from '../components/charts/LineChart.vue'
 import DonutChart from '../components/charts/DonutChart.vue'
 import { useStatisticsStore } from '../stores/statistics'
 import { useSubjectsStore } from '../stores/subjects'
+import { usePomodoroStore } from '../stores/pomodoro'
 import { bojaPredmeta, satiIMinute } from '../utils/format'
 
 const statistika = useStatisticsStore()
 const predmetiStore = useSubjectsStore()
+const pomodoro = usePomodoroStore()
+
+const ucitavanje = computed(() => predmetiStore.ucitavanje || pomodoro.ucitavanje)
 
 const odabraniPredmet = ref('svi')
 const razdoblje = ref(4)
@@ -47,7 +51,7 @@ const postotakZadataka = computed(() =>
       subtitle="Pregled vremena provedenog u učenju po danima, tjednima i predmetima."
     />
 
-    <Loader v-if="predmetiStore.ucitavanje" tekst="Učitavanje statistike" />
+    <Loader v-if="ucitavanje" tekst="Učitavanje statistike" />
     <template v-else>
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <StatCard label="Ukupno vrijeme učenja" :value="`${statistika.ukupnoSati} sati`">

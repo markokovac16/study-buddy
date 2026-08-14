@@ -10,6 +10,8 @@ import {
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { auth, db, googleProvider } from '../firebase'
 
+export const POMODORO_ZADANO = { minutaRada: 25, minutaPauze: 5, automatskiNastavak: true }
+
 const PREDLOZAK = {
   aktivan: true,
   uloga: 'student',
@@ -20,6 +22,7 @@ const PREDLOZAK = {
   dnevniCiljSati: 6,
   preferencije: { jezik: 'hr', tema: 'svijetla' },
   obavijesti: { podsjetnici: true, pauze: true, ciljevi: false },
+  pomodoro: { ...POMODORO_ZADANO },
 }
 
 const imeIzEmaila = (email) =>
