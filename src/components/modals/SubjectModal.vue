@@ -40,7 +40,7 @@ function posalji() {
       <BaseInput v-model="obrazac.naziv" label="Naziv" placeholder="npr. Strukture podataka" />
       <BaseInput v-model="obrazac.opis" label="Opis" placeholder="npr. Računalne znanosti 202" />
 
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label class="block">
           <span class="mb-1.5 block text-xs font-semibold tracking-wide text-sb-blue uppercase"
             >Boja</span

@@ -35,16 +35,16 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
 </script>
 
 <template>
-  <section class="bg-sb-surface px-12 py-24">
+  <section class="bg-sb-surface px-4 py-14 sm:px-6 sm:py-20 lg:px-12 lg:py-24">
     <div class="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-2">
       <div>
-        <h1 class="text-6xl leading-tight font-bold text-slate-900">
+        <h1 class="text-4xl leading-tight font-bold text-slate-900 sm:text-5xl lg:text-6xl">
           Više fokusa,<br />bolje ocjene.
         </h1>
         <p class="mt-6 text-lg text-slate-500">
           Kolegiji, zadaci i bilješke na jednom mjestu, uz timer koji vas drži u fokusu.
         </p>
-        <div class="mt-8 flex gap-4">
+        <div class="mt-8 flex flex-wrap gap-4">
           <BaseButton to="/registracija">Započnite besplatno</BaseButton>
           <BaseButton to="/prijava" variant="secondary">Prijava</BaseButton>
         </div>
@@ -54,13 +54,13 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
     </div>
   </section>
 
-  <section class="bg-slate-100 px-12 py-20">
+  <section class="bg-slate-100 px-4 py-14 sm:px-6 sm:py-20 lg:px-12">
     <div class="mx-auto max-w-7xl">
-      <h2 class="text-4xl font-bold text-sb-indigo">Vladajte svojim vremenom</h2>
+      <h2 class="text-3xl font-bold text-sb-indigo sm:text-4xl">Vladajte svojim vremenom</h2>
       <p class="mt-2 text-slate-500">Alati skrojeni za svakodnevicu studenta.</p>
 
       <div class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div class="rounded-3xl bg-white p-8 shadow-sm">
+        <div class="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
           <span
             class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-100 text-teal-600"
           >
@@ -99,7 +99,7 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
         </div>
 
         <div
-          class="grid grid-cols-1 items-center gap-6 rounded-3xl bg-white p-8 shadow-sm sm:grid-cols-2"
+          class="grid grid-cols-1 items-center gap-6 rounded-3xl bg-white p-6 shadow-sm sm:p-8 sm:grid-cols-2"
         >
           <div>
             <span
@@ -116,7 +116,7 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
         </div>
 
         <div
-          class="grid grid-cols-1 items-center gap-6 rounded-3xl bg-white p-8 shadow-sm sm:grid-cols-2"
+          class="grid grid-cols-1 items-center gap-6 rounded-3xl bg-white p-6 shadow-sm sm:p-8 sm:grid-cols-2"
         >
           <div>
             <span
@@ -154,7 +154,7 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
           </div>
         </div>
 
-        <div class="rounded-3xl bg-white p-8 shadow-sm">
+        <div class="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
           <span
             class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-100 text-teal-600"
           >

@@ -96,7 +96,7 @@ const postotakZadataka = computed(() =>
             <Icon name="filter" />
             Prilagodi prikaz
           </p>
-          <div class="flex gap-3">
+          <div class="flex flex-wrap gap-3">
             <BaseSelect v-model="odabraniPredmet" :options="predmetOpcije" />
             <BaseSelect v-model="razdoblje" :options="razdobljeOpcije" />
           </div>

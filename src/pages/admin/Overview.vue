@@ -126,7 +126,7 @@ async function obrisi(stavka) {
           <div
             v-for="stavka in novosti.objave"
             :key="stavka.sadrzajId"
-            class="flex items-center gap-4 rounded-xl bg-slate-100 p-4"
+            class="flex flex-wrap items-center gap-4 rounded-xl bg-slate-100 p-4"
           >
             <span
               class="flex h-14 w-20 shrink-0 flex-col items-center justify-center rounded-lg bg-sb-blue text-white"

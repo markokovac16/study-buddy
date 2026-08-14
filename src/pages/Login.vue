@@ -8,9 +8,11 @@ const { email, lozinka, salje, greska, greskaEmaila, greskaLozinke, posalji, goo
 </script>
 
 <template>
-  <div class="flex justify-center px-6 py-20">
+  <div class="flex justify-center px-4 py-12 sm:px-6 sm:py-20">
     <form class="w-full max-w-md" @submit.prevent="posalji">
-      <h1 class="mb-8 text-center text-4xl font-bold text-slate-900">Dobro došli natrag</h1>
+      <h1 class="mb-8 text-center text-3xl font-bold text-slate-900 sm:text-4xl">
+        Dobro došli natrag
+      </h1>
 
       <BaseButton type="button" variant="outline" block :disabled="salje" @click="google">
         Prijava putem Googlea

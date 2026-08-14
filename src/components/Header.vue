@@ -7,6 +7,10 @@ import Avatar from './ui/Avatar.vue'
 import { useAuthStore } from '../stores/auth'
 import { useNotificationsStore } from '../stores/notifications'
 
+defineProps({ izbornik: Boolean })
+
+defineEmits(['izbornik'])
+
 const auth = useAuthStore()
 const obavijesti = useNotificationsStore()
 
@@ -22,12 +26,25 @@ function prebaci() {
 </script>
 
 <template>
-  <header class="relative flex h-16 items-center justify-between bg-sb-surface px-12 shadow-sm">
-    <RouterLink :to="auth.prijavljen ? '/ploca' : '/'">
-      <Logo />
-    </RouterLink>
+  <header
+    class="relative flex h-16 items-center justify-between bg-sb-surface px-4 shadow-sm sm:px-6 lg:px-12"
+  >
+    <div class="flex min-w-0 items-center gap-2 sm:gap-3">
+      <button
+        v-if="izbornik"
+        class="shrink-0 cursor-pointer rounded-xl p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-sb-indigo lg:hidden"
+        title="Otvori izbornik"
+        @click="$emit('izbornik')"
+      >
+        <Icon name="izbornik" size="h-6 w-6" />
+      </button>
 
-    <div v-if="auth.prijavljen" class="flex items-center gap-4">
+      <RouterLink :to="auth.prijavljen ? '/ploca' : '/'" class="min-w-0">
+        <Logo size="text-lg sm:text-2xl" />
+      </RouterLink>
+    </div>
+
+    <div v-if="auth.prijavljen" class="flex shrink-0 items-center gap-3 sm:gap-4">
       <div class="relative">
         <button
           class="relative cursor-pointer rounded-xl p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-sb-indigo"
@@ -47,7 +64,7 @@ function prebaci() {
           <div class="fixed inset-0 z-40" @click="otvorene = false" />
 
           <div
-            class="rounded-card absolute top-11 right-0 z-50 w-80 bg-white p-4 shadow-lg ring-1 ring-slate-900/5"
+            class="rounded-card fixed top-16 right-4 left-4 z-50 max-h-[70vh] overflow-y-auto bg-white p-4 shadow-lg ring-1 ring-slate-900/5 sm:absolute sm:top-11 sm:right-0 sm:left-auto sm:w-80"
           >
             <div class="mb-3 flex items-center justify-between">
               <p class="text-sm font-bold text-slate-900">Obavijesti</p>

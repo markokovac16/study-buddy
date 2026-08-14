@@ -27,12 +27,12 @@ const novosti = useNewsStore()
       <article
         v-for="objava in novosti.vidljive"
         :key="objava.sadrzajId"
-        class="rounded-card flex gap-5 bg-white p-5"
+        class="rounded-card flex gap-4 bg-white p-4 sm:gap-5 sm:p-5"
       >
         <NewsVotes :objava="objava" />
 
         <div class="min-w-0 flex-1">
-          <div class="flex items-center gap-3">
+          <div class="flex flex-wrap items-center gap-3">
             <BaseBadge color="indigo">{{ objava.tip }}</BaseBadge>
             <span class="text-xs text-slate-400">{{ formatDatum(objava.datum) }}</span>
           </div>

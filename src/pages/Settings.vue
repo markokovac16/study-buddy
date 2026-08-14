@@ -97,7 +97,7 @@ const obavijestiStavke = [
           Pomodoro
         </p>
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <BaseInput v-model="obrazac.pomodoro.minutaRada" label="Sesija (min)" type="number" />
           <BaseInput v-model="obrazac.pomodoro.minutaPauze" label="Pauza (min)" type="number" />
         </div>

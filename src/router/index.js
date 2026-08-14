@@ -6,6 +6,7 @@ import AdminLayout from '../layouts/AdminLayout.vue'
 import Homepage from '../pages/Homepage.vue'
 import Login from '../pages/Login.vue'
 import Register from '../pages/Register.vue'
+import Info from '../pages/Info.vue'
 import Dashboard from '../pages/Dashboard.vue'
 import Subjects from '../pages/Subjects.vue'
 import Statistics from '../pages/Statistics.vue'
@@ -27,6 +28,10 @@ const router = createRouter({
         { path: '', name: 'naslovnica', component: Homepage, meta: { gost: true } },
         { path: 'prijava', name: 'prijava', component: Login, meta: { gost: true } },
         { path: 'registracija', name: 'registracija', component: Register, meta: { gost: true } },
+        { path: 'o-nama', name: 'o-nama', component: Info },
+        { path: 'kontakt', name: 'kontakt', component: Info },
+        { path: 'privatnost', name: 'privatnost', component: Info },
+        { path: 'uvjeti', name: 'uvjeti', component: Info },
       ],
     },
     {

@@ -35,15 +35,15 @@ const objava = computed(() => novosti.objavaPoId(route.params.sadrzajId))
       <BaseButton to="/novosti">Natrag na novosti</BaseButton>
     </div>
 
-    <article v-else class="rounded-card flex gap-6 bg-white p-8">
+    <article v-else class="rounded-card flex gap-4 bg-white p-5 sm:gap-6 sm:p-8">
       <NewsVotes :objava="objava" />
 
       <div class="min-w-0 flex-1">
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-3">
           <BaseBadge color="indigo">{{ objava.tip }}</BaseBadge>
           <span class="text-xs text-slate-400">{{ formatDatum(objava.datum) }}</span>
         </div>
-        <h1 class="mt-3 text-3xl font-bold text-slate-900">{{ objava.naslov }}</h1>
+        <h1 class="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">{{ objava.naslov }}</h1>
         <p class="mt-4 leading-relaxed whitespace-pre-line text-slate-600">
           {{ objava.sadrzaj }}
         </p>

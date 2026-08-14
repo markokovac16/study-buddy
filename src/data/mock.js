@@ -111,30 +111,3 @@ export const zadaci = [
 ]
 
 export const KVOTA_KB = 5 * 1024 * 1024
-
-export const aktivnosti = [
-  {
-    id: 'a1',
-    ikona: 'knjiga',
-    boja: 'blue',
-    naslov: 'Kvantna fizika',
-    opis: 'Ponovljeno 12 kartica',
-    vrijeme: 'prije 45 min',
-  },
-  {
-    id: 'a2',
-    ikona: 'dokument',
-    boja: 'teal',
-    naslov: 'Strukture podataka',
-    opis: 'Anotiran PDF "B-Tree vizualizacija"',
-    vrijeme: 'prije 2 h',
-  },
-  {
-    id: 'a3',
-    ikona: 'pomoc',
-    boja: 'amber',
-    naslov: 'Filozofija',
-    opis: 'Vježbeni kviz: Sustavi pamćenja',
-    vrijeme: 'jučer',
-  },
-]

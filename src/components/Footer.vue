@@ -1,21 +1,33 @@
 <script setup>
 import Logo from './Logo.vue'
 
-const links = ['O nama', 'Kontakt', 'Privatnost', 'Uvjeti']
+const poveznice = [
+  { to: '/o-nama', naziv: 'O nama' },
+  { to: '/kontakt', naziv: 'Kontakt' },
+  { to: '/privatnost', naziv: 'Privatnost' },
+  { to: '/uvjeti', naziv: 'Uvjeti' },
+]
 </script>
 
 <template>
   <footer
-    class="flex h-16 w-full items-center justify-between bg-sb-surface px-12 text-sm text-slate-500"
+    class="flex w-full flex-col items-center gap-4 bg-sb-surface px-4 py-6 text-center text-sm text-slate-500 sm:px-6 lg:h-16 lg:flex-row lg:justify-between lg:gap-0 lg:px-12 lg:py-0 lg:text-left"
   >
-    <div class="w-1/3">
+    <div class="lg:w-1/3">
       <Logo :icon="false" size="text-xl" />
     </div>
 
-    <div class="flex w-1/3 items-center justify-center gap-6">
-      <a v-for="link in links" :key="link" href="#">{{ link }}</a>
+    <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 lg:w-1/3">
+      <RouterLink
+        v-for="poveznica in poveznice"
+        :key="poveznica.to"
+        :to="poveznica.to"
+        class="transition hover:text-sb-indigo"
+      >
+        {{ poveznica.naziv }}
+      </RouterLink>
     </div>
 
-    <p class="w-1/3 text-right">© 2026 StudyBuddy. Sva prava pridržana.</p>
+    <p class="lg:w-1/3 lg:text-right">© 2026 StudyBuddy. Sva prava pridržana.</p>
   </footer>
 </template>

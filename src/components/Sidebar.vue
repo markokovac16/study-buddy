@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Icon from './ui/Icon.vue'
 import Avatar from './ui/Avatar.vue'
@@ -8,12 +8,20 @@ import PomodoroModal from './modals/PomodoroModal.vue'
 import { useAuthStore } from '../stores/auth'
 import { usePomodoroStore } from '../stores/pomodoro'
 
+const props = defineProps({ samoDrawer: Boolean })
+
 const auth = useAuthStore()
 const pomodoro = usePomodoroStore()
 const route = useRoute()
 const router = useRouter()
 
+const otvoren = defineModel({ type: Boolean, default: false })
 const pomodoroModal = ref(false)
+
+watch(
+  () => route.path,
+  () => (otvoren.value = false),
+)
 
 const stavke = computed(() => [
   { to: '/ploca', ikona: 'ploca', naziv: 'Nadzorna ploča' },
@@ -26,6 +34,19 @@ const stavke = computed(() => [
 
 const prikaziPomodoro = computed(() => route.path !== '/ploca')
 
+const stanjeSesije = computed(() => {
+  if (!pomodoro.radi) return null
+  return pomodoro.faza === 'rad'
+    ? { naziv: 'Deep work mode', razred: 'bg-indigo-100 text-sb-blue', tocka: 'bg-sb-indigo' }
+    : { naziv: 'Pauza u tijeku', razred: 'bg-teal-100 text-sb-teal', tocka: 'bg-sb-teal' }
+})
+
+const razredSirine = computed(() =>
+  props.samoDrawer
+    ? 'lg:hidden'
+    : 'lg:static lg:translate-x-0 lg:overflow-visible lg:transition-none',
+)
+
 async function odjava() {
   await auth.odjava()
   router.push('/')
@@ -33,7 +54,16 @@ async function odjava() {
 </script>
 
 <template>
-  <aside class="flex w-64 shrink-0 flex-col justify-between px-6 py-8">
+  <div
+    v-if="otvoren"
+    class="fixed inset-0 z-40 bg-slate-900/40 lg:hidden"
+    @click="otvoren = false"
+  />
+
+  <aside
+    class="fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col justify-between overflow-y-auto bg-sb-bg px-6 py-8 transition-transform duration-200"
+    :class="[razredSirine, otvoren ? 'translate-x-0' : '-translate-x-full']"
+  >
     <div>
       <div class="mb-6 flex items-center gap-3">
         <Avatar :ime="auth.korisnik.ime" />
@@ -41,7 +71,17 @@ async function odjava() {
           <p class="font-semibold text-slate-800">
             {{ auth.korisnik.ime.split(' ')[0] }}
           </p>
-          <p class="text-xs text-slate-500">Deep work mode</p>
+          <p
+            v-if="stanjeSesije"
+            class="mt-1 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-bold"
+            :class="stanjeSesije.razred"
+          >
+            <span
+              class="h-1.5 w-1.5 animate-pulse rounded-full motion-reduce:animate-none"
+              :class="stanjeSesije.tocka"
+            />
+            {{ stanjeSesije.naziv }}
+          </p>
         </div>
       </div>
 
@@ -96,7 +136,7 @@ async function odjava() {
         </RouterLink>
       </div>
     </div>
-
-    <PomodoroModal v-model="pomodoroModal" />
   </aside>
+
+  <PomodoroModal v-model="pomodoroModal" />
 </template>

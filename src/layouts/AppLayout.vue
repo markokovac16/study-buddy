@@ -1,15 +1,18 @@
 <script setup>
+import { ref } from 'vue'
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 import Sidebar from '../components/Sidebar.vue'
+
+const izbornikOtvoren = ref(false)
 </script>
 
 <template>
   <div class="flex min-h-screen flex-col">
-    <Header />
+    <Header izbornik @izbornik="izbornikOtvoren = true" />
     <div class="flex flex-1">
-      <Sidebar />
-      <main class="flex-1 px-8 py-8">
+      <Sidebar v-model="izbornikOtvoren" />
+      <main class="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <RouterView />
       </main>
     </div>

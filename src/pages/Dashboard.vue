@@ -9,13 +9,14 @@ import Loader from '../components/ui/Loader.vue'
 import { useAuthStore } from '../stores/auth'
 import { useSubjectsStore } from '../stores/subjects'
 import { useStatisticsStore } from '../stores/statistics'
-import { aktivnosti } from '../data/mock'
+import { usePomodoroStore } from '../stores/pomodoro'
 import { STATUSI } from '../data/mock'
-import { bojaPredmeta, danaDo } from '../utils/format'
+import { bojaPredmeta, danaDo, prijeVremena, satiIMinute } from '../utils/format'
 
 const auth = useAuthStore()
 const predmetiStore = useSubjectsStore()
 const statistika = useStatisticsStore()
+const pomodoro = usePomodoroStore()
 
 const sortiranje = ref('datum')
 
@@ -36,6 +37,40 @@ const porukaCilja = computed(() => {
   return 'Tek ste počeli.'
 })
 
+const bojaPredmetaPoId = (predmetId) => predmetiStore.predmetPoId(predmetId)?.boja ?? 'indigo'
+const nazivPredmeta = (predmetId) => predmetiStore.predmetPoId(predmetId)?.naziv ?? 'Predmet'
+
+const nedavno = computed(() =>
+  [
+    ...pomodoro.sesije.map((sesija) => ({
+      id: `sesija-${sesija.sesijaId}`,
+      ikona: 'sat',
+      boja: bojaPredmetaPoId(sesija.predmetId),
+      naslov: nazivPredmeta(sesija.predmetId),
+      opis: `Sesija fokusa, ${satiIMinute(sesija.trajanje)}`,
+      vrijeme: sesija.zavrsetak,
+    })),
+    ...predmetiStore.biljeske.map((biljeska) => ({
+      id: `biljeska-${biljeska.biljeskaId}`,
+      ikona: 'dokument',
+      boja: bojaPredmetaPoId(biljeska.predmetId),
+      naslov: biljeska.naslov,
+      opis: `Bilješka uz predmet ${nazivPredmeta(biljeska.predmetId)}`,
+      vrijeme: biljeska.datum,
+    })),
+    ...predmetiStore.prilozi.map((prilog) => ({
+      id: `prilog-${prilog.prilogId}`,
+      ikona: 'mapa',
+      boja: bojaPredmetaPoId(prilog.predmetId),
+      naslov: prilog.naziv,
+      opis: `Prilog uz predmet ${nazivPredmeta(prilog.predmetId)}`,
+      vrijeme: prilog.datum,
+    })),
+  ]
+    .sort((prvi, drugi) => drugi.vrijeme.localeCompare(prvi.vrijeme))
+    .slice(0, 4),
+)
+
 const tezinaPrioriteta = { VISOK: 0, SREDNJI: 1, NIZAK: 2 }
 
 const nadolazeci = computed(() => {
@@ -51,7 +86,7 @@ const nadolazeci = computed(() => {
 
 <template>
   <div>
-    <h1 class="text-4xl font-bold text-slate-900">{{ pozdrav }}, {{ ime }}!</h1>
+    <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">{{ pozdrav }}, {{ ime }}!</h1>
     <p class="mt-2 text-slate-500">Spremni za deep work sesiju?</p>
 
     <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -74,32 +109,35 @@ const nadolazeci = computed(() => {
       </BaseCard>
 
       <BaseCard>
-        <div class="mb-4 flex items-start justify-between">
-          <p class="text-lg font-semibold text-slate-800">Nedavna aktivnost</p>
-          <button class="cursor-pointer text-sm font-semibold text-sb-indigo">Prikaži sve</button>
-        </div>
+        <p class="mb-4 text-lg font-semibold text-slate-800">Nedavna aktivnost</p>
 
-        <div class="space-y-4">
-          <div v-for="stavka in aktivnosti" :key="stavka.id" class="flex gap-3">
+        <p v-if="!nedavno.length" class="text-sm text-slate-500">
+          Još nema zabilježene aktivnosti. Pokrenite sesiju ili dodajte bilješku.
+        </p>
+
+        <div v-else class="space-y-4">
+          <div v-for="stavka in nedavno" :key="stavka.id" class="flex gap-3">
             <span
               class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
               :class="[bojaPredmeta(stavka.boja).pozadina, bojaPredmeta(stavka.boja).tekst]"
             >
               <Icon :name="stavka.ikona" />
             </span>
-            <div>
-              <p class="text-sm font-semibold text-slate-800">
+            <div class="min-w-0">
+              <p class="truncate text-sm font-semibold text-slate-800">
                 {{ stavka.naslov }}
               </p>
-              <p class="text-xs text-slate-500">{{ stavka.opis }} • {{ stavka.vrijeme }}</p>
+              <p class="text-xs text-slate-500">
+                {{ stavka.opis }} • {{ prijeVremena(stavka.vrijeme) }}
+              </p>
             </div>
           </div>
         </div>
       </BaseCard>
     </div>
 
-    <div class="rounded-card mt-6 bg-slate-100 p-6">
-      <div class="mb-5 flex items-center justify-between">
+    <div class="rounded-card mt-6 bg-slate-100 p-4 sm:p-6">
+      <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
         <h2 class="text-2xl font-bold text-slate-900">Nadolazeći zadaci</h2>
         <div class="flex gap-2">
           <button

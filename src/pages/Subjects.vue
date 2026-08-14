@@ -164,7 +164,7 @@ function ucitajDatoteku(dogadaj) {
 
 <template>
   <div>
-    <div class="flex items-start justify-between gap-6">
+    <div class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:gap-6">
       <PageHeading
         title="Upravljanje predmetima"
         subtitle="Svi kolegiji, zadaci, bilješke i materijali na jednom mjestu."
@@ -197,15 +197,15 @@ function ucitajDatoteku(dogadaj) {
     </BaseCard>
 
     <template v-if="odabrani">
-      <div class="mt-12 flex items-center justify-between">
-        <div class="flex items-center gap-4">
+      <div class="mt-12 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex min-w-0 items-center gap-4">
           <span
             class="flex h-12 w-12 items-center justify-center rounded-xl"
             :class="[bojaPredmeta(odabrani.boja).pozadina, bojaPredmeta(odabrani.boja).tekst]"
           >
             <Icon :name="odabrani.ikona" size="h-6 w-6" />
           </span>
-          <h2 class="text-3xl font-bold text-slate-900">
+          <h2 class="min-w-0 text-2xl font-bold break-words text-slate-900 sm:text-3xl">
             {{ odabrani.naziv }}
           </h2>
         </div>
@@ -220,13 +220,13 @@ function ucitajDatoteku(dogadaj) {
 
       <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
         <div class="space-y-6 xl:col-span-2">
-          <div class="rounded-card bg-slate-100 p-6">
+          <div class="rounded-card bg-slate-100 p-4 sm:p-6">
             <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
               <h3 class="flex items-center gap-2 text-xl font-bold text-slate-900">
                 <Icon name="kvacica" />
                 Aktivni zadaci
               </h3>
-              <div class="flex items-center gap-3">
+              <div class="flex flex-wrap items-center gap-3">
                 <BaseSelect v-model="filterPrioriteta" :options="prioritetOpcije" />
                 <BaseButton @click="otvoriNoviZadatak">
                   <Icon name="plus" size="h-4 w-4" />
@@ -248,13 +248,13 @@ function ucitajDatoteku(dogadaj) {
             <p v-else class="text-sm text-slate-500">Nema zadataka za odabrani filter.</p>
           </div>
 
-          <div class="rounded-card bg-slate-100 p-6">
-            <div class="mb-4 flex items-center justify-between">
+          <div class="rounded-card bg-slate-100 p-4 sm:p-6">
+            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
               <h3 class="flex items-center gap-2 text-xl font-bold text-slate-900">
                 <Icon name="dokument" />
                 Bilješke
               </h3>
-              <div class="flex items-center gap-3">
+              <div class="flex flex-wrap items-center gap-3">
                 <BaseSelect
                   v-if="kategorijeOdabranog.length"
                   v-model="filterKategorije"
@@ -296,8 +296,8 @@ function ucitajDatoteku(dogadaj) {
         <div class="space-y-6">
           <TimerCard :predmet-id="odabraniId" />
 
-          <div class="rounded-card bg-slate-100 p-6">
-            <div class="mb-4 flex items-center justify-between">
+          <div class="rounded-card bg-slate-100 p-4 sm:p-6">
+            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
               <h3 class="flex items-center gap-2 text-xl font-bold text-slate-900">
                 <Icon name="mapa" />
                 Resursi

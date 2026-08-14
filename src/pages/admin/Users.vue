@@ -154,7 +154,7 @@ async function obrisi(korisnik) {
     />
 
     <div class="flex flex-wrap gap-4">
-      <label class="relative min-w-72 flex-1">
+      <label class="relative w-full flex-1 sm:w-auto sm:min-w-72">
         <Icon
           name="pretraga"
           size="h-5 w-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"
@@ -195,135 +195,137 @@ async function obrisi(korisnik) {
     <Loader v-if="admin.ucitavanje" />
 
     <div v-else class="rounded-card mt-6 overflow-hidden bg-white shadow-sm">
-      <table class="w-full text-left">
-        <thead class="bg-slate-100 text-[10px] tracking-wide text-slate-500 uppercase">
-          <tr>
-            <th class="w-12 px-6 py-4">
-              <input
-                type="checkbox"
-                :checked="sviOdabrani"
-                class="h-4 w-4 cursor-pointer"
-                @change="prebaciSve"
-              />
-            </th>
-            <th class="px-6 py-4">Ime</th>
-            <th class="px-6 py-4">Uloga</th>
-            <th class="px-6 py-4">Datum pridruživanja</th>
-            <th class="px-6 py-4">Status</th>
-            <th class="px-6 py-4 text-right">Radnje</th>
-          </tr>
-        </thead>
-
-        <tbody class="divide-y divide-slate-100">
-          <tr
-            v-for="korisnik in stranicaKorisnika"
-            :key="korisnik.korisnikId"
-            class="hover:bg-slate-50"
-          >
-            <td class="px-6 py-4">
-              <input
-                v-if="korisnik.korisnikId !== mojId"
-                type="checkbox"
-                :checked="odabrani.includes(korisnik.korisnikId)"
-                class="h-4 w-4 cursor-pointer"
-                @change="prebaciOdabir(korisnik.korisnikId)"
-              />
-            </td>
-
-            <td class="px-6 py-4">
-              <div class="flex items-center gap-3">
-                <Avatar :ime="korisnik.ime" size="h-9 w-9 text-xs" />
-                <div>
-                  <p
-                    class="text-sm font-semibold"
-                    :class="korisnik.aktivan ? 'text-slate-800' : 'text-slate-400'"
-                  >
-                    {{ korisnik.ime }}
-                  </p>
-                  <p class="text-xs text-slate-400">{{ korisnik.email }}</p>
-                </div>
-              </div>
-            </td>
-
-            <td class="px-6 py-4">
-              <BaseBadge :color="korisnik.uloga === 'admin' ? 'amber' : 'indigo'">
-                {{ korisnik.uloga === 'admin' ? 'Administrator' : 'Student' }}
-              </BaseBadge>
-            </td>
-
-            <td class="px-6 py-4 text-sm text-slate-500">
-              {{ formatDatum(korisnik.datumRegistracije) }}
-            </td>
-
-            <td class="px-6 py-4">
-              <span
-                class="flex items-center gap-2 text-sm"
-                :class="korisnik.aktivan ? 'text-sb-teal' : 'text-rose-500'"
-              >
-                <span
-                  class="h-2 w-2 rounded-full"
-                  :class="korisnik.aktivan ? 'bg-sb-teal' : 'bg-rose-400'"
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-3xl text-left">
+          <thead class="bg-slate-100 text-[10px] tracking-wide text-slate-500 uppercase">
+            <tr>
+              <th class="w-12 px-6 py-4">
+                <input
+                  type="checkbox"
+                  :checked="sviOdabrani"
+                  class="h-4 w-4 cursor-pointer"
+                  @change="prebaciSve"
                 />
-                {{ korisnik.aktivan ? 'Aktivan' : 'Deaktiviran' }}
-              </span>
-            </td>
+              </th>
+              <th class="px-6 py-4">Ime</th>
+              <th class="px-6 py-4">Uloga</th>
+              <th class="px-6 py-4">Datum pridruživanja</th>
+              <th class="px-6 py-4">Status</th>
+              <th class="px-6 py-4 text-right">Radnje</th>
+            </tr>
+          </thead>
 
-            <td class="px-6 py-4">
-              <div class="flex justify-end gap-1">
-                <button
-                  class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:cursor-default disabled:opacity-30"
-                  :disabled="korisnik.korisnikId === mojId"
-                  :title="
-                    korisnik.korisnikId === mojId
-                      ? 'Ne možete mijenjati vlastiti račun'
-                      : korisnik.uloga === 'admin'
-                        ? 'Postavi kao studenta'
-                        : 'Postavi kao administratora'
-                  "
-                  @click="prebaciUlogu(korisnik)"
-                >
-                  <Icon name="stit" size="h-4 w-4" />
-                </button>
-                <button
-                  class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:cursor-default disabled:opacity-30"
-                  :disabled="korisnik.korisnikId === mojId"
-                  :title="
-                    korisnik.korisnikId === mojId
-                      ? 'Ne možete mijenjati vlastiti račun'
-                      : korisnik.aktivan
-                        ? 'Deaktiviraj račun'
-                        : 'Aktiviraj račun'
-                  "
-                  @click="prebaciAktivnost(korisnik)"
-                >
-                  <Icon :name="korisnik.aktivan ? 'zabrana' : 'kvacica'" size="h-4 w-4" />
-                </button>
-                <button
-                  class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-red-600 disabled:cursor-default disabled:opacity-30"
-                  :disabled="korisnik.korisnikId === mojId"
-                  :title="
-                    korisnik.korisnikId === mojId
-                      ? 'Ne možete obrisati vlastiti račun'
-                      : 'Obriši korisnika'
-                  "
-                  @click="obrisi(korisnik)"
-                >
-                  <Icon name="kanta" size="h-4 w-4" />
-                </button>
-              </div>
-            </td>
-          </tr>
+          <tbody class="divide-y divide-slate-100">
+            <tr
+              v-for="korisnik in stranicaKorisnika"
+              :key="korisnik.korisnikId"
+              class="hover:bg-slate-50"
+            >
+              <td class="px-6 py-4">
+                <input
+                  v-if="korisnik.korisnikId !== mojId"
+                  type="checkbox"
+                  :checked="odabrani.includes(korisnik.korisnikId)"
+                  class="h-4 w-4 cursor-pointer"
+                  @change="prebaciOdabir(korisnik.korisnikId)"
+                />
+              </td>
 
-          <tr v-if="!stranicaKorisnika.length">
-            <td colspan="6" class="px-6 py-10 text-center text-sm text-slate-500">
-              Nema korisnika koji odgovaraju filterima.
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <Avatar :ime="korisnik.ime" size="h-9 w-9 text-xs" />
+                  <div>
+                    <p
+                      class="text-sm font-semibold"
+                      :class="korisnik.aktivan ? 'text-slate-800' : 'text-slate-400'"
+                    >
+                      {{ korisnik.ime }}
+                    </p>
+                    <p class="text-xs text-slate-400">{{ korisnik.email }}</p>
+                  </div>
+                </div>
+              </td>
+
+              <td class="px-6 py-4">
+                <BaseBadge :color="korisnik.uloga === 'admin' ? 'amber' : 'indigo'">
+                  {{ korisnik.uloga === 'admin' ? 'Administrator' : 'Student' }}
+                </BaseBadge>
+              </td>
+
+              <td class="px-6 py-4 text-sm text-slate-500">
+                {{ formatDatum(korisnik.datumRegistracije) }}
+              </td>
+
+              <td class="px-6 py-4">
+                <span
+                  class="flex items-center gap-2 text-sm"
+                  :class="korisnik.aktivan ? 'text-sb-teal' : 'text-rose-500'"
+                >
+                  <span
+                    class="h-2 w-2 rounded-full"
+                    :class="korisnik.aktivan ? 'bg-sb-teal' : 'bg-rose-400'"
+                  />
+                  {{ korisnik.aktivan ? 'Aktivan' : 'Deaktiviran' }}
+                </span>
+              </td>
+
+              <td class="px-6 py-4">
+                <div class="flex justify-end gap-1">
+                  <button
+                    class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:cursor-default disabled:opacity-30"
+                    :disabled="korisnik.korisnikId === mojId"
+                    :title="
+                      korisnik.korisnikId === mojId
+                        ? 'Ne možete mijenjati vlastiti račun'
+                        : korisnik.uloga === 'admin'
+                          ? 'Postavi kao studenta'
+                          : 'Postavi kao administratora'
+                    "
+                    @click="prebaciUlogu(korisnik)"
+                  >
+                    <Icon name="stit" size="h-4 w-4" />
+                  </button>
+                  <button
+                    class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-sb-indigo disabled:cursor-default disabled:opacity-30"
+                    :disabled="korisnik.korisnikId === mojId"
+                    :title="
+                      korisnik.korisnikId === mojId
+                        ? 'Ne možete mijenjati vlastiti račun'
+                        : korisnik.aktivan
+                          ? 'Deaktiviraj račun'
+                          : 'Aktiviraj račun'
+                    "
+                    @click="prebaciAktivnost(korisnik)"
+                  >
+                    <Icon :name="korisnik.aktivan ? 'zabrana' : 'kvacica'" size="h-4 w-4" />
+                  </button>
+                  <button
+                    class="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:text-red-600 disabled:cursor-default disabled:opacity-30"
+                    :disabled="korisnik.korisnikId === mojId"
+                    :title="
+                      korisnik.korisnikId === mojId
+                        ? 'Ne možete obrisati vlastiti račun'
+                        : 'Obriši korisnika'
+                    "
+                    @click="obrisi(korisnik)"
+                  >
+                    <Icon name="kanta" size="h-4 w-4" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr v-if="!stranicaKorisnika.length">
+              <td colspan="6" class="px-6 py-10 text-center text-sm text-slate-500">
+                Nema korisnika koji odgovaraju filterima.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div
-        class="flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 px-6 py-4"
+        class="flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 px-4 py-4 sm:px-6"
       >
         <p class="text-sm text-slate-500">
           Prikaz {{ stranicaKorisnika.length }} od {{ filtrirani.length }} korisnika
