@@ -6,6 +6,7 @@ import Icon from './ui/Icon.vue'
 import Avatar from './ui/Avatar.vue'
 import { useAuthStore } from '../stores/auth'
 import { useNotificationsStore } from '../stores/notifications'
+import { useGreske } from '../composables/greske'
 import { useTheme } from '../composables/theme'
 
 defineProps({ izbornik: Boolean })
@@ -15,6 +16,7 @@ defineEmits(['izbornik'])
 const auth = useAuthStore()
 const obavijesti = useNotificationsStore()
 const route = useRoute()
+const { pokusaj } = useGreske()
 const { tema, prebaci: prebaciTemu } = useTheme()
 
 const prijavljen = computed(() => auth.prijavljen && !route.meta.gost)
@@ -26,7 +28,7 @@ function prebaci() {
   otvorene.value = !otvorene.value
   if (!otvorene.value) return
   istaknute.value = obavijesti.nove.map((stavka) => stavka.id)
-  obavijesti.oznaciVidjene()
+  pokusaj(obavijesti.oznaciVidjene)
 }
 </script>
 

@@ -1,8 +1,10 @@
 import { computed, ref } from 'vue'
 import { useAuthStore } from '../stores/auth'
+import { useGreske } from './greske'
 
 export function useProfileForm(pocetno, pretvori = (podaci) => podaci) {
   const auth = useAuthStore()
+  const { pokusaj } = useGreske()
 
   const obrazac = ref(pocetno())
   const spremljeno = ref(false)
@@ -12,8 +14,8 @@ export function useProfileForm(pocetno, pretvori = (podaci) => podaci) {
     () => JSON.stringify(zaSpremanje()) !== JSON.stringify(pretvori(pocetno())),
   )
 
-  function spremi() {
-    auth.azuriraj(zaSpremanje())
+  async function spremi() {
+    if (!(await pokusaj(() => auth.azuriraj(zaSpremanje())))) return
     spremljeno.value = true
     setTimeout(() => (spremljeno.value = false), 2500)
   }

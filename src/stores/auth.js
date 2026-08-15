@@ -13,7 +13,9 @@ import {
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { auth, db, googleProvider } from '../firebase'
+import { useGreske } from '../composables/greske'
 import { lokalnaTema } from '../utils/theme'
+import { greska } from '../utils/errors'
 import { isoDatum } from '../utils/format'
 
 export const POMODORO_ZADANO = { minutaRada: 25, minutaPauze: 5, automatskiNastavak: true }
@@ -43,11 +45,8 @@ const imeIzEmaila = (email) =>
 const googleId = (racun) =>
   racun.providerData.find((davatelj) => davatelj.providerId === 'google.com')?.uid ?? ''
 
-function greska(kod) {
-  return Object.assign(new Error(kod), { code: kod })
-}
-
 export const useAuthStore = defineStore('auth', () => {
+  const { prikazi } = useGreske()
   const korisnik = ref(null)
   const davatelji = ref([])
   let razrijesi
@@ -78,7 +77,6 @@ export const useAuthStore = defineStore('auth', () => {
         ...PREDLOZAK.preferencije,
         tema: lokalnaTema() ?? PREDLOZAK.preferencije.tema,
       },
-      uloga: racun.email.includes('admin') ? 'admin' : 'student',
       datumRegistracije: isoDatum(),
       zadnjaPrijava: new Date().toISOString(),
     }
@@ -142,9 +140,14 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function azuriraj(promjene) {
-    const korisnikId = korisnik.value.korisnikId
-    korisnik.value = { ...korisnik.value, ...promjene }
-    await updateDoc(zapis(korisnikId), promjene)
+    const prethodni = korisnik.value
+    korisnik.value = { ...prethodni, ...promjene }
+    try {
+      await updateDoc(zapis(prethodni.korisnikId), promjene)
+    } catch (iznimka) {
+      korisnik.value = prethodni
+      throw iznimka
+    }
   }
 
   async function deaktiviraj() {
@@ -154,7 +157,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   onAuthStateChanged(auth, async (racun) => {
     if (racun && korisnik.value?.korisnikId !== racun.uid) {
-      await ucitaj(racun).catch(() => {})
+      await ucitaj(racun).catch(prikazi)
     } else if (!racun) {
       korisnik.value = null
       zapamtiDavatelje(null)

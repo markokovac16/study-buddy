@@ -13,6 +13,7 @@ import SaveBar from '../components/SaveBar.vue'
 import ConfirmModal from '../components/modals/ConfirmModal.vue'
 import PasswordModal from '../components/modals/PasswordModal.vue'
 import { useConfirm } from '../composables/useConfirm'
+import { useGreske } from '../composables/greske'
 import { useLogout } from '../composables/logout'
 import { useProfileForm } from '../composables/profileForm'
 import { useAuthStore } from '../stores/auth'
@@ -22,6 +23,7 @@ const auth = useAuthStore()
 const router = useRouter()
 const odjava = useLogout()
 const { upit, pitaj, odgovori } = useConfirm()
+const { pokusaj } = useGreske()
 
 const pocetno = () => ({
   ime: auth.korisnik.ime,
@@ -78,7 +80,7 @@ async function deaktiviraj() {
     gumb: 'Deaktiviraj',
   })
   if (!potvrda) return
-  await auth.deaktiviraj()
+  if (!(await pokusaj(auth.deaktiviraj))) return
   router.push('/')
 }
 </script>

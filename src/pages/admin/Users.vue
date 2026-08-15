@@ -8,6 +8,7 @@ import PageHeading from '../../components/ui/PageHeading.vue'
 import UserRow from '../../components/UserRow.vue'
 import ConfirmModal from '../../components/modals/ConfirmModal.vue'
 import { useConfirm } from '../../composables/useConfirm'
+import { useGreske } from '../../composables/greske'
 import { usePagination } from '../../composables/pagination'
 import { useAdminStore } from '../../stores/admin'
 import { useAuthStore } from '../../stores/auth'
@@ -16,6 +17,7 @@ import { sBrojem } from '../../utils/format'
 const admin = useAdminStore()
 const auth = useAuthStore()
 const { upit: potvrdaUpit, pitaj, odgovori } = useConfirm()
+const { pokusaj } = useGreske()
 
 const PO_STRANICI = 8
 
@@ -89,7 +91,7 @@ async function skupnaDeaktivacija() {
     gumb: 'Deaktiviraj',
   })
   if (!potvrda) return
-  admin.skupnaDeaktivacija(odabrani.value)
+  if (!(await pokusaj(() => admin.skupnaDeaktivacija(odabrani.value)))) return
   odabrani.value = []
 }
 
@@ -104,7 +106,7 @@ async function prebaciAktivnost(korisnik) {
     opasno: !aktivan,
   })
   if (!potvrda) return
-  admin.postaviAktivnost(korisnik.korisnikId, aktivan)
+  pokusaj(() => admin.postaviAktivnost(korisnik.korisnikId, aktivan))
 }
 
 async function skupnoBrisanje() {
@@ -114,7 +116,7 @@ async function skupnoBrisanje() {
     gumb: 'Obriši',
   })
   if (!potvrda) return
-  admin.skupnoBrisanje(odabrani.value)
+  if (!(await pokusaj(() => admin.skupnoBrisanje(odabrani.value)))) return
   odabrani.value = []
 }
 
@@ -128,7 +130,7 @@ async function prebaciUlogu(korisnik) {
     opasno: false,
   })
   if (!potvrda) return
-  admin.postaviUlogu(korisnik.korisnikId, nova)
+  pokusaj(() => admin.postaviUlogu(korisnik.korisnikId, nova))
 }
 
 async function obrisi(korisnik) {
@@ -138,7 +140,7 @@ async function obrisi(korisnik) {
     gumb: 'Obriši',
   })
   if (!potvrda) return
-  admin.obrisiKorisnika(korisnik.korisnikId)
+  if (!(await pokusaj(() => admin.obrisiKorisnika(korisnik.korisnikId)))) return
   odabrani.value = odabrani.value.filter((id) => id !== korisnik.korisnikId)
 }
 </script>
@@ -172,7 +174,9 @@ async function obrisi(korisnik) {
       class="mt-6 flex flex-wrap items-center gap-4 rounded-xl bg-indigo-50 px-5 py-3"
     >
       <p class="text-sm font-semibold text-sb-blue">
-        {{ sBrojem(odabrani.length, 'korisnik odabran', 'korisnika odabrana', 'korisnika odabrano') }}
+        {{
+          sBrojem(odabrani.length, 'korisnik odabran', 'korisnika odabrana', 'korisnika odabrano')
+        }}
       </p>
       <span class="h-5 w-px bg-indigo-200" />
       <button

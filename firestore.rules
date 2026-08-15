@@ -21,7 +21,9 @@ service cloud.firestore {
 
     match /korisnici/{korisnikId} {
       allow read: if jeAdmin() || jeVlasnik(korisnikId);
-      allow create: if jeVlasnik(korisnikId);
+      allow create: if jeVlasnik(korisnikId)
+        && request.resource.data.uloga == 'student'
+        && request.resource.data.aktivan == true;
       allow delete: if jeAdmin();
       allow update: if jeAdmin()
         || (jeVlasnik(korisnikId)

@@ -1,0 +1,15 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function jeVlasnik(korisnikId) {
+      return request.auth != null && request.auth.uid == korisnikId;
+    }
+
+    match /korisnici/{korisnikId}/{putanja=**} {
+      allow read, delete: if jeVlasnik(korisnikId);
+      allow create, update: if jeVlasnik(korisnikId)
+        && request.resource.size <= 10 * 1024 * 1024;
+    }
+  }
+}

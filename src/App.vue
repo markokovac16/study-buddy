@@ -1,5 +1,6 @@
 <script setup>
 import { watch } from 'vue'
+import ErrorToast from './components/ErrorToast.vue'
 import { useTheme } from './composables/theme'
 
 const TRAJANJE = 250
@@ -25,4 +26,5 @@ watch(
 
 <template>
   <RouterView />
+  <ErrorToast />
 </template>

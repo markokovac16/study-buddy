@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { addDoc, collection } from 'firebase/firestore'
 import { db } from '../firebase'
 import { useCollection } from '../composables/collection'
+import { useGreske } from '../composables/greske'
 import { POMODORO_ZADANO, useAuthStore } from './auth'
 import { pripremiZvuk, zvukKraja } from '../utils/sound'
 
@@ -12,6 +13,7 @@ let interval = null
 
 export const usePomodoroStore = defineStore('pomodoro', () => {
   const auth = useAuthStore()
+  const { pokusaj } = useGreske()
 
   const faza = ref('rad')
   const sekunde = ref(POMODORO_ZADANO.minutaRada * 60)
@@ -53,7 +55,7 @@ export const usePomodoroStore = defineStore('pomodoro', () => {
   function sljedecaFaza() {
     const zavrsenRad = faza.value === 'rad'
     if (zavrsenRad) {
-      spremiSesiju()
+      pokusaj(spremiSesiju)
       faza.value = 'pauza'
       sesija.value = (sesija.value % SESIJA_U_CIKLUSU) + 1
     } else {

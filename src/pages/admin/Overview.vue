@@ -13,6 +13,7 @@ import ContentModal from '../../components/modals/ContentModal.vue'
 import ConfirmModal from '../../components/modals/ConfirmModal.vue'
 import { useConfirm } from '../../composables/useConfirm'
 import { useEditing } from '../../composables/editing'
+import { useGreske } from '../../composables/greske'
 import { prijeVremena, sBrojem } from '../../utils/format'
 import { silazno } from '../../utils/sort'
 import { useAdminStore } from '../../stores/admin'
@@ -21,6 +22,7 @@ import { useNewsStore } from '../../stores/news'
 const admin = useAdminStore()
 const novosti = useNewsStore()
 const { upit, pitaj, odgovori } = useConfirm()
+const { pokusaj } = useGreske()
 
 const objavaModal = useEditing(novosti.dodaj, novosti.uredi, 'sadrzajId')
 
@@ -52,7 +54,7 @@ async function obrisi(stavka) {
     gumb: 'Obriši',
   })
   if (!potvrda) return
-  novosti.obrisi(stavka.sadrzajId)
+  pokusaj(() => novosti.obrisi(stavka.sadrzajId))
 }
 </script>
 
@@ -94,7 +96,14 @@ async function obrisi(stavka) {
         <div class="mb-5 flex items-center justify-between">
           <h2 class="text-2xl font-bold text-sb-indigo">Novosti</h2>
           <p class="text-sm text-slate-500">
-            {{ sBrojem(novosti.vidljive.length, 'vidljiva objava', 'vidljive objave', 'vidljivih objava') }}
+            {{
+              sBrojem(
+                novosti.vidljive.length,
+                'vidljiva objava',
+                'vidljive objave',
+                'vidljivih objava',
+              )
+            }}
           </p>
         </div>
 
@@ -125,7 +134,7 @@ async function obrisi(stavka) {
               <IconButton
                 :name="stavka.vidljiv ? 'zabrana' : 'kvacica'"
                 :title="stavka.vidljiv ? 'Sakrij objavu' : 'Objavi'"
-                @click="novosti.prebaciVidljivost(stavka)"
+                @click="pokusaj(() => novosti.prebaciVidljivost(stavka))"
               />
               <IconButton
                 name="olovka"

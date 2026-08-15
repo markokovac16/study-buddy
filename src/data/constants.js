@@ -3,3 +3,5 @@ export const PRIORITETI = { NIZAK: 'NIZAK', SREDNJI: 'SREDNJI', VISOK: 'VISOK' }
 export const STATUSI = { NA_CEKANJU: 'NA_CEKANJU', U_TIJEKU: 'U_TIJEKU', ZAVRSENO: 'ZAVRSENO' }
 
 export const KVOTA_KB = 5 * 1024 * 1024
+
+export const NAJVECI_PRILOG_KB = 10 * 1024

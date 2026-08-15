@@ -5,7 +5,8 @@ import { deleteObject, getDownloadURL, ref as mjestoDatoteke, uploadBytes } from
 import { db, spremiste } from '../firebase'
 import { useCollection } from '../composables/collection'
 import { useAuthStore } from './auth'
-import { STATUSI } from '../data/constants'
+import { NAJVECI_PRILOG_KB, STATUSI } from '../data/constants'
+import { greska } from '../utils/errors'
 import { isoDatum } from '../utils/format'
 import { uzlazno } from '../utils/sort'
 
@@ -188,6 +189,7 @@ export const useSubjectsStore = defineStore('subjects', () => {
     putanja ? deleteObject(mjestoDatoteke(spremiste, putanja)) : Promise.resolve()
 
   async function dodajPrilog({ predmetId, datoteka }) {
+    if (datoteka.size / 1024 > NAJVECI_PRILOG_KB) throw greska('app/prilog-prevelik')
     slanjePriloga.value = true
     try {
       const putanja = `korisnici/${auth.korisnik.korisnikId}/predmeti/${predmetId}/${Date.now()}-${datoteka.name}`

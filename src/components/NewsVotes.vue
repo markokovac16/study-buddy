@@ -1,11 +1,15 @@
 <script setup>
 import { computed } from 'vue'
 import Icon from './ui/Icon.vue'
+import { useGreske } from '../composables/greske'
 import { useNewsStore } from '../stores/news'
 
 const props = defineProps({ objava: { type: Object, required: true } })
 
 const novosti = useNewsStore()
+const { pokusaj } = useGreske()
+
+const glasaj = (vrijednost) => pokusaj(() => novosti.glasaj(props.objava.sadrzajId, vrijednost))
 
 const moj = computed(() => novosti.mojGlas(props.objava))
 const rezultat = computed(() => novosti.rezultat(props.objava))
@@ -22,7 +26,7 @@ const bojaRezultata = computed(() => {
       class="cursor-pointer rounded-lg p-1 transition"
       :class="moj === 1 ? 'text-sb-teal' : 'text-slate-400 hover:text-sb-teal'"
       :title="moj === 1 ? 'Ukloni glas' : 'Glas za'"
-      @click="novosti.glasaj(objava.sadrzajId, 1)"
+      @click="glasaj(1)"
     >
       <Icon name="lijevo" size="h-5 w-5 rotate-90" />
     </button>
@@ -31,7 +35,7 @@ const bojaRezultata = computed(() => {
       class="cursor-pointer rounded-lg p-1 transition"
       :class="moj === -1 ? 'text-red-600' : 'text-slate-400 hover:text-red-600'"
       :title="moj === -1 ? 'Ukloni glas' : 'Glas protiv'"
-      @click="novosti.glasaj(objava.sadrzajId, -1)"
+      @click="glasaj(-1)"
     >
       <Icon name="desno" size="h-5 w-5 rotate-90" />
     </button>

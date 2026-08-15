@@ -72,7 +72,7 @@ Aplikacija traži vlastiti Firebase projekt. U [konzoli](https://console.firebas
 3. U **Firestore Database** napravi bazu.
 4. Uključi **Storage** za priloge uz bilješke. Storage traži Blaze plan, ali sve ostaje unutar besplatne kvote.
 5. Konfiguraciju web aplikacije prepiši u `.env` prema `.env.example`.
-6. Objavi pravila iz `firestore.rules` - `firebase deploy --only firestore:rules` ili copy-paste u konzolu pod **Firestore Database → Rules**.
+6. Objavi pravila iz `firestore.rules` i `storage.rules` - `firebase deploy --only firestore:rules,storage` ili copy-paste u konzolu pod **Firestore Database → Rules** i **Storage → Rules**.
 
 `.env` je u `.gitignore` i ne ide u repozitorij.
 
@@ -88,20 +88,21 @@ korisnici/{korisnikId}                    profil, uloga, preferencije, Pomodoro 
 sadrzajNaslovnice/{sadrzajId}             objave u Novostima, glasovi kao mapa {uid: 1 | -1}
 ```
 
-Pravila drže da korisnik čita i piše samo pod svojim `korisnici/{uid}`, da administrator vidi sve, da Novosti svatko može čitati i da prijavljeni korisnik u tuđoj objavi smije dirati samo vlastiti glas.
+Pravila drže da korisnik čita i piše samo pod svojim `korisnici/{uid}`, da administrator vidi sve, da Novosti svatko može čitati i da prijavljeni korisnik u tuđoj objavi smije dirati samo vlastiti glas. Registracija smije otvoriti dokument samo s ulogom `student`, pa se uloga administratora ne može dodijeliti iz preglednika. Storage pravila drže datoteke unutar `korisnici/{uid}` i ograničavaju prilog na 10 MB.
 
 ## Prijava tijekom razvoja
 
-Registracija otvara pravi Firebase račun i uz njega dokument u kolekciji `korisnici`. Adresa koja sadrži `admin` dobiva ulogu administratora, sve ostale ulogu studenta. Svi podaci aplikacije žive u Firestoreu; mock ostaje samo za izlog na naslovnici, koji gost vidi bez prijave.
+Registracija otvara pravi Firebase račun i uz njega dokument u kolekciji `korisnici`, uvijek s ulogom studenta. Prvi administrator se postavlja ručno u konzoli - u `korisnici/{uid}` polje `uloga` promijeni u `admin`; nakon toga ostale uloge mijenja administrator kroz sučelje. Svi podaci aplikacije žive u Firestoreu; mock ostaje samo za izlog na naslovnici, koji gost vidi bez prijave.
 
 ## Struktura
 
 ```
 firestore.rules   sigurnosna pravila baze
+storage.rules     sigurnosna pravila Storagea
 src/
   assets/       slike i ikone
   components/   komponente (ui/ = bazne, charts/ = grafovi, modals/ = obrasci)
-  composables/  obrazac prijave i potvrdni modal
+  composables/  obrazac prijave, potvrdni modal i prikaz grešaka
   data/         enumi prioriteta i statusa te podaci za izlog na naslovnici
   firebase.js   inicijalizacija Firebasea iz .env varijabli
   layouts/      PublicLayout, AppLayout, AdminLayout

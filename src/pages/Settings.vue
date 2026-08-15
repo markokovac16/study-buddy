@@ -37,8 +37,8 @@ watch(() => obrazac.value.preferencije.tema, prikazi)
 
 onBeforeUnmount(ocisti)
 
-function spremiPostavke() {
-  spremi()
+async function spremiPostavke() {
+  await spremi()
   ocisti()
 }
 

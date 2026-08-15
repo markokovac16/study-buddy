@@ -19,6 +19,7 @@ import NoteModal from '../components/modals/NoteModal.vue'
 import ConfirmModal from '../components/modals/ConfirmModal.vue'
 import { useConfirm } from '../composables/useConfirm'
 import { useEditing } from '../composables/editing'
+import { useGreske } from '../composables/greske'
 import TimerCard from '../components/TimerCard.vue'
 import { useSubjectsStore } from '../stores/subjects'
 import { KVOTA_KB, PRIORITETI, STATUSI } from '../data/constants'
@@ -26,6 +27,7 @@ import { bojaPredmeta, decimalni, formatVelicina, prioritetNaziv } from '../util
 
 const store = useSubjectsStore()
 const { upit, pitaj, odgovori } = useConfirm()
+const { pokusaj } = useGreske()
 
 const odabraniId = ref(null)
 
@@ -116,13 +118,13 @@ async function obrisiPredmet() {
     gumb: 'Obriši',
   })
   if (!potvrda) return
-  store.obrisiPredmet(odabraniId.value)
+  pokusaj(() => store.obrisiPredmet(odabraniId.value))
 }
 
 function ucitajDatoteku(dogadaj) {
   const datoteka = dogadaj.target.files[0]
   if (!datoteka) return
-  store.dodajPrilog({ predmetId: odabraniId.value, datoteka })
+  pokusaj(() => store.dodajPrilog({ predmetId: odabraniId.value, datoteka }))
   dogadaj.target.value = ''
 }
 </script>
@@ -202,9 +204,9 @@ function ucitajDatoteku(dogadaj) {
                 v-for="zadatak in zadaciOdabranog"
                 :key="zadatak.zadatakId"
                 :zadatak="zadatak"
-                @prebaci="store.prebaciStatus(zadatak.zadatakId)"
+                @prebaci="pokusaj(() => store.prebaciStatus(zadatak.zadatakId))"
                 @uredi="zadatakModal.otvoriUredi(zadatak)"
-                @obrisi="store.obrisiZadatak(zadatak.zadatakId)"
+                @obrisi="pokusaj(() => store.obrisiZadatak(zadatak.zadatakId))"
               />
             </div>
             <p v-else class="text-sm text-slate-500">Nema zadataka za odabrani filter.</p>
@@ -236,7 +238,7 @@ function ucitajDatoteku(dogadaj) {
                 :key="biljeska.biljeskaId"
                 :biljeska="biljeska"
                 @uredi="biljeskaModal.otvoriUredi(biljeska)"
-                @obrisi="store.obrisiBiljesku(biljeska.biljeskaId)"
+                @obrisi="pokusaj(() => store.obrisiBiljesku(biljeska.biljeskaId))"
               />
             </div>
             <p v-else class="text-sm text-slate-500">
@@ -268,7 +270,7 @@ function ucitajDatoteku(dogadaj) {
                 v-for="prilog in priloziOdabranog"
                 :key="prilog.prilogId"
                 :prilog="prilog"
-                @obrisi="store.obrisiPrilog(prilog.prilogId)"
+                @obrisi="pokusaj(() => store.obrisiPrilog(prilog.prilogId))"
               />
             </div>
             <p v-else class="text-sm text-slate-500">Nema priloga. Dodajte datoteku ili sliku.</p>
