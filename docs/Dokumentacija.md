@@ -209,13 +209,13 @@ Administrator radi u zasebnom dijelu aplikacije s vlastitim rasporedom zaslona.
 
 ### 3.2. Dijagram obrazaca uporabe
 
-![Dijagram obrazaca uporabe](Dijagrami/useCase.png)
+![Dijagram obrazaca uporabe](dijagrami/useCase.png)
 
 Dijagram prikazuje tri glavna aktera s lijeve strane granice sustava StudyBuddy i četiri pomoćna aktera s desne. Nasljeđivanje između glavnih aktera nije crtano jer registrirani korisnik i administrator u ovoj aplikaciji rade s različitim skupovima zaslona, pa je preglednije prikazati ih odvojeno s vezama prema zajedničkim obrascima.
 
 Obrazac *Registrirati se* proširen je obrascem *Reg. putem Google računa* vezom `«extend»`, jer je registracija Google računom neobavezna varijanta osnovnog toka. Korisnik se može registrirati i bez nje.
 
-Pomoćni akteri sa stereotipom `«sustav»` označavaju vanjske sustave o kojima aplikacija ovisi. Povezani su s obrascima koje opslužuju, a opisani su u poglavlju 3.3. Prva verzija dijagrama, izrađena u fazi analize prije programiranja, nalazi se u datoteci `Dijagrami/useCase-izvorni.png` i sadrži samo glavne aktere.
+Pomoćni akteri sa stereotipom `«sustav»` označavaju vanjske sustave o kojima aplikacija ovisi. Povezani su s obrascima koje opslužuju, a opisani su u poglavlju 3.3. Prva verzija dijagrama, izrađena u fazi analize prije programiranja, nalazi se u datoteci `dijagrami/useCase-izvorni.png` i sadrži samo glavne aktere.
 
 ### 3.3. Komunikacija s vanjskim sustavima
 
@@ -324,7 +324,7 @@ Dijagram obrazaca uporabe izrađen je na temelju scenarija opisanih u nastavku.
 
 ### 3.5. Klasni dijagram domene
 
-![Klasni dijagram domene](Dijagrami/classDijagram.png)
+![Klasni dijagram domene](dijagrami/classDijagram.png)
 
 Dijagram prikazuje objekte domene koji se spremaju u bazu.
 
@@ -381,7 +381,7 @@ Kroz cijelu aplikaciju drže se tri pravila. **Komponente ne dodiruju Firestore*
 
 ### 4.3. Pretplata na podatke
 
-![Pretplata na Firestore kolekciju](Dijagrami/impl-collection.png)
+![Pretplata na Firestore kolekciju](dijagrami/impl-collection.png)
 
 Sve kolekcije dohvaćaju se kroz `useCollection`. On prima uvjet pod kojim pretplata smije postojati, funkciju koja vraća kolekciju, naziv polja za identifikator dokumenta i neobavezne postavke. Kad se uvjet promijeni, stara pretplata se prekida, popis se prazni i pretplata kreće ispočetka. Time se rješava odjava: čim `korisnikId` postane prazan, slušači se gase i podaci prethodnog korisnika nestaju iz memorije.
 
@@ -389,7 +389,7 @@ Store predmeta koristi taj mehanizam u dvije razine. Predmeti se prate izravno, 
 
 ### 4.4. Upravljanje predmetima, zadacima i bilješkama
 
-![Klasni dijagram upravljanja predmetima](Dijagrami/impl-predmeti.png)
+![Klasni dijagram upravljanja predmetima](dijagrami/impl-predmeti.png)
 
 Zaslon `Subjects` drži samo ono što se tiče prikaza: koji je predmet odabran, koji su filtri postavljeni i je li popis bilježaka proširen. Svi podaci dolaze iz storea, sve promjene idu kroz njegove akcije.
 
@@ -416,7 +416,7 @@ Brisanje predmeta je jedina akcija koja radi u više koraka. Najprije se iz Stor
 
 ### 4.5. Pomodoro timer i statistika
 
-![Klasni dijagram Pomodoro timera i statistike](Dijagrami/impl-pomodoro.png)
+![Klasni dijagram Pomodoro timera i statistike](dijagrami/impl-pomodoro.png)
 
 Stanje timera drži `pomodoroStore`: faza, preostale sekunde, oznaka radi li timer, redni broj sesije u ciklusu i identifikator predmeta. Interval je varijabla izvan store funkcije, čime se osigurava da postoji samo jedan bez obzira na to koliko komponenti timer prikazuje. Takav smještaj rješava zahtjev da timer preživi promjenu rute. Komponenta `TimerCard` pojavljuje se na radnoj ploči, u detaljnom prikazu predmeta i na početnoj stranici, a sve tri instance čitaju isto stanje.
 
@@ -426,7 +426,7 @@ Kad radna faza istekne, `sljedecaFaza` zapisuje sesiju, prebacuje se na pauzu i 
 
 ### 4.6. Prijava, registracija i zaštita ruta
 
-![Klasni dijagram prijave i zaštite ruta](Dijagrami/impl-auth.png)
+![Klasni dijagram prijave i zaštite ruta](dijagrami/impl-auth.png)
 
 Zasloni `Login` i `Register` razlikuju se samo po naslovima i po tome koju akciju storea pozivaju. Sve ostalo drži `useAuthForm`, koji prima naziv akcije i vraća polja obrasca, poruke o pogreškama, oznaku slanja i dvije funkcije za slanje. Provjera unosa računa se kao izvedeno stanje i prikazuje tek nakon prvog pokušaja slanja, kako korisnik ne bi dobio crvenu poruku dok još tipka. Pogreške koje vraća Firebase prevode se u `utils/errors.js`, gdje se šifra poput `auth/wrong-password` pretvara u rečenicu na hrvatskom jeziku.
 
@@ -447,7 +447,7 @@ Rute su ugniježđene pod tri rasporeda. Javne rute imaju oznaku `gost`, korisni
 
 ### 4.7. Administratorski dio
 
-![Klasni dijagram administratorskog dijela](Dijagrami/impl-admin.png)
+![Klasni dijagram administratorskog dijela](dijagrami/impl-admin.png)
 
 Zaslon `Users` drži tekst pretrage, dva filtra i popis označenih redaka. Filtriranje je izvedeno svojstvo nad popisom korisnika iz storea, a stranično listanje preuzima `usePagination`, koji vraća trenutnu stranicu, ukupan broj stranica i izrezani popis. Promjena filtra vraća listanje na prvu stranicu.
 

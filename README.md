@@ -4,6 +4,8 @@ Web aplikacija za organizaciju učenja.
 
 Student tijekom semestra prati više kolegija odjednom, a rokovi, bilješke i materijali obično završe razbacani po bilježnicama, mailovima i chatovima. StudyBuddy ih drži na jednom mjestu i uz to mjeri koliko je vremena stvarno potrošeno na učenje, umjesto da se student oslanja na dojam.
 
+📄 Cjelovita dokumentacija projekta: [docs/Dokumentacija.md](docs/Dokumentacija.md)
+
 ## Projekt
 
 | | |
