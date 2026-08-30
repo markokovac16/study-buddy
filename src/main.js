@@ -34,4 +34,5 @@ app.use(createPinia())
 useAuthStore().inicijalizacija.then(() => {
   app.use(router)
   app.mount('#app')
+  if (import.meta.env.DEV) import('./data/seed').then((seed) => (window.seed = seed))
 })

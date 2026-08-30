@@ -92,6 +92,12 @@ Pravila drže da korisnik čita i piše samo pod svojim `korisnici/{uid}`, da ad
 
 ## Prijava tijekom razvoja
 
+U `npm run dev` načinu rada `window.seed` nudi punjenje baze demo podacima. `seed.zasij()` prijavljenom korisniku dodaje 7 predmeta, 19 zadataka, 21 bilješku, po tri priloga na predmet i osam tjedana Pomodoro sesija, a administratoru i objave u Novostima. Prilozi se generiraju u pregledniku i stvarno se šalju na Storage: tekstualni sažetak, PDF s popisom literature i PNG nacrtan na canvasu. Zadnjih sedam dana sesija namjerno je gušće da dnevni cilj na nadzornoj ploči dođe blizu sto posto. `seed.pocisti()` briše **sve** predmete, priloge i sesije trenutnog korisnika, ne samo generirane.
+
+`seed.zasijKorisnike()` traži administratorsku ulogu i puni tablicu korisnika. Preko druge instance Firebase aplikacije (`initializeApp(konfiguracija, 'sjeme-...')`) otvara prave Auth račune na domeni `@sjeme.studybuddy.test`, prijavljuje se kao svaki od njih i njegovim ovlastima piše profil te lakše podstablo predmeta, zadataka, bilježaka i sesija. Trenutna prijava ostaje netaknuta jer je riječ o zasebnom auth kontekstu. Nakon toga administratorska sesija dvojici postavlja ulogu administratora, a trojici `aktivan` na `false`, pa filteri, paginacija i graf registracija imaju raznolike podatke. Lozinke su nasumične i nigdje se ne spremaju. `seed.pocistiKorisnike()` briše njihove Firestore dokumente; sami Auth računi brišu se ručno u konzoli jer to klijentski SDK ne može.
+
+Modul se u produkcijski build ne uključuje.
+
 Registracija otvara pravi Firebase račun i uz njega dokument u kolekciji `korisnici`, uvijek s ulogom studenta. Prvi administrator se postavlja ručno u konzoli - u `korisnici/{uid}` polje `uloga` promijeni u `admin`; nakon toga ostale uloge mijenja administrator kroz sučelje. Svi podaci aplikacije žive u Firestoreu; mock ostaje samo za izlog na naslovnici, koji gost vidi bez prijave.
 
 ## Struktura

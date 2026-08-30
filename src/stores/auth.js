@@ -20,7 +20,7 @@ import { isoDatum } from '../utils/format'
 
 export const POMODORO_ZADANO = { minutaRada: 25, minutaPauze: 5, automatskiNastavak: true }
 
-const PREDLOZAK = {
+export const PREDLOZAK = {
   aktivan: true,
   uloga: 'student',
   googleId: '',
