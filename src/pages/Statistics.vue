@@ -122,13 +122,15 @@ const daniUFlowu = computed(() => statistika.poDanuTjedna().filter((dan) => dan.
         <BaseCard>
           <p class="mb-4 text-xl font-bold text-slate-900">Raspodjela po kolegijima</p>
           <div class="relative h-48">
-            <DonutChart
-              :labels="raspodjela.map((predmet) => predmet.naziv)"
-              :values="raspodjela.map((predmet) => predmet.minuta)"
-              :colors="raspodjela.map((predmet) => bojaPredmeta(predmet.boja).hex)"
-            />
+            <div class="relative z-10 h-full">
+              <DonutChart
+                :labels="raspodjela.map((predmet) => predmet.naziv)"
+                :values="raspodjela.map((predmet) => predmet.minuta)"
+                :colors="raspodjela.map((predmet) => bojaPredmeta(predmet.boja).hex)"
+              />
+            </div>
             <div
-              class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
+              class="pointer-events-none absolute inset-0 z-0 flex flex-col items-center justify-center"
             >
               <span class="text-3xl font-bold text-slate-900">
                 {{ decimalni(statistika.ukupnoSati) }}

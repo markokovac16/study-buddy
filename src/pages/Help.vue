@@ -17,7 +17,7 @@ const teme = [
   {
     ikona: 'graf',
     naslov: 'Statistika',
-    opis: 'Grafovi se računaju isključivo iz spremljenih Pomodoro sesija, ručni unos vremena ne postoji. Filteri kolegija i razdoblja mijenjaju sva tri grafa istovremeno.',
+    opis: 'Grafovi se računaju isključivo iz spremljenih Pomodoro sesija, ručni unos vremena ne postoji. Stupčasti graf pokazuje tekući tjedan, prstenasti ukupnu raspodjelu kroz cijelo razdoblje korištenja, a linijski zadnja četiri ili osam tjedana. Filter kolegija mijenja stupčasti i linijski graf, filter razdoblja samo linijski.',
   },
   {
     ikona: 'mapa',

@@ -169,12 +169,12 @@ Registrirani korisnik ima pristup cijelom radnom dijelu aplikacije.
 **Statistika** se u cijelosti izvodi iz spremljenih sesija:
 
 - Ukupno vrijeme učenja i najučeniji kolegij.
-- Raspodjela vremena po kolegijima u prstenastom grafu.
+- Raspodjela ukupnog vremena po kolegijima u prstenastom grafu, s vremenom i postotkom u opisu segmenta.
 - Vrijeme po danima tekućeg tjedna u stupčastom grafu.
 - Kretanje kroz zadnja četiri ili osam tjedana u linijskom grafu.
 - Usporedba tekućeg i prošlog tjedna izražena postotkom.
 - Broj dovršenih zadataka u odnosu na ukupan broj.
-- Filtriranje cijelog prikaza na jedan kolegij.
+- Filtriranje stupčastog i linijskog grafa na jedan kolegij, uz odabir razdoblja od četiri ili osam tjedana za linijski graf.
 
 **Novosti** su popis objava koje uređuje administrator. Korisnik može otvoriti pojedinu objavu i glasovati za nju ili protiv nje. Glasovi se čuvaju po korisniku, pa ponovni klik na isti glas poništava odabir.
 
@@ -285,10 +285,10 @@ Dijagram obrazaca uporabe izrađen je na temelju scenarija opisanih u nastavku.
 
 1. Korisnik otvara Statistiku.
 2. Vidi ukupno vrijeme, najučeniji kolegij, usporedbu s prošlim tjednom i broj dovršenih zadataka.
-3. Prstenasti graf pokazuje udio pojedinog kolegija u ukupnom vremenu.
+3. Prstenasti graf pokazuje udio pojedinog kolegija u ukupnom vremenu, neovisno o odabranom filtru.
 4. Stupčasti graf pokazuje raspodjelu po danima tekućeg tjedna.
 5. Prebacivanjem razdoblja na osam tjedana linijski graf prikazuje duži trend.
-6. Odabirom jednog kolegija u filtru svi grafovi prikazuju samo njegove sesije.
+6. Odabirom jednog kolegija u filtru stupčasti i linijski graf prikazuju samo njegove sesije.
 
 **Scenarij 5: Administrator objavljuje novost**
 
@@ -538,9 +538,9 @@ Prelazak na drugu stranicu ne zaustavlja timer.
 
 Zaslon **Statistika** prikazuje podatke prikupljene iz sesija.
 
-U gornjem redu su ukupno vrijeme učenja, najučeniji kolegij i usporedba s prošlim tjednom izražena postotkom. Prstenasti graf pokazuje udio svakog kolegija u ukupnom vremenu. Stupčasti graf prikazuje raspodjelu po danima tekućeg tjedna, a linijski kretanje kroz zadnja četiri ili osam tjedana.
+U gornjem redu su ukupno vrijeme učenja, najučeniji kolegij i usporedba s prošlim tjednom izražena postotkom. Prstenasti graf pokazuje udio svakog kolegija u ukupnom vremenu; prelaskom miša preko segmenta prikazuju se sati i postotak. Stupčasti graf prikazuje raspodjelu po danima tekućeg tjedna, a linijski kretanje kroz zadnja četiri ili osam tjedana.
 
-Padajućim izbornikom pri vrhu možete cijeli prikaz ograničiti na jedan kolegij.
+Padajućim izbornikom pri vrhu možete stupčasti i linijski graf ograničiti na jedan kolegij. Prstenasti graf uvijek prikazuje ukupnu raspodjelu.
 
 Ako ste tek počeli koristiti aplikaciju, grafovi će biti prazni dok ne dovršite prvu Pomodoro sesiju.
 
