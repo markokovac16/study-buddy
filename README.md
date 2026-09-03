@@ -25,18 +25,18 @@ Marko Kovač - samostalan rad na cijelom projektu.
 |---|---|
 | Dizajn i prototip | Figma prototip, dizajn tokeni, bazne UI komponente |
 | Arhitektura frontenda | Vue Router s tri layouta, Pinia storeovi, struktura mapa |
-| Korisnički dio | Predmeti, zadaci, bilješke, prilozi, Pomodoro timer, statistika, profil |
+| Korisnički dio | Kolegiji, zadaci, bilješke, prilozi, Pomodoro timer, statistika, profil |
 | Administracija | Pregled platforme, objave u Novostima, upravljanje korisnicima |
 | Firebase | Authentication, Firestore po class dijagramu, Storage, sigurnosna pravila |
 | Dokumentacija | Dijagrami, README, plan rada i vođenje git historyja |
 
 ## Što aplikacija radi
 
-- **Predmeti** - svaki kolegij ima naziv, kratki opis, boju i ikonu, a kartica predmeta prikazuje napredak u postocima izračunat iz omjera dovršenih zadataka.
+- **Kolegiji** - svaki kolegij ima naziv, kratki opis, boju i ikonu, a kartica kolegija prikazuje napredak u postocima izračunat iz omjera dovršenih zadataka.
 - **Zadaci** - naslov, opis, rok, prioritet i status. Nadzorna ploča izdvaja nadolazeće zadatke po roku, a zadaci se označavaju dovršenima izravno s liste.
-- **Bilješke i prilozi** - bilješke vezane uz predmet i materijali koji se šalju na Firebase Storage, s prikazom tipa, veličine i zauzeća kvote.
-- **Pomodoro timer** - ciklus od četiri sesije, 25 minuta rada i 5 minuta pauze. Timer se pokreće za odabrani predmet i vidljiv je u sidebaru kroz cijelu aplikaciju, a svaka dovršena sesija se sprema.
-- **Statistika** - grafovi se računaju iz spremljenih Pomodoro sesija: sati po danima tjedna, raspodjela po predmetima i kretanje po tjednima, uz filtere predmeta i razdoblja.
+- **Bilješke i prilozi** - bilješke vezane uz kolegij i materijali koji se šalju na Firebase Storage, s prikazom tipa, veličine i zauzeća kvote.
+- **Pomodoro timer** - ciklus od četiri sesije, 25 minuta rada i 5 minuta pauze. Timer se pokreće za odabrani kolegij i vidljiv je u sidebaru kroz cijelu aplikaciju, a svaka dovršena sesija se sprema.
+- **Statistika** - grafovi se računaju iz spremljenih Pomodoro sesija: sati po danima tjedna, raspodjela po kolegijima i kretanje po tjednima, uz filtere kolegija i razdoblja.
 - **Profil** - osobni podaci, dnevni cilj sati koji određuje postotak na nadzornoj ploči, jezik i tema sučelja, prekidači obavijesti te deaktivacija računa.
 - **Novosti** - objave administratora s glasanjem gore ili dolje, jedan glas po korisniku. Poredak je po zbroju glasova pa po datumu, a tri vidljive objave stoje i na naslovnici.
 - **Administracija** - brojevi platforme računati iz baze (prijave danas, registracije po danima, stanje računa), uređivanje Novosti i tablica korisnika s pretragom, filterima, paginacijom, promjenom uloge i skupnim akcijama.
@@ -45,7 +45,7 @@ Marko Kovač - samostalan rad na cijelom projektu.
 
 - Vue 3 (Composition API, `<script setup>`)
 - Vue Router - ugniježđene rute i tri layouta (javni, korisnički, admin)
-- Pinia - storeovi za autentikaciju, predmete, Pomodoro, statistiku, Novosti i administraciju
+- Pinia - storeovi za autentikaciju, kolegije, Pomodoro, statistiku, Novosti i administraciju
 - Tailwind CSS 4 - dizajn tokeni u `@theme` bloku u `src/style.css`
 - Chart.js - grafovi statistike učenja
 - Firebase 12 (modularni SDK) - Authentication, Firestore i Storage
@@ -94,9 +94,9 @@ Pravila drže da korisnik čita i piše samo pod svojim `korisnici/{uid}`, da ad
 
 ## Prijava tijekom razvoja
 
-U `npm run dev` načinu rada `window.seed` nudi punjenje baze demo podacima. `seed.zasij()` prijavljenom korisniku dodaje 7 predmeta, 19 zadataka, 21 bilješku, po tri priloga na predmet i osam tjedana Pomodoro sesija, a administratoru i objave u Novostima. Prilozi se generiraju u pregledniku i stvarno se šalju na Storage: tekstualni sažetak, PDF s popisom literature i PNG nacrtan na canvasu. Zadnjih sedam dana sesija namjerno je gušće da dnevni cilj na nadzornoj ploči dođe blizu sto posto. `seed.pocisti()` briše **sve** predmete, priloge i sesije trenutnog korisnika, ne samo generirane.
+U `npm run dev` načinu rada `window.seed` nudi punjenje baze demo podacima. `seed.zasij()` prijavljenom korisniku dodaje 7 kolegija, 19 zadataka, 21 bilješku, po tri priloga na kolegij i osam tjedana Pomodoro sesija, a administratoru i objave u Novostima. Prilozi se generiraju u pregledniku i stvarno se šalju na Storage: tekstualni sažetak, PDF s popisom literature i PNG nacrtan na canvasu. Zadnjih sedam dana sesija namjerno je gušće da dnevni cilj na nadzornoj ploči dođe blizu sto posto. `seed.pocisti()` briše **sve** kolegije, priloge i sesije trenutnog korisnika, ne samo generirane.
 
-`seed.zasijKorisnike()` traži administratorsku ulogu i puni tablicu korisnika. Preko druge instance Firebase aplikacije (`initializeApp(konfiguracija, 'sjeme-...')`) otvara prave Auth račune na domeni `@sjeme.studybuddy.test`, prijavljuje se kao svaki od njih i njegovim ovlastima piše profil te lakše podstablo predmeta, zadataka, bilježaka i sesija. Trenutna prijava ostaje netaknuta jer je riječ o zasebnom auth kontekstu. Nakon toga administratorska sesija dvojici postavlja ulogu administratora, a trojici `aktivan` na `false`, pa filteri, paginacija i graf registracija imaju raznolike podatke. Lozinke su nasumične i nigdje se ne spremaju. `seed.pocistiKorisnike()` briše njihove Firestore dokumente; sami Auth računi brišu se ručno u konzoli jer to klijentski SDK ne može.
+`seed.zasijKorisnike()` traži administratorsku ulogu i puni tablicu korisnika. Preko druge instance Firebase aplikacije (`initializeApp(konfiguracija, 'sjeme-...')`) otvara prave Auth račune na domeni `@studybuddytesting.com`, prijavljuje se kao svaki od njih i njegovim ovlastima piše profil te lakše podstablo kolegija, zadataka, bilježaka i sesija. Trenutna prijava ostaje netaknuta jer je riječ o zasebnom auth kontekstu. Nakon toga administratorska sesija dvojici postavlja ulogu administratora, a trojici `aktivan` na `false`, pa filteri, paginacija i graf registracija imaju raznolike podatke. Lozinke su nasumične i nigdje se ne spremaju. `seed.pocistiKorisnike()` briše njihove Firestore dokumente; sami Auth računi brišu se ručno u konzoli jer to klijentski SDK ne može.
 
 Modul se u produkcijski build ne uključuje.
 
@@ -123,7 +123,7 @@ src/
 ## Uloge
 
 - **Neregistrirani korisnik** - naslovnica, registracija i prijava
-- **Registrirani korisnik** - predmeti, zadaci, bilješke, prilozi, Pomodoro timer, statistika, Novosti s glasanjem, profil
+- **Registrirani korisnik** - kolegiji, zadaci, bilješke, prilozi, Pomodoro timer, statistika, Novosti s glasanjem, profil
 - **Administrator** - pregled platforme, objave u Novostima, upravljanje korisnicima
 
 Deaktivacija računa nije brisanje: dokument ostaje, `aktivan` pada na `false` i prijava se prekida s `auth/user-disabled`. Brisanje iz administracije briše samo dokument, dok Auth račun ostaje - njega uklanja Admin SDK, što je izvan opsega projekta.

@@ -29,7 +29,7 @@ const ikoneOpcije = [
 </script>
 
 <template>
-  <FormModal v-model="open" :title="predmet ? 'Uredi predmet' : 'Novi predmet'" @posalji="posalji">
+  <FormModal v-model="open" :title="predmet ? 'Uredi kolegij' : 'Novi kolegij'" @posalji="posalji">
     <BaseInput v-model="obrazac.naziv" label="Naziv" placeholder="npr. Strukture podataka" />
     <BaseInput v-model="obrazac.opis" label="Opis" placeholder="npr. Računalne znanosti 202" />
 

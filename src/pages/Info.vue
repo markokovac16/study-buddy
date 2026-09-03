@@ -56,7 +56,7 @@ const STRANICE = {
       {
         naslov: 'Što se sprema',
         tekst:
-          'Adresa e-pošte i podaci profila koje sami unesete (ime, sveučilište, godina studija, dnevni cilj), zatim vaši predmeti, zadaci, bilješke, priložene datoteke i Pomodoro sesije. Uz račun se bilježi i vrijeme zadnje prijave.',
+          'Adresa e-pošte i podaci profila koje sami unesete (ime, sveučilište, godina studija, dnevni cilj), zatim vaši kolegiji, zadaci, bilješke, priložene datoteke i Pomodoro sesije. Uz račun se bilježi i vrijeme zadnje prijave.',
       },
       {
         naslov: 'Gdje se sprema',
@@ -76,7 +76,7 @@ const STRANICE = {
       {
         naslov: 'Vaša kontrola',
         tekst:
-          'Predmete, zadatke, bilješke i priloge brišete sami; brisanjem predmeta nestaju i njegove datoteke sa Storagea. Račun možete deaktivirati u profilu, čime gubite pristup dok ga administrator ponovno ne aktivira. Deaktivacija ne briše zapise.',
+          'Kolegije, zadatke, bilješke i priloge brišete sami; brisanjem kolegija nestaju i njegove datoteke sa Storagea. Račun možete deaktivirati u profilu, čime gubite pristup dok ga administrator ponovno ne aktivira. Deaktivacija ne briše zapise.',
       },
     ],
   },

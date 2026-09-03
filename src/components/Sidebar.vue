@@ -26,7 +26,7 @@ watch(
 
 const stavke = computed(() => [
   { to: '/ploca', ikona: 'ploca', naziv: 'Nadzorna ploča' },
-  { to: '/predmeti', ikona: 'knjiga', naziv: 'Predmeti' },
+  { to: '/predmeti', ikona: 'knjiga', naziv: 'Kolegiji' },
   { to: '/statistika', ikona: 'graf', naziv: 'Statistika' },
   { to: '/novosti', ikona: 'iskra', naziv: 'Novosti' },
   { to: '/profil', ikona: 'korisnik', naziv: 'Profil' },

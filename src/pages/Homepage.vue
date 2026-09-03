@@ -71,7 +71,7 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
           />
           <h3 class="text-2xl font-bold text-slate-900">Organizirani kolegiji</h3>
           <p class="mt-2 mb-6 text-slate-500">
-            Svaki kolegij dobiva svoj prostor. Materijali, zadaci i bilješke stoje uz predmet kojem
+            Svaki kolegij dobiva svoj prostor. Materijali, zadaci i bilješke stoje uz kolegij kojem
             pripadaju, a ne u istoj hrpi.
           </p>
 
@@ -137,7 +137,7 @@ const istaknuto = computed(() => novosti.vidljive.slice(0, 3))
           </div>
 
           <div class="rounded-xl bg-slate-50 p-4">
-            <p class="mb-2 text-xs font-semibold text-slate-600">Raspodjela predmeta</p>
+            <p class="mb-2 text-xs font-semibold text-slate-600">Raspodjela kolegija</p>
             <div class="relative h-32">
               <DonutChart
                 :labels="raspodjela.map((predmet) => predmet.naziv)"

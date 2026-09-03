@@ -17,7 +17,7 @@ const auth = useAuthStore()
 const prikaziIzbor = computed(() => auth.prijavljen && !props.predmetId)
 
 const opcije = computed(() => [
-  { value: null, label: 'Odaberite predmet' },
+  { value: null, label: 'Odaberite kolegij' },
   ...predmetiStore.predmeti.map((predmet) => ({ value: predmet.predmetId, label: predmet.naziv })),
 ])
 
@@ -82,7 +82,7 @@ watch(
       </p>
 
       <p v-if="drugiPredmet" class="mt-2 text-xs text-slate-500">
-        Timer je pokrenut za predmet {{ predmetiStore.predmetPoId(pomodoro.predmetId)?.naziv }}
+        Timer je pokrenut za kolegij {{ predmetiStore.predmetPoId(pomodoro.predmetId)?.naziv }}
       </p>
     </div>
   </BaseCard>

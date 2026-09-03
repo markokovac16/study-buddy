@@ -26,9 +26,9 @@ Pula, 2026.
 
 StudyBuddy je web aplikacija za organizaciju studentskih obaveza i praćenje vremena provedenog u učenju. Nastala je iz zapažanja da studenti svoje obaveze najčešće drže razbacane po više alata: rokovi u kalendaru, materijali u mapama na disku, bilješke u bilježnici ili Google Docsu, a procjena utrošenog vremena postoji samo u glavi. Zbog toga na kraju semestra nitko nema pouzdan odgovor na pitanje koliko je vremena zapravo uložio u pojedini kolegij.
 
-Aplikacija oko pojma predmeta okuplja sve što uz njega ide. Svaki predmet ima svoje zadatke s rokom i prioritetom, bilješke razvrstane po kategorijama i priložene datoteke. Uz predmet se veže i Pomodoro timer, pa se svaka završena radna sesija automatski zapisuje s trajanjem i pripadajućim predmetom. Iz tih zapisa aplikacija gradi statistiku po danima, tjednima i predmetima, bez ijednog ručnog unosa vremena.
+Aplikacija oko pojma kolegija okuplja sve što uz njega ide. Svaki kolegij ima svoje zadatke s rokom i prioritetom, bilješke razvrstane po kategorijama i priložene datoteke. Uz kolegij se veže i Pomodoro timer, pa se svaka završena radna sesija automatski zapisuje s trajanjem i pripadajućim kolegijem. Iz tih zapisa aplikacija gradi statistiku po danima, tjednima i kolegijima, bez ijednog ručnog unosa vremena.
 
-Sustav razlikuje tri skupine korisnika. Neregistrirani posjetitelj vidi početnu stranicu s prikazom mogućnosti, javne objave i informativne stranice, te se može registrirati adresom e-pošte ili Google računom. Registrirani korisnik dobiva radnu ploču s pregledom dana, upravljanje predmetima, statistiku, profil i postavke. Administrator ima zaseban dio aplikacije s pregledom platforme, upravljanjem korisničkim računima i uređivanjem sadržaja koji se prikazuje u Novostima.
+Sustav razlikuje tri skupine korisnika. Neregistrirani posjetitelj vidi početnu stranicu s prikazom mogućnosti, javne objave i informativne stranice, te se može registrirati adresom e-pošte ili Google računom. Registrirani korisnik dobiva radnu ploču s pregledom dana, upravljanje kolegijima, statistiku, profil i postavke. Administrator ima zaseban dio aplikacije s pregledom platforme, upravljanjem korisničkim računima i uređivanjem sadržaja koji se prikazuje u Novostima.
 
 Aplikacija je izrađena u Vue 3 s Composition API pristupom, Pinia storeovima za stanje, Vue Routerom za navigaciju i Tailwind CSS-om za stilizaciju. Podaci se čuvaju u Cloud Firestoreu, prijava se rješava kroz Firebase Authentication, a priložene datoteke idu u Cloud Storage. Grafovi su izrađeni pomoću Chart.js biblioteke. Sve promjene podataka teku kroz Pinia store akcije, pa komponente nikad ne pozivaju Firestore izravno.
 
@@ -40,15 +40,15 @@ Dokumentacija u nastavku opisuje tržišni kontekst i SWOT analizu, razrađuje f
 
 ### 2.1. Opis aplikacije
 
-StudyBuddy je aplikacija za studente koji žele imati jedno mjesto za sve obaveze vezane uz studij i uz to dobiti mjerljivu sliku vlastitog rada. Korisnik unosi predmete koje sluša, na njih veže zadatke s rokom i prioritetom, piše bilješke i prilaže materijale. Kad sjedne učiti, pokreće Pomodoro timer i bira predmet na kojem radi. Timer nakon svakog završenog radnog intervala sam zapisuje sesiju, tako da se statistika puni usput.
+StudyBuddy je aplikacija za studente koji žele imati jedno mjesto za sve obaveze vezane uz studij i uz to dobiti mjerljivu sliku vlastitog rada. Korisnik unosi kolegije koje sluša, na njih veže zadatke s rokom i prioritetom, piše bilješke i prilaže materijale. Kad sjedne učiti, pokreće Pomodoro timer i bira kolegij na kojem radi. Timer nakon svakog završenog radnog intervala sam zapisuje sesiju, tako da se statistika puni usput.
 
-Vrijednost leži u toj vezi između planiranja i mjerenja. Popisi zadataka i timeri postoje u desecima alata, ali rijetko su spojeni tako da vrijeme automatski završi kod pravog kolegija. Zbog toga StudyBuddy odgovara na pitanja koja obični planer ne pokriva: koji predmet troši najviše sati, kako se ovaj tjedan odnosi prema prošlom i koliko je zadataka riješeno u odnosu na ukupno postavljene.
+Vrijednost leži u toj vezi između planiranja i mjerenja. Popisi zadataka i timeri postoje u desecima alata, ali rijetko su spojeni tako da vrijeme automatski završi kod pravog kolegija. Zbog toga StudyBuddy odgovara na pitanja koja obični planer ne pokriva: koji kolegij troši najviše sati, kako se ovaj tjedan odnosi prema prošlom i koliko je zadataka riješeno u odnosu na ukupno postavljene.
 
 ### 2.2. Ciljano tržište i korisnici
 
 Primarno tržište su studenti preddiplomskih i diplomskih studija, s naglaskom na tehničke i informatičke studije gdje se obaveze javljaju kroz veći broj manjih zadataka raspoređenih kroz semestar (laboratorijske vježbe, kolokviji, seminari, projekti). Takav ritam rada teško se prati kalendarom, koji pokriva rokove, a ne raspodjelu sati kroz tjedan.
 
-Sekundarno tržište čine maturanti i polaznici tečajeva s vlastitim tempom učenja, jer je model podataka dovoljno općenit da predmet bude bilo koje područje učenja. Aplikacija radi u pregledniku bez instalacije, sučelje je na hrvatskom, a pristup besplatan. Korisnik se prijavi Google računom i u minuti unese prvi predmet.
+Sekundarno tržište čine maturanti i polaznici tečajeva s vlastitim tempom učenja, jer je model podataka dovoljno općenit da kolegij bude bilo koje područje učenja. Aplikacija radi u pregledniku bez instalacije, sučelje je na hrvatskom, a pristup besplatan. Korisnik se prijavi Google računom i u minuti unese prvi kolegij.
 
 ### 2.3. Postojeća i konkurentska rješenja
 
@@ -59,21 +59,21 @@ Alati koji pokrivaju dio problema:
 | Rješenje | Što pokriva | Što nedostaje za ovaj slučaj |
 |---|---|---|
 | Notion | Bilješke, baze, zadaci, vrlo prilagodljivo | Traži da korisnik sam izgradi sustav; timer i statistika po kolegiju idu preko ručnih zaobilaznica |
-| Todoist, Microsoft To Do | Zadaci, rokovi, podsjetnici | Nema pojma predmeta, nema mjerenja vremena ni statistike učenja |
-| Forest, Pomofocus, Focus To-Do | Pomodoro timer i fokus | Timer je odvojen od zadataka i predmeta, statistika je opća |
-| MyStudyLife | Raspored, zadaci, ispiti | Nema mjerenja utrošenog vremena ni analitike po predmetu |
+| Todoist, Microsoft To Do | Zadaci, rokovi, podsjetnici | Nema pojma kolegija, nema mjerenja vremena ni statistike učenja |
+| Forest, Pomofocus, Focus To-Do | Pomodoro timer i fokus | Timer je odvojen od zadataka i kolegija, statistika je opća |
+| MyStudyLife | Raspored, zadaci, ispiti | Nema mjerenja utrošenog vremena ni analitike po kolegiju |
 | Google Calendar, Google Classroom | Raspored i obaveze koje zadaje ustanova | Vođeno od strane nastavnika, korisnik nema svoj sloj planiranja i mjerenja |
 | Excel tablica, papirnati planer | Potpuna sloboda | Ručni unos, podaci se ne agregiraju sami |
 
-Nijedan od navedenih alata ne povezuje predmet, zadatke, materijale i izmjereno vrijeme u jednu cjelinu. Korisnik koji želi tu sliku mora sam spajati podatke iz dva ili tri izvora, što u praksi radi vrlo mali broj ljudi i to kratko.
+Nijedan od navedenih alata ne povezuje kolegij, zadatke, materijale i izmjereno vrijeme u jednu cjelinu. Korisnik koji želi tu sliku mora sam spajati podatke iz dva ili tri izvora, što u praksi radi vrlo mali broj ljudi i to kratko.
 
 ### 2.4. SWOT analiza
 
 | Snage | Slabosti |
 |---|---|
-| Predmet je središnja jedinica podataka, pa su zadaci, bilješke, materijali i vrijeme povezani bez dodatnog rada korisnika | Ovisnost o Firebase platformi otežava eventualnu selidbu na drugu infrastrukturu |
-| Vrijeme se mjeri automatski iz Pomodoro sesija, a statistika po danima, tjednima i predmetima dostupna je odmah | Nema izvornu mobilnu aplikaciju ni rad izvan mreže |
-| Rad u pregledniku bez instalacije, prijava Google računom u jednom koraku, sučelje na hrvatskom jeziku | Nema raspored predavanja, sinkronizaciju s kalendarom ni dijeljenje predmeta među korisnicima |
+| Kolegij je središnja jedinica podataka, pa su zadaci, bilješke, materijali i vrijeme povezani bez dodatnog rada korisnika | Ovisnost o Firebase platformi otežava eventualnu selidbu na drugu infrastrukturu |
+| Vrijeme se mjeri automatski iz Pomodoro sesija, a statistika po danima, tjednima i kolegijima dostupna je odmah | Nema izvornu mobilnu aplikaciju ni rad izvan mreže |
+| Rad u pregledniku bez instalacije, prijava Google računom u jednom koraku, sučelje na hrvatskom jeziku | Nema raspored predavanja, sinkronizaciju s kalendarom ni dijeljenje kolegija među korisnicima |
 | Podaci se osvježavaju uživo, promjene su vidljive u svim otvorenim karticama | Projekt razvija jedna osoba, što ograničava tempo razvoja i održavanja |
 
 | Prilike | Prijetnje |
@@ -130,14 +130,14 @@ Registrirani korisnik ima pristup cijelom radnom dijelu aplikacije.
 
 **Radna ploča** je početni zaslon nakon prijave. Sadrži pozdrav prilagođen dobu dana, prstenasti prikaz ispunjenosti dnevnog cilja u satima, Pomodoro timer, popis nadolazećih zadataka sa sortiranjem po datumu ili prioritetu, te popis nedavne aktivnosti sastavljen od završenih sesija i promjena na zadacima.
 
-**Upravljanje predmetima** je središnji dio aplikacije:
+**Upravljanje kolegijima** je središnji dio aplikacije:
 
-- Dodavanje, uređivanje i brisanje predmeta. Predmet ima naziv, boju i ikonu.
-- Kartica predmeta prikazuje broj zadataka na čekanju i postotak dovršenosti.
-- Odabirom predmeta otvara se detaljni prikaz s njegovim zadacima, bilješkama i materijalima.
-- Brisanje predmeta uklanja i sve njegove podzapise, uz obveznu potvrdu u dijalogu.
+- Dodavanje, uređivanje i brisanje kolegija. Kolegij ima naziv, boju i ikonu.
+- Kartica kolegija prikazuje broj zadataka na čekanju i postotak dovršenosti.
+- Odabirom kolegija otvara se detaljni prikaz s njegovim zadacima, bilješkama i materijalima.
+- Brisanje kolegija uklanja i sve njegove podzapise, uz obveznu potvrdu u dijalogu.
 
-**Upravljanje zadacima** radi unutar odabranog predmeta:
+**Upravljanje zadacima** radi unutar odabranog kolegija:
 
 - Zadatak ima naslov, opis, rok izvršenja, prioritet (nizak, srednji, visok) i status (na čekanju, u tijeku, završeno).
 - Označavanje zadatka završenim jednim klikom, uz vraćanje u prethodno stanje istim klikom.
@@ -145,13 +145,13 @@ Registrirani korisnik ima pristup cijelom radnom dijelu aplikacije.
 - Završeni zadaci padaju na dno popisa, aktivni ostaju gore.
 - Rok se prikazuje opisno, ovisno o tome koliko je dana ostalo.
 
-**Bilješke** se vežu uz predmet:
+**Bilješke** se vežu uz kolegij:
 
 - Naslov, sadržaj i kategorija koju korisnik sam upisuje.
 - Filtriranje po kategoriji, pri čemu se popis kategorija sam gradi iz postojećih bilježaka.
 - Prikaz dvije najnovije bilješke uz gumb za otvaranje cijelog popisa.
 
-**Materijali** su datoteke priložene predmetu:
+**Materijali** su datoteke priložene kolegiju:
 
 - Slanje datoteke ili slike, uz prepoznavanje vrste (slika, PDF, dokument).
 - Preuzimanje i brisanje priloga.
@@ -159,22 +159,22 @@ Registrirani korisnik ima pristup cijelom radnom dijelu aplikacije.
 
 **Pomodoro timer** mjeri vrijeme učenja:
 
-- Odabir predmeta na kojem se radi, pokretanje, pauza i vraćanje na početak.
+- Odabir kolegija na kojem se radi, pokretanje, pauza i vraćanje na početak.
 - Izmjena radne faze i pauze, uz brojanje sesija unutar ciklusa od četiri.
 - Zvučni signal na kraju faze, ako je korisnik uključio tu obavijest.
 - Automatski nastavak sljedeće faze, ako je uključen u postavkama.
 - Timer nastavlja raditi pri promjeni rute jer stanje živi u storeu.
-- Svaka završena radna faza sprema se kao sesija s početkom, završetkom, trajanjem i predmetom.
+- Svaka završena radna faza sprema se kao sesija s početkom, završetkom, trajanjem i kolegijem.
 
 **Statistika** se u cijelosti izvodi iz spremljenih sesija:
 
-- Ukupno vrijeme učenja i najučeniji predmet.
-- Raspodjela vremena po predmetima u prstenastom grafu.
+- Ukupno vrijeme učenja i najučeniji kolegij.
+- Raspodjela vremena po kolegijima u prstenastom grafu.
 - Vrijeme po danima tekućeg tjedna u stupčastom grafu.
 - Kretanje kroz zadnja četiri ili osam tjedana u linijskom grafu.
 - Usporedba tekućeg i prošlog tjedna izražena postotkom.
 - Broj dovršenih zadataka u odnosu na ukupan broj.
-- Filtriranje cijelog prikaza na jedan predmet.
+- Filtriranje cijelog prikaza na jedan kolegij.
 
 **Novosti** su popis objava koje uređuje administrator. Korisnik može otvoriti pojedinu objavu i glasovati za nju ili protiv nje. Glasovi se čuvaju po korisniku, pa ponovni klik na isti glas poništava odabir.
 
@@ -225,9 +225,9 @@ Aplikacija nema vlastiti poslužiteljski dio. Sve što se ne događa u pregledni
 
 **Google Identity Platform** stoji iza prijave Google računom i poziva se neizravno, kroz Firebase Authentication. Iz odgovora se preuzimaju adresa e-pošte, prikazno ime i slika profila, kojima se popunjava novi korisnički profil.
 
-**Cloud Firestore** čuva sve dokumente domene: korisnike, predmete, zadatke, bilješke, zapise o priloženim datotekama, Pomodoro sesije i objave. Na kolekcije se pretplaćuju slušači koji javljaju svaku promjenu, pa se sučelje osvježava bez ponovnog dohvaćanja.
+**Cloud Firestore** čuva sve dokumente domene: korisnike, kolegije, zadatke, bilješke, zapise o priloženim datotekama, Pomodoro sesije i objave. Na kolekcije se pretplaćuju slušači koji javljaju svaku promjenu, pa se sučelje osvježava bez ponovnog dohvaćanja.
 
-**Cloud Storage** prima same datoteke priložene predmetu. Firestore uz svaku datoteku čuva zapis s nazivom, vrstom, veličinom, poveznicom za preuzimanje i putanjom u spremištu. Putanja se koristi pri brisanju, kako datoteka ne bi ostala u spremištu nakon što zapis nestane.
+**Cloud Storage** prima same datoteke priložene kolegiju. Firestore uz svaku datoteku čuva zapis s nazivom, vrstom, veličinom, poveznicom za preuzimanje i putanjom u spremištu. Putanja se koristi pri brisanju, kako datoteka ne bi ostala u spremištu nakon što zapis nestane.
 
 Na dijagramu obrazaca uporabe ovi sustavi stoje kao pomoćni akteri s desne strane granice sustava. Predviđene integracije koje nisu izvedene u ovoj verziji opisane su u poglavlju 2.5, a sve traže suradnju ustanove.
 
@@ -235,7 +235,7 @@ Na dijagramu obrazaca uporabe ovi sustavi stoje kao pomoćni akteri s desne stra
 
 Dijagram obrazaca uporabe izrađen je na temelju scenarija opisanih u nastavku.
 
-**Scenarij 1: Registracija i unos prvog predmeta**
+**Scenarij 1: Registracija i unos prvog kolegija**
 
 *Akter:* neregistrirani korisnik.
 *Preduvjet:* korisnik nema račun.
@@ -243,9 +243,9 @@ Dijagram obrazaca uporabe izrađen je na temelju scenarija opisanih u nastavku.
 1. Korisnik otvara početnu stranicu i bira Registraciju.
 2. Unosi adresu e-pošte i lozinku. Aplikacija provjerava oblik adrese i duljinu lozinke prije slanja.
 3. Firebase Authentication stvara račun, a aplikacija u Firestoreu zapisuje korisnički profil s početnim postavkama.
-4. Korisnik završava na radnoj ploči, koja je prazna i poziva ga da doda prvi predmet.
-5. Odlazi na Predmete, otvara dijalog za novi predmet, upisuje naziv i bira boju.
-6. Predmet se pojavljuje u mreži kartica i postaje odabran.
+4. Korisnik završava na radnoj ploči, koja je prazna i poziva ga da doda prvi kolegij.
+5. Odlazi na Kolegije, otvara dijalog za novi kolegij, upisuje naziv i bira boju.
+6. Kolegij se pojavljuje u mreži kartica i postaje odabran.
 
 *Alternativni tok:* korisnik u drugom koraku bira prijavu Google računom. Otvara se skočni prozor Google prijave, a nakon odabira računa aplikacija sama popunjava ime i sliku profila iz podataka koje je Google vratio.
 
@@ -254,27 +254,27 @@ Dijagram obrazaca uporabe izrađen je na temelju scenarija opisanih u nastavku.
 **Scenarij 2: Planiranje tjedna**
 
 *Akter:* registrirani korisnik.
-*Preduvjet:* korisnik ima barem jedan predmet.
+*Preduvjet:* korisnik ima barem jedan kolegij.
 
-1. Korisnik otvara Predmete i bira predmet za koji planira rad.
+1. Korisnik otvara Kolegije i bira kolegij za koji planira rad.
 2. U odjeljku Aktivni zadaci dodaje zadatak, upisuje naslov i opis, postavlja rok i prioritet.
 3. Ponavlja postupak za ostale obaveze.
 4. Filtrira popis na visoki prioritet kako bi vidio što je prvo na redu.
-5. Odlazi na radnu ploču, gdje su svi zadaci sa svih predmeta složeni po roku.
+5. Odlazi na radnu ploču, gdje su svi zadaci sa svih kolegija složeni po roku.
 
 **Scenarij 3: Sesija učenja**
 
 *Akter:* registrirani korisnik.
-*Preduvjet:* korisnik ima barem jedan predmet.
+*Preduvjet:* korisnik ima barem jedan kolegij.
 
-1. Korisnik otvara predmet na kojem radi. Timer u bočnom stupcu sam preuzima taj predmet.
+1. Korisnik otvara kolegij na kojem radi. Timer u bočnom stupcu sam preuzima taj kolegij.
 2. Pokreće timer i uči dok teče radna faza.
 3. Kad faza istekne, aplikacija sprema sesiju s početkom, završetkom i trajanjem, oglašava zvuk ako je obavijest uključena i prelazi u pauzu.
 4. Ako je uključen automatski nastavak, pauza kreće sama, inače korisnik pokreće sljedeću fazu.
 5. Brojač sesija napreduje unutar ciklusa od četiri.
 6. Nakon učenja korisnik označava zadatak završenim.
 
-*Alternativni tok:* korisnik pokreće timer s radne ploče ili iz bočnog izbornika. Tada mora sam odabrati predmet jer kontekst predmeta nije poznat.
+*Alternativni tok:* korisnik pokreće timer s radne ploče ili iz bočnog izbornika. Tada mora sam odabrati kolegij jer kontekst kolegija nije poznat.
 
 *Napomena:* prelazak na drugu rutu ne prekida timer jer stanje živi u Pinia storeu, a ne u komponenti.
 
@@ -284,11 +284,11 @@ Dijagram obrazaca uporabe izrađen je na temelju scenarija opisanih u nastavku.
 *Preduvjet:* postoji barem jedna spremljena sesija.
 
 1. Korisnik otvara Statistiku.
-2. Vidi ukupno vrijeme, najučeniji predmet, usporedbu s prošlim tjednom i broj dovršenih zadataka.
-3. Prstenasti graf pokazuje udio pojedinog predmeta u ukupnom vremenu.
+2. Vidi ukupno vrijeme, najučeniji kolegij, usporedbu s prošlim tjednom i broj dovršenih zadataka.
+3. Prstenasti graf pokazuje udio pojedinog kolegija u ukupnom vremenu.
 4. Stupčasti graf pokazuje raspodjelu po danima tekućeg tjedna.
 5. Prebacivanjem razdoblja na osam tjedana linijski graf prikazuje duži trend.
-6. Odabirom jednog predmeta u filtru svi grafovi prikazuju samo njegove sesije.
+6. Odabirom jednog kolegija u filtru svi grafovi prikazuju samo njegove sesije.
 
 **Scenarij 5: Administrator objavljuje novost**
 
@@ -326,15 +326,15 @@ Dijagram obrazaca uporabe izrađen je na temelju scenarija opisanih u nastavku.
 
 ![Klasni dijagram domene](dijagrami/classDijagram.png)
 
-Dijagram prikazuje objekte domene koji se spremaju u bazu.
+Dijagram prikazuje objekte domene koji se spremaju u bazu. Klasa koja u sučelju nosi naziv kolegij u dijagramu, kodu i Firestore kolekcijama zove se `Predmet`, odnosno `predmeti`; naziv je zadržan da se dokumentacija poklapa s izvornim kodom.
 
 **Nasljeđivanje.** `Korisnik` je apstraktna klasa s podacima i radnjama zajedničkima svima koji se mogu prijaviti. Iz nje se izvode `RegistriraniKorisnik` i `Administrator`. Podjela je napravljena zato što administrator ima radnje koje običnom korisniku nisu dostupne, dok su prijava i odjava zajedničke. U bazi je ta razlika svedena na polje `uloga` unutar jednog korisničkog dokumenta. Dvije odvojene kolekcije zahtijevale bi dvostruku provjeru pri svakoj prijavi, uz malu dobit.
 
-**Kompozicija.** Veze između `Predmet` i klasa `Zadatak`, `Biljeska` i `Prilog` su kompozicije, prikazane punim rombom. Zadatak ne postoji izvan predmeta, nema smisla kao samostalan zapis i brisanjem predmeta prestaje postojati. Isto vrijedi za bilješke i priloge. Ta odluka izravno se preslikava na strukturu Firestorea, gdje su te tri kolekcije podkolekcije dokumenta predmeta, pa je u putanji dokumenta vidljivo kojem predmetu pripada.
+**Kompozicija.** Veze između `Predmet` i klasa `Zadatak`, `Biljeska` i `Prilog` su kompozicije, prikazane punim rombom. Zadatak ne postoji izvan kolegija, nema smisla kao samostalan zapis i brisanjem kolegija prestaje postojati. Isto vrijedi za bilješke i priloge. Ta odluka izravno se preslikava na strukturu Firestorea, gdje su te tri kolekcije podkolekcije dokumenta kolegija, pa je u putanji dokumenta vidljivo kojem kolegiju pripada.
 
-**Agregacija.** Veza između `RegistriraniKorisnik` i `Predmet` je agregacija, prikazana praznim rombom. Predmet pripada korisniku, ali je konceptualno cjelina za sebe, s vlastitim sadržajem i vlastitim životnim vijekom unutar korisničkog računa. Isto vrijedi za vezu prema `PomodoroSesija`, jer sesija je zapis o događaju koji ostaje smislen i nakon što se predmet nad kojim je nastala izbriše.
+**Agregacija.** Veza između `RegistriraniKorisnik` i `Predmet` je agregacija, prikazana praznim rombom. Kolegij pripada korisniku, ali je konceptualno cjelina za sebe, s vlastitim sadržajem i vlastitim životnim vijekom unutar korisničkog računa. Isto vrijedi za vezu prema `PomodoroSesija`, jer sesija je zapis o događaju koji ostaje smislen i nakon što se kolegij nad kojim je nastala izbriše.
 
-**Odnos sesije i predmeta.** `PomodoroSesija` ima vezu prema `Predmet` jer svaka sesija bilježi na kojem se predmetu radilo. Ta veza je slaba, izvedena preko identifikatora predmeta, a ne preko ugniježđenosti u bazi. Sesije se čuvaju na razini korisnika, u kolekciji `pomodoroSesije`. Da su smještene ispod predmeta, brisanjem predmeta nestala bi i povijest učenja, čime bi ukupna statistika izgubila smisao.
+**Odnos sesije i kolegija.** `PomodoroSesija` ima vezu prema `Predmet` jer svaka sesija bilježi na kojem se kolegiju radilo. Ta veza je slaba, izvedena preko identifikatora kolegija, a ne preko ugniježđenosti u bazi. Sesije se čuvaju na razini korisnika, u kolekciji `pomodoroSesije`. Da su smještene ispod kolegija, brisanjem kolegija nestala bi i povijest učenja, čime bi ukupna statistika izgubila smisao.
 
 **Izvedeni podaci.** `Statistika` na dijagramu nije zapis u bazi. Prikazana je zato što se u aplikaciji ponaša kao objekt s vlastitim radnjama, ali sve njezine vrijednosti računaju se iz sesija i zadataka pri svakom prikazu. U kodu je to Pinia store bez vlastitog stanja, sastavljen isključivo od izvedenih vrijednosti.
 
@@ -342,7 +342,7 @@ Dijagram prikazuje objekte domene koji se spremaju u bazu.
 
 **Sadržaj početne stranice.** `SadrzajPocetneStranice` je jedini objekt izvan korisničkog stabla. Nalazi se u vlastitoj kolekciji jer ga stvara administrator, a čitaju ga svi, uključujući neprijavljene posjetitelje. U implementaciji je proširen mapom glasova, gdje je ključ identifikator korisnika, a vrijednost jedan ili minus jedan. Takav oblik zapisa sprječava da isti korisnik glasa dva puta i omogućuje da sigurnosno pravilo dopusti izmjenu samo vlastitog glasa.
 
-**Odstupanja od prvotnog modela.** Tijekom izrade model se na tri mjesta razišao s dijagramom. Prilog je vezan izravno na predmet, a ne na bilješku, jer se u praksi materijali odnose na kolegij u cjelini. Bilješka je dobila polje kategorije, koje korisnik sam upisuje, pa se popis kategorija gradi iz postojećih zapisa umjesto iz unaprijed zadanog nabrajanja. Lozinka na klasi `Korisnik` postoji samo konceptualno, jer je čuva Firebase Authentication i aplikacija joj nikad ne pristupa.
+**Odstupanja od prvotnog modela.** Tijekom izrade model se na tri mjesta razišao s dijagramom. Prilog je vezan izravno na kolegij, a ne na bilješku, jer se u praksi materijali odnose na cijeli kolegij. Bilješka je dobila polje kategorije, koje korisnik sam upisuje, pa se popis kategorija gradi iz postojećih zapisa umjesto iz unaprijed zadanog nabrajanja. Lozinka na klasi `Korisnik` postoji samo konceptualno, jer je čuva Firebase Authentication i aplikacija joj nikad ne pristupa.
 
 <div style="page-break-after: always"></div>
 
@@ -377,7 +377,7 @@ src/
   utils/            Čiste funkcije za oblikovanje, sortiranje i poruke o pogreškama
 ```
 
-Kroz cijelu aplikaciju drže se tri pravila. **Komponente ne dodiruju Firestore**, svaki poziv prema bazi nalazi se u Pinia storeu. Aplikacija je zbog toga najprije napisana nad lažnim podacima, a prelazak na Firebase sveo se na izmjenu unutrašnjosti store akcija, bez diranja zaslona. **Izvedeno stanje se računa**, pa su broj zadataka na čekanju, postotak dovršenosti predmeta i sve vrijednosti u statistici `computed` svojstva, a u bazi nema polja koje bi trebalo održavati usklađenim s drugima. **Ponavljanje se izdvaja u composable**, čim se pojavi na tri ili više mjesta. Tako su nastali `useCollection`, `useModalForm`, `useEditing`, `useConfirm`, `usePagination` i `useLogout`.
+Kroz cijelu aplikaciju drže se tri pravila. **Komponente ne dodiruju Firestore**, svaki poziv prema bazi nalazi se u Pinia storeu. Aplikacija je zbog toga najprije napisana nad lažnim podacima, a prelazak na Firebase sveo se na izmjenu unutrašnjosti store akcija, bez diranja zaslona. **Izvedeno stanje se računa**, pa su broj zadataka na čekanju, postotak dovršenosti kolegija i sve vrijednosti u statistici `computed` svojstva, a u bazi nema polja koje bi trebalo održavati usklađenim s drugima. **Ponavljanje se izdvaja u composable**, čim se pojavi na tri ili više mjesta. Tako su nastali `useCollection`, `useModalForm`, `useEditing`, `useConfirm`, `usePagination` i `useLogout`.
 
 ### 4.3. Pretplata na podatke
 
@@ -385,13 +385,13 @@ Kroz cijelu aplikaciju drže se tri pravila. **Komponente ne dodiruju Firestore*
 
 Sve kolekcije dohvaćaju se kroz `useCollection`. On prima uvjet pod kojim pretplata smije postojati, funkciju koja vraća kolekciju, naziv polja za identifikator dokumenta i neobavezne postavke. Kad se uvjet promijeni, stara pretplata se prekida, popis se prazni i pretplata kreće ispočetka. Time se rješava odjava: čim `korisnikId` postane prazan, slušači se gase i podaci prethodnog korisnika nestaju iz memorije.
 
-Store predmeta koristi taj mehanizam u dvije razine. Predmeti se prate izravno, a kroz postavku `nakon` svaki dohvat usklađuje pretplate na podkolekcije zadataka, bilježaka i priloga. Predmet koji se pojavi dobiva tri nova slušača, predmet koji nestane gubi svoje, a prekid glavne pretplate gasi sve odjednom.
+Store kolegija koristi taj mehanizam u dvije razine. Kolegiji se prate izravno, a kroz postavku `nakon` svaki dohvat usklađuje pretplate na podkolekcije zadataka, bilježaka i priloga. Kolegij koji se pojavi dobiva tri nova slušača, kolegij koji nestane gubi svoje, a prekid glavne pretplate gasi sve odjednom.
 
-### 4.4. Upravljanje predmetima, zadacima i bilješkama
+### 4.4. Upravljanje kolegijima, zadacima i bilješkama
 
-![Klasni dijagram upravljanja predmetima](dijagrami/impl-predmeti.png)
+![Klasni dijagram upravljanja kolegijima](dijagrami/impl-predmeti.png)
 
-Zaslon `Subjects` drži samo ono što se tiče prikaza: koji je predmet odabran, koji su filtri postavljeni i je li popis bilježaka proširen. Svi podaci dolaze iz storea, sve promjene idu kroz njegove akcije.
+Zaslon `Subjects` drži samo ono što se tiče prikaza: koji je kolegij odabran, koji su filtri postavljeni i je li popis bilježaka proširen. Svi podaci dolaze iz storea, sve promjene idu kroz njegove akcije.
 
 Tri dijaloga na tom zaslonu upravljaju se composableom `useEditing`. On prima akciju za dodavanje, akciju za uređivanje i naziv polja s identifikatorom, a vraća objekt koji zna je li dijalog otvoren, uređuje li se postojeći zapis i što učiniti pri spremanju:
 
@@ -403,7 +403,7 @@ const biljeskaModal = useEditing(dodajBiljesku, store.urediBiljesku, 'biljeskaId
 
 Sami dijalozi grade se nad komponentom `FormModal`, koja sadrži okvir, obrazac i podnožje s gumbima, pa se njihova unutrašnjost svodi na polja obrasca. Popunjavanje i provjeru preuzima `useModalForm`, koji pri otvaranju puni polja iz postojećeg zapisa ili iz praznog predloška, a pri slanju odbija prazan obavezni unos.
 
-U storeu predmeta zadaci, bilješke i prilozi opisani su jednim popisom podkolekcija. Uređivanje i brisanje izvedeni su kao funkcije koje vraćaju funkciju, pa se konkretne akcije dobivaju pozivom s nazivom podkolekcije:
+U storeu kolegija zadaci, bilješke i prilozi opisani su jednim popisom podkolekcija. Uređivanje i brisanje izvedeni su kao funkcije koje vraćaju funkciju, pa se konkretne akcije dobivaju pozivom s nazivom podkolekcije:
 
 ```js
 const urediZadatak = urediStavku('zadaci')
@@ -412,17 +412,17 @@ const urediBiljesku = urediStavku('biljeske')
 const obrisiBiljesku = obrisiStavku('biljeske')
 ```
 
-Brisanje predmeta je jedina akcija koja radi u više koraka. Najprije se iz Storagea uklanjaju datoteke svih priloga, zatim se brišu dokumenti u sve tri podkolekcije, i tek na kraju sam predmet. Redoslijed je bitan jer se putanje datoteka čitaju iz dokumenata koji se u drugom koraku brišu.
+Brisanje kolegija je jedina akcija koja radi u više koraka. Najprije se iz Storagea uklanjaju datoteke svih priloga, zatim se brišu dokumenti u sve tri podkolekcije, i tek na kraju sam kolegij. Redoslijed je bitan jer se putanje datoteka čitaju iz dokumenata koji se u drugom koraku brišu.
 
 ### 4.5. Pomodoro timer i statistika
 
 ![Klasni dijagram Pomodoro timera i statistike](dijagrami/impl-pomodoro.png)
 
-Stanje timera drži `pomodoroStore`: faza, preostale sekunde, oznaka radi li timer, redni broj sesije u ciklusu i identifikator predmeta. Interval je varijabla izvan store funkcije, čime se osigurava da postoji samo jedan bez obzira na to koliko komponenti timer prikazuje. Takav smještaj rješava zahtjev da timer preživi promjenu rute. Komponenta `TimerCard` pojavljuje se na radnoj ploči, u detaljnom prikazu predmeta i na početnoj stranici, a sve tri instance čitaju isto stanje.
+Stanje timera drži `pomodoroStore`: faza, preostale sekunde, oznaka radi li timer, redni broj sesije u ciklusu i identifikator kolegija. Interval je varijabla izvan store funkcije, čime se osigurava da postoji samo jedan bez obzira na to koliko komponenti timer prikazuje. Takav smještaj rješava zahtjev da timer preživi promjenu rute. Komponenta `TimerCard` pojavljuje se na radnoj ploči, u detaljnom prikazu kolegija i na početnoj stranici, a sve tri instance čitaju isto stanje.
 
 Kad radna faza istekne, `sljedecaFaza` zapisuje sesiju, prebacuje se na pauzu i povećava brojač. Početak sesije računa se unatrag od trenutka završetka, prema trajanju radne faze. Ako je korisnik uključio obavijesti o pauzama, oglašava se ton, a ako je uključen automatski nastavak, sljedeća faza kreće sama.
 
-`statisticsStore` nema vlastito stanje, sve se izvodi iz sesija i zadataka. Grupiranje po danu i po tjednu radi nad prvim danom tekućeg tjedna, s ponedjeljkom kao početkom. Zaslon `Statistics` mijenja samo odabrani predmet i broj tjedana, a store vraća pripremljene nizove za grafove. Tri komponente grafova su tanki omoti oko `vue-chartjs`, sa zajedničkim postavkama osi i boja u `charts/options.js`.
+`statisticsStore` nema vlastito stanje, sve se izvodi iz sesija i zadataka. Grupiranje po danu i po tjednu radi nad prvim danom tekućeg tjedna, s ponedjeljkom kao početkom. Zaslon `Statistics` mijenja samo odabrani kolegij i broj tjedana, a store vraća pripremljene nizove za grafove. Tri komponente grafova su tanki omoti oko `vue-chartjs`, sa zajedničkim postavkama osi i boja u `charts/options.js`.
 
 ### 4.6. Prijava, registracija i zaštita ruta
 
@@ -490,19 +490,19 @@ Prijava postojećim računom radi na isti način kroz zaslon **Prijava**. Ako st
 
 Nakon prijave otvara se radna ploča. U gornjem dijelu nalazi se pozdrav i prsten koji pokazuje koliko ste od dnevnog cilja odradili. Cilj se postavlja u Profilu i zadano iznosi šest sati.
 
-Ispod prstena je Pomodoro timer. Popis nadolazećih zadataka skuplja obaveze sa svih predmeta i može se posložiti po datumu ili po prioritetu. Sa strane je popis nedavne aktivnosti s posljednjim sesijama i promjenama na zadacima.
+Ispod prstena je Pomodoro timer. Popis nadolazećih zadataka skuplja obaveze sa svih kolegija i može se posložiti po datumu ili po prioritetu. Sa strane je popis nedavne aktivnosti s posljednjim sesijama i promjenama na zadacima.
 
 *Snimka: radna ploča s podacima.*
 
-### 5.3. Rad s predmetima
+### 5.3. Rad s kolegijima
 
-Otvorite **Predmeti** u bočnom izborniku. Gumbom **Dodaj novi predmet** otvara se dijalog u kojem upisujete naziv i birate boju. Boja se kasnije koristi na karticama, u grafovima i u popisu aktivnosti, pa je korisno svakom kolegiju dati drugu.
+Otvorite **Kolegiji** u bočnom izborniku. Gumbom **Dodaj novi kolegij** otvara se dijalog u kojem upisujete naziv i birate boju. Boja se kasnije koristi na karticama, u grafovima i u popisu aktivnosti, pa je korisno svakom kolegiju dati drugu.
 
-Kartica predmeta pokazuje broj zadataka na čekanju i traku dovršenosti. Klikom na karticu predmet postaje odabran i ispod se otvara njegov detaljni prikaz.
+Kartica kolegija pokazuje broj zadataka na čekanju i traku dovršenosti. Klikom na karticu kolegij postaje odabran i ispod se otvara njegov detaljni prikaz.
 
-Za uređivanje odaberite **Uredi predmet**, a za uklanjanje **Obriši**. Brisanje traži potvrdu jer uklanja i sve zadatke, bilješke i priložene datoteke tog predmeta.
+Za uređivanje odaberite **Uredi kolegij**, a za uklanjanje **Obriši**. Brisanje traži potvrdu jer uklanja i sve zadatke, bilješke i priložene datoteke tog kolegija.
 
-*Snimke: mreža kartica predmeta, dijalog za novi predmet.*
+*Snimke: mreža kartica kolegija, dijalog za novi kolegij.*
 
 ### 5.4. Zadaci
 
@@ -516,7 +516,7 @@ Padajući izbornik iznad popisa filtrira zadatke po prioritetu. Rok se prikazuje
 
 ### 5.5. Bilješke i materijali
 
-Odjeljak **Bilješke** služi za zapise vezane uz predmet. Uz naslov i sadržaj možete upisati kategoriju, na primjer Predavanja ili Kolokvij. Kategorije se same skupljaju u filtar iznad popisa. Prikazuju se dvije najnovije bilješke, a gumbom **Prikaži sve bilješke** otvara se cijeli popis.
+Odjeljak **Bilješke** služi za zapise vezane uz kolegij. Uz naslov i sadržaj možete upisati kategoriju, na primjer Predavanja ili Kolokvij. Kategorije se same skupljaju u filtar iznad popisa. Prikazuju se dvije najnovije bilješke, a gumbom **Prikaži sve bilješke** otvara se cijeli popis.
 
 Odjeljak **Resursi** u desnom stupcu služi za datoteke. Ikonom za slanje otvara se odabir datoteke s računala. Podržane su slike, PDF dokumenti i uobičajene datoteke. Uz svaku datoteku prikazuju se vrsta i veličina, a nudi se preuzimanje i brisanje. Na dnu odjeljka je traka koja pokazuje koliko je prostora iskorišteno.
 
@@ -524,7 +524,7 @@ Odjeljak **Resursi** u desnom stupcu služi za datoteke. Ikonom za slanje otvara
 
 ### 5.6. Pomodoro timer
 
-Timer se nalazi na radnoj ploči, u detaljnom prikazu predmeta i u bočnom izborniku. Kad ga otvorite iz predmeta, taj predmet se sam postavlja kao odabrani. Na radnoj ploči predmet birate iz padajućeg izbornika.
+Timer se nalazi na radnoj ploči, u detaljnom prikazu kolegija i u bočnom izborniku. Kad ga otvorite iz kolegija, taj kolegij se sam postavlja kao odabrani. Na radnoj ploči kolegij birate iz padajućeg izbornika.
 
 Gumbom za pokretanje kreće radna faza. Kad istekne, sesija se sprema i timer prelazi u pauzu. Brojač ispod prikaza pokazuje koja je sesija na redu unutar ciklusa od četiri.
 
@@ -538,9 +538,9 @@ Prelazak na drugu stranicu ne zaustavlja timer.
 
 Zaslon **Statistika** prikazuje podatke prikupljene iz sesija.
 
-U gornjem redu su ukupno vrijeme učenja, najučeniji predmet i usporedba s prošlim tjednom izražena postotkom. Prstenasti graf pokazuje udio svakog predmeta u ukupnom vremenu. Stupčasti graf prikazuje raspodjelu po danima tekućeg tjedna, a linijski kretanje kroz zadnja četiri ili osam tjedana.
+U gornjem redu su ukupno vrijeme učenja, najučeniji kolegij i usporedba s prošlim tjednom izražena postotkom. Prstenasti graf pokazuje udio svakog kolegija u ukupnom vremenu. Stupčasti graf prikazuje raspodjelu po danima tekućeg tjedna, a linijski kretanje kroz zadnja četiri ili osam tjedana.
 
-Padajućim izbornikom pri vrhu možete cijeli prikaz ograničiti na jedan predmet.
+Padajućim izbornikom pri vrhu možete cijeli prikaz ograničiti na jedan kolegij.
 
 Ako ste tek počeli koristiti aplikaciju, grafovi će biti prazni dok ne dovršite prvu Pomodoro sesiju.
 

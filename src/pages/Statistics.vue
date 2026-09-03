@@ -25,7 +25,7 @@ const odabraniPredmet = ref('svi')
 const razdoblje = ref(4)
 
 const predmetOpcije = computed(() => [
-  { value: 'svi', label: 'Svi predmeti' },
+  { value: 'svi', label: 'Svi kolegiji' },
   ...predmetiStore.predmeti.map((predmet) => ({ value: predmet.predmetId, label: predmet.naziv })),
 ])
 
@@ -43,16 +43,14 @@ const postotakZadataka = computed(() =>
     : 0,
 )
 
-const daniUFlowu = computed(
-  () => statistika.poDanuTjedna().filter((dan) => dan.minuta > 0).length,
-)
+const daniUFlowu = computed(() => statistika.poDanuTjedna().filter((dan) => dan.minuta > 0).length)
 </script>
 
 <template>
   <div>
     <PageHeading
       title="Statistika učenja"
-      subtitle="Pregled vremena provedenog u učenju po danima, tjednima i predmetima."
+      subtitle="Pregled vremena provedenog u učenju po danima, tjednima i kolegijima."
     />
 
     <Loader v-if="ucitavanje" tekst="Učitavanje statistike" />
@@ -73,7 +71,7 @@ const daniUFlowu = computed(
           </p>
         </StatCard>
 
-        <StatCard label="Najviše učen predmet">
+        <StatCard label="Najviše učen kolegij">
           <p class="mt-2 text-3xl font-bold text-sb-teal">
             {{ statistika.najuceniPredmet?.naziv ?? '-' }}
           </p>
@@ -122,7 +120,7 @@ const daniUFlowu = computed(
         </BaseCard>
 
         <BaseCard>
-          <p class="mb-4 text-xl font-bold text-slate-900">Raspodjela po predmetima</p>
+          <p class="mb-4 text-xl font-bold text-slate-900">Raspodjela po kolegijima</p>
           <div class="relative h-48">
             <DonutChart
               :labels="raspodjela.map((predmet) => predmet.naziv)"
@@ -191,7 +189,7 @@ const daniUFlowu = computed(
             to="/predmeti"
             class="mt-6 flex items-center gap-2 font-semibold text-sb-indigo"
           >
-            Otvorite predmete
+            Otvorite kolegije
             <Icon name="desno" size="h-4 w-4" />
           </RouterLink>
         </BaseCard>

@@ -45,7 +45,7 @@ const porukaCilja = computed(() => {
 })
 
 const bojaPredmetaPoId = (predmetId) => predmetiStore.predmetPoId(predmetId)?.boja ?? 'indigo'
-const nazivPredmeta = (predmetId) => predmetiStore.predmetPoId(predmetId)?.naziv ?? 'Predmet'
+const nazivPredmeta = (predmetId) => predmetiStore.predmetPoId(predmetId)?.naziv ?? 'Kolegij'
 
 const nedavno = computed(() =>
   [
@@ -62,7 +62,7 @@ const nedavno = computed(() =>
       ikona: 'dokument',
       boja: bojaPredmetaPoId(biljeska.predmetId),
       naslov: biljeska.naslov,
-      opis: `Bilješka uz predmet ${nazivPredmeta(biljeska.predmetId)}`,
+      opis: `Bilješka uz kolegij ${nazivPredmeta(biljeska.predmetId)}`,
       vrijeme: biljeska.datum,
     })),
     ...predmetiStore.prilozi.map((prilog) => ({
@@ -70,7 +70,7 @@ const nedavno = computed(() =>
       ikona: 'mapa',
       boja: bojaPredmetaPoId(prilog.predmetId),
       naslov: prilog.naziv,
-      opis: `Prilog uz predmet ${nazivPredmeta(prilog.predmetId)}`,
+      opis: `Prilog uz kolegij ${nazivPredmeta(prilog.predmetId)}`,
       vrijeme: prilog.datum,
     })),
   ]

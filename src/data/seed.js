@@ -336,7 +336,7 @@ const OBJAVE = [
 
 const PREDMETI = [...izlogPredmeti, ...DODATNI_PREDMETI]
 
-const DOMENA = 'fakemail.com'
+const DOMENA = 'studybuddytesting.com'
 const lozinka = () => crypto.randomUUID()
 const TJEDANA_KORISNIKA = 3
 const ADMINA = 2

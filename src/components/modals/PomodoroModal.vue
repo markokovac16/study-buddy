@@ -33,7 +33,7 @@ function pokreni() {
   <BaseModal v-model="open" title="Pokreni Pomodoro">
     <template v-if="opcije.length">
       <p class="mb-4 text-sm text-slate-500">
-        Odaberite predmet za koji se bilježi vrijeme ove sesije.
+        Odaberite kolegij za koji se bilježi vrijeme ove sesije.
       </p>
       <BaseSelect v-model="odabrani" :options="opcije" class="w-full" />
       <div class="flex justify-end gap-3 pt-6">
@@ -44,11 +44,11 @@ function pokreni() {
 
     <template v-else>
       <p class="text-sm text-slate-500">
-        Nemate nijedan predmet, a sesija se bilježi uz predmet. Dodajte prvi predmet pa se vratite.
+        Nemate nijedan kolegij, a sesija se bilježi uz kolegij. Dodajte prvi kolegij pa se vratite.
       </p>
       <div class="flex justify-end gap-3 pt-6">
         <BaseButton variant="secondary" @click="open = false">Odustani</BaseButton>
-        <BaseButton to="/predmeti" @click="open = false">Dodaj predmet</BaseButton>
+        <BaseButton to="/predmeti" @click="open = false">Dodaj kolegij</BaseButton>
       </div>
     </template>
   </BaseModal>

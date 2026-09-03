@@ -113,12 +113,42 @@ const iskoristenoPostotak = computed(() =>
 
 async function obrisiPredmet() {
   const potvrda = await pitaj({
-    naslov: 'Brisanje predmeta',
-    tekst: `Obrisati predmet "${odabrani.value.naziv}" sa svim zadacima, bilješkama i prilozima?`,
+    naslov: 'Brisanje kolegija',
+    tekst: `Obrisati kolegij "${odabrani.value.naziv}" sa svim zadacima, bilješkama i prilozima?`,
     gumb: 'Obriši',
   })
   if (!potvrda) return
   pokusaj(() => store.obrisiPredmet(odabraniId.value))
+}
+
+async function obrisiZadatak(zadatak) {
+  const potvrda = await pitaj({
+    naslov: 'Brisanje zadatka',
+    tekst: `Obrisati zadatak "${zadatak.naslov}"?`,
+    gumb: 'Obriši',
+  })
+  if (!potvrda) return
+  pokusaj(() => store.obrisiZadatak(zadatak.zadatakId))
+}
+
+async function obrisiBiljesku(biljeska) {
+  const potvrda = await pitaj({
+    naslov: 'Brisanje bilješke',
+    tekst: `Obrisati bilješku "${biljeska.naslov}"?`,
+    gumb: 'Obriši',
+  })
+  if (!potvrda) return
+  pokusaj(() => store.obrisiBiljesku(biljeska.biljeskaId))
+}
+
+async function obrisiPrilog(prilog) {
+  const potvrda = await pitaj({
+    naslov: 'Brisanje priloga',
+    tekst: `Obrisati prilog "${prilog.naziv}"? Datoteka se uklanja i sa Storagea.`,
+    gumb: 'Obriši',
+  })
+  if (!potvrda) return
+  pokusaj(() => store.obrisiPrilog(prilog.prilogId))
 }
 
 function ucitajDatoteku(dogadaj) {
@@ -134,17 +164,17 @@ function ucitajDatoteku(dogadaj) {
     <div class="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:gap-6">
       <PageHeading
         spacing=""
-        title="Upravljanje predmetima"
+        title="Upravljanje kolegijima"
         subtitle="Svi kolegiji, zadaci, bilješke i materijali na jednom mjestu."
       />
       <BaseButton @click="predmetModal.otvoriNovu()">
         <Icon name="plus" size="h-4 w-4" />
-        Dodaj novi predmet
+        Dodaj novi kolegij
       </BaseButton>
     </div>
 
     <BaseCard v-if="store.ucitavanje">
-      <Loader tekst="Učitavanje predmeta" />
+      <Loader tekst="Učitavanje kolegija" />
     </BaseCard>
     <div
       v-else-if="store.predmeti.length"
@@ -161,7 +191,7 @@ function ucitajDatoteku(dogadaj) {
       />
     </div>
     <BaseCard v-else>
-      <p class="text-slate-500">Još nemate predmeta. Dodajte prvi i krenite s organizacijom.</p>
+      <p class="text-slate-500">Još nemate kolegija. Dodajte prvi i krenite s organizacijom.</p>
     </BaseCard>
 
     <template v-if="odabrani">
@@ -180,7 +210,7 @@ function ucitajDatoteku(dogadaj) {
 
         <div class="flex items-center gap-3">
           <BaseButton variant="ghost" @click="predmetModal.otvoriUredi(odabrani)">
-            Uredi predmet
+            Uredi kolegij
           </BaseButton>
           <BaseButton variant="ghost" class="text-red-600 hover:bg-red-50" @click="obrisiPredmet"
             >Obriši</BaseButton
@@ -206,7 +236,7 @@ function ucitajDatoteku(dogadaj) {
                 :zadatak="zadatak"
                 @prebaci="pokusaj(() => store.prebaciStatus(zadatak.zadatakId))"
                 @uredi="zadatakModal.otvoriUredi(zadatak)"
-                @obrisi="pokusaj(() => store.obrisiZadatak(zadatak.zadatakId))"
+                @obrisi="obrisiZadatak(zadatak)"
               />
             </div>
             <p v-else class="text-sm text-slate-500">Nema zadataka za odabrani filter.</p>
@@ -238,13 +268,13 @@ function ucitajDatoteku(dogadaj) {
                 :key="biljeska.biljeskaId"
                 :biljeska="biljeska"
                 @uredi="biljeskaModal.otvoriUredi(biljeska)"
-                @obrisi="pokusaj(() => store.obrisiBiljesku(biljeska.biljeskaId))"
+                @obrisi="obrisiBiljesku(biljeska)"
               />
             </div>
             <p v-else class="text-sm text-slate-500">
               {{
                 filterKategorije === 'sve'
-                  ? 'Još nema bilježaka za ovaj predmet.'
+                  ? 'Još nema bilježaka za ovaj kolegij.'
                   : 'Nema bilježaka u odabranoj kategoriji.'
               }}
             </p>
@@ -270,7 +300,7 @@ function ucitajDatoteku(dogadaj) {
                 v-for="prilog in priloziOdabranog"
                 :key="prilog.prilogId"
                 :prilog="prilog"
-                @obrisi="pokusaj(() => store.obrisiPrilog(prilog.prilogId))"
+                @obrisi="obrisiPrilog(prilog)"
               />
             </div>
             <p v-else class="text-sm text-slate-500">Nema priloga. Dodajte datoteku ili sliku.</p>
