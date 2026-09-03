@@ -48,7 +48,7 @@ function pokreni() {
       </p>
       <div class="flex justify-end gap-3 pt-6">
         <BaseButton variant="secondary" @click="open = false">Odustani</BaseButton>
-        <BaseButton to="/predmeti" @click="open = false">Dodaj kolegij</BaseButton>
+        <BaseButton to="/kolegiji" @click="open = false">Dodaj kolegij</BaseButton>
       </div>
     </template>
   </BaseModal>

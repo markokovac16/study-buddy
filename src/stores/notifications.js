@@ -34,7 +34,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
         hitno: danaDo(zadatak.rokIzvrsenja) < 0,
         naslov: zadatak.naslov,
         opis: opisRoka(danaDo(zadatak.rokIzvrsenja)),
-        poveznica: '/predmeti',
+        poveznica: '/kolegiji',
       }))
   })
 

@@ -40,7 +40,7 @@ const router = createRouter({
       meta: { auth: true },
       children: [
         { path: 'ploca', name: 'ploca', component: Dashboard },
-        { path: 'predmeti', name: 'predmeti', component: Subjects },
+        { path: 'kolegiji', name: 'kolegiji', component: Subjects },
         { path: 'statistika', name: 'statistika', component: Statistics },
         { path: 'novosti', name: 'novosti', component: News },
         { path: 'novosti/:sadrzajId', name: 'novost', component: NewsPost },

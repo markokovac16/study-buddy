@@ -186,7 +186,7 @@ const daniUFlowu = computed(() => statistika.poDanuTjedna().filter((dan) => dan.
             }}%). Nastavite ovim tempom.
           </p>
           <RouterLink
-            to="/predmeti"
+            to="/kolegiji"
             class="mt-6 flex items-center gap-2 font-semibold text-sb-indigo"
           >
             Otvorite kolegije
